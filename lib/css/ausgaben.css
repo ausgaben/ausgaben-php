@@ -1,0 +1,104 @@
+/** SIZES **/
+body {
+    margin: 0px;
+}
+div.menu {
+    padding: 5px;
+    margin: 0 0 5px 0;
+}
+form {
+    padding: 0;
+    margin: 0;
+}
+input.tiny {
+width: 18px;
+}
+input.small{
+width: 36px;
+}
+input.medium, select {
+width: 100px;
+}
+input.large {
+width: 200px;
+}
+table.spendings {
+        margin: 10px auto 10px auto;;
+}
+div.box {
+    width: 600px;
+    margin: 10px auto 10px auto;;
+    padding: 10px;
+}
+p, h1 {
+    margin: 0 0 5px 0;
+    padding: 0;
+}
+/** FONTS **/
+body {
+    font-family: Georgia, Times, serif;
+}
+div.menu {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+/** FONT-SIZES **/
+div.menu, td.row, input, select {
+    font-size: 9pt;
+}
+td, p {
+    font-size: 10pt;
+}
+h1 {
+    font-size: 15pt;
+}
+/** BOLD **/
+div.menu, tr.header-a, tr.header-b, thead {
+    font-weight: bold;
+}
+/** COLORS **/
+a {
+    color: #FF6600;
+}
+body {
+    background-color: #ffffff;
+}
+div.menu {
+    background-color: #EEEEEE;
+    border-color: #000000;
+}
+tr.header-a {
+    background-color: #cccccc;
+}
+tr.header-b {
+    background-color: #ffffff;
+}
+tr.row-1 {
+    background-color: #ffffff;
+}
+tr.row-2 {
+    background-color: #eeeeee;
+}
+select, input {
+border-color: #000000;
+}
+h1 {
+    color: #808080;
+    border-color: #808080;
+}
+/** BORDERS **/
+.border, select, input, table.spendings, div.box {
+    border-width: 1px;
+    border-style: solid;
+}
+td.header-a {
+    border-top-width: 2px;
+    border-top-style: solid;
+}
+td.header-b {
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+div.menu, h1 {
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+}
