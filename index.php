@@ -31,6 +31,7 @@
     $ifsubmit         = getVar(&$_REQUEST['ifsubmit'], false);
     $ifdelete         = getVar(&$_REQUEST['ifdelete'], false);
     $logout           = getVar(&$_REQUEST['logout'], false);
+    session_start();
     $display_month    = getVar(&$_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
 
     /**
@@ -203,6 +204,7 @@
                 $result = $Spending->update();
             } else {
                 $result = $Spending->insert();
+                $spending_id = $result;
             }
             if (!$result) {
                 if (PEAR::isError($result)) {
@@ -212,19 +214,7 @@
             }
             updateAbf($account_id);
             $relocateDo = 'spendings';
-        }
-        // Actions
-        switch ($action) {
-        case 'delete':
-            $Spending = DB_DataObject::factory('spending');
-            if (!$Spending->get($_REQUEST['spending_id'])) {
-                break;
-            }
-            if ($Spending->user_id == $_SESSION['user']['user_id']) {
-                $Spending->delete();
-            }
-            $relocateDo = 'spendings';
-            break;
+            $relocateId = $spending_id;
         }
         // Load Spendinggroups
         $Spendinggroup = DB_DataObject::factory('spendinggroup');
@@ -310,6 +300,7 @@
             }
         }
         // Load Spendings
+        $DISPLAYDATA['sum_type'] = array(SPENDING_TYPE_ALL => 0, SPENDING_TYPE_IN => 0, SPENDING_TYPE_OUT => 0);
         $Spending = DB_DataObject::factory('spending');
         $Spending->orderBy('spendinggroup_id');
         $Spending->orderBy('day desc');
@@ -320,7 +311,6 @@
         }
         $Spending->whereAdd("account_id=$account_id");
         if ($Spending->find()) {
-            $DISPLAYDATA['sum_type'] = array(0 => 0, 1 => 0, 2 => 0);
             if ($separate_sums) {
                 $DISPLAYDATA['sum_group'] = array();
             } else {
@@ -344,7 +334,7 @@
                 }
                 if ($Spending->type == SPENDING_TYPE_IN) {
                     $DISPLAYDATA['sum_type'][$Spending->type]                               += $Spending->value;
-                    $DISPLAYDATA['sum_type'][0]                                             += $Spending->value;
+                    $DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL]                             += $Spending->value;
                     if ($separate_sums) {
                         $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] += $Spending->value;
                     } else {
@@ -352,7 +342,7 @@
                     }
                 } else {
                     $DISPLAYDATA['sum_type'][$Spending->type]                               -= $Spending->value;
-                    $DISPLAYDATA['sum_type'][0]                                             -= $Spending->value;
+                    $DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL]                             -= $Spending->value;
                     if ($separate_sums) {
                         $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] -= $Spending->value;
                     } else {
@@ -369,7 +359,7 @@
                     'value' => $abf[$account_id][$last_month],
                     'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
                 );
-                $DISPLAYDATA['sum_abf'] = $DISPLAYDATA['sum_type'][0] + $abf[$account_id][$last_month];
+                $DISPLAYDATA['sum_abf'] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL] + $abf[$account_id][$last_month];
             }
             // Set Date of the abf sum
             $date_now     = new Date;
@@ -569,7 +559,9 @@
     */
     if (isset($relocateDo)) {
         $_SESSION['do'] = $relocateDo;
-        header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?do=$relocateDo&display_month=$display_month");
+        $target = $proto . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '?do=' . $relocateDo;
+        if (isset($relocateId)) $target .= '#' . $relocateId;
+        header('Location: ' . $target);
         return;
     }
 

@@ -22,7 +22,7 @@
         {/if}
         <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
         <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
-        <td align="right" nowrap="true"><span class="type-{$spending.type}">{if $spending.type eq 1}-{/if}{$spending.value|mf}</span></td>
+        <td align="right" nowrap="true"><a name="{$spending.spending_id}"><span class="type-{$spending.type}">{if $spending.type eq 1}-{/if}{$spending.value|mf}</span></a></td>
     </tr>
 {/foreach}
 <script type="text/javascript">
