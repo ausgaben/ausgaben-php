@@ -11,6 +11,8 @@
     * Include smarty
     */
     require_once "{$CONFIG['path']['smarty']}/Smarty.class.php";
+    require_once "{$CONFIG['path']['home']}/lib/functions/javaScriptOut.php";
+    require_once "{$CONFIG['path']['home']}/lib/functions/screenOut.php";
     
     /**
     * Class which handles general smarty configuration
@@ -34,6 +36,9 @@
             $this->debugging_ctrl   = 'URL';
             
             $this->error_reporting  = E_ALL ^ E_NOTICE;
+
+            $this->register_modifier('so', 'screenOut');
+            $this->register_modifier('jso', 'javaScriptOut');
             
             if(isset($GLOBALS['DISPLAYDATA'])) $this->assign($GLOBALS['DISPLAYDATA']);
         }

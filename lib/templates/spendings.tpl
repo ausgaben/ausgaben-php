@@ -74,7 +74,7 @@
                         {else}
                             <tr>
                         {/if}
-                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description}</a></td>
+                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a></td>
                             <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
                             <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|string_format:'%.2f'}</span></td>
                         </tr>
@@ -121,7 +121,7 @@
                         {else}
                             <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
                         {/if}
-                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description}{else}&mdash;{/if}</a></td>
+                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
                         <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
                         <td align="right" nowrap="true"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                     </tr>
@@ -245,7 +245,7 @@
         {foreach from=$spendings[$spending_type] item=spending}
             Spendings[{$spending.spending_id}] = new Array();
             {foreach from=$spending key=fieldname item=field_value}
-                Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|replace:"\r\n":""}";
+                Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
             {/foreach}
         {/foreach}
     {/foreach}
@@ -253,7 +253,7 @@
     {section loop=$spendings_notbooked name=notbooked}
         Spendings[{$spendings_notbooked[notbooked].spending_id}] = new Array();
         {foreach from=$spendings_notbooked[notbooked] key=fieldname item=field_value}
-            Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|replace:"\r\n":""}";
+            Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
         {/foreach}
     {/section}
 
