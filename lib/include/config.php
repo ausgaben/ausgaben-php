@@ -36,4 +36,6 @@
 
     ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
 
+    $proto = (isset($_SERVER['HTTPS']) and strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
+
 ?>
