@@ -11,7 +11,7 @@
                     </p>
                 {/if}
                 <p class="large" onclick="doLogin('{$users[users].email}', this);">
-                    <img src="lib/images/users/{$users[users].user_id}.png" align="middle" /> <strong>{$users[users].prename}</strong>
+                    <img src="lib/images/users/{$users[users].avatar}" align="middle" /> <strong>{$users[users].prename}</strong>
                 </p>
             {if $smarty.section.users.last}
                         {if $smarty.request.username}
