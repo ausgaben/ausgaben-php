@@ -10,10 +10,10 @@ class DataObject_Account extends DB_DataObject
     /* the code below is auto generated do not remove the above tag */
 
     var $__table = 'account';                         // table name
-    var $account_id;                      // int(11)  not_null primary_key auto_increment
+    var $account_id;                      // int(11)  not_null primary_key unsigned auto_increment
     var $name;                            // blob(255)  not_null blob
     var $description;                     // blob(65535)  not_null blob
-    var $summarize_months;                // int(1)  not_null
+    var $summarize_months;                // int(1)  not_null unsigned
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

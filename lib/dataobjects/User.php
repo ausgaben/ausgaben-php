@@ -15,7 +15,7 @@ class DataObject_User extends DB_DataObject
     var $password;                        // string(32)  not_null
     var $prename;                         // blob(255)  not_null blob
     var $name;                            // blob(255)  not_null blob
-    var $admin;                           // int(4)  not_null
+    var $admin;                           // int(4)  not_null unsigned
     var $last_account_id;                 // int(11)  not_null unsigned
     var $last_login;                      // string(14)  
     var $avatar;                          // blob(255)  not_null blob

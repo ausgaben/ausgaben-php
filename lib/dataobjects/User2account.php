@@ -10,8 +10,8 @@ class DataObject_User2account extends DB_DataObject
     /* the code below is auto generated do not remove the above tag */
 
     var $__table = 'user2account';                    // table name
-    var $user_id;                         // int(11)  not_null
-    var $account_id;                      // int(11)  not_null
+    var $user_id;                         // int(11)  not_null unsigned
+    var $account_id;                      // int(11)  not_null unsigned
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

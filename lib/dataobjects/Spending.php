@@ -13,18 +13,18 @@ class DataObject_Spending extends DB_DataObject
     /* the code below is auto generated do not remove the above tag */
 
     var $__table = 'spending';                        // table name
-    var $spending_id;                     // int(11)  not_null primary_key auto_increment
-    var $type;                            // int(1)  not_null
-    var $year;                            // int(4)  not_null
-    var $month;                           // int(2)  not_null
-    var $day;                             // int(2)  not_null
-    var $spendinggroup_id;                // int(11)  not_null
+    var $spending_id;                     // int(11)  not_null primary_key unsigned auto_increment
+    var $type;                            // int(1)  not_null unsigned
+    var $year;                            // int(4)  not_null unsigned
+    var $month;                           // int(2)  not_null unsigned
+    var $day;                             // int(2)  not_null unsigned
+    var $spendinggroup_id;                // int(11)  not_null unsigned
     var $description;                     // blob(65535)  not_null blob
-    var $user_id;                         // int(11)  not_null
-    var $account_id;                      // int(11)  not_null
-    var $value;                           // real(12)  not_null
-    var $booked;                          // int(1)  not_null
-    var $spendingmethod_id;               // int(4)  not_null
+    var $user_id;                         // int(11)  not_null unsigned
+    var $account_id;                      // int(11)  not_null unsigned
+    var $value;                           // blob(255)  not_null blob
+    var $booked;                          // int(1)  not_null unsigned
+    var $spendingmethod_id;               // int(4)  not_null unsigned
     var $timestamp;                       // timestamp(14)  not_null unsigned zerofill timestamp
 
     /* ZE2 compatibility trick*/

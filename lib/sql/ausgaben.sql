@@ -32,7 +32,7 @@ CREATE TABLE spending (
   description text NOT NULL,
   user_id int(11) unsigned NOT NULL default '0',
   account_id int(11) unsigned NOT NULL default '0',
-  value float unsigned NOT NULL default '0',
+  value tinytext NOT NULL,
   booked tinyint(1) unsigned NOT NULL default '1',
   spendingmethod_id tinyint(4) unsigned NOT NULL default '0',
   timestamp timestamp(14) NOT NULL,

@@ -143,7 +143,7 @@
             }
             // Neue Werte setzen
             $Spending->setFrom($_REQUEST);
-            $Spending->value = floatval(str_replace(',', '.', trim($Spending->value)));
+            $Spending->value = str_replace(',', '.', trim($Spending->value));
             if ($Spending->value < 0) {
                 $Spending->value = $Spending->value * -1;
                 $Spending->type = SPENDING_TYPE_OUT;
