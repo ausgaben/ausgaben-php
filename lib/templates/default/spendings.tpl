@@ -53,7 +53,7 @@
                     {if $smarty.foreach.months.last}
                         {if $account.enable_abf eq 0}
                             <tr>
-                                <td colspan="2" align="right" class="leftsum">{if $month_sums._all >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums._all|mf}</span></span></td>                                
+                                <td colspan="2" align="right" class="leftsum">{if $month_sums._all >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums._all|mf}</span></span></td>
                             </tr>
                         {/if}
                         </table><p></p>
@@ -81,9 +81,9 @@
         <div class="boxcontent">
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
-                	<tr>
-                		<tr colspan="4"><h3>Zusammenfassung</h3></td>
-                	</tr>
+                    <tr>
+                        <tr colspan="4"><h3>Zusammenfassung</h3></td>
+                    </tr>
                     {* Summen anzeigen *}
                     <tr class="alt">
                         <td colspan="3">Einnahmen</td>
@@ -111,7 +111,7 @@
                     {* Nicht gebuchte Ausgaben anzeigen *}
                     {section loop=$spendings_notbooked name=notbooked}
                         {if $smarty.section.notbooked.first}
-                        	<tr>
+                            <tr>
                                 <td colspan="4">&nbsp;</td>
                             </tr>
                             <tr>
@@ -128,7 +128,7 @@
                             <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|mf}</span></td>
                         </tr>
                         {if $smarty.section.notbooked.last}
-                        	<tr class="sum">
+                            <tr class="sum">
                                 <td colspan="3" class="sum"><strong>Summe</strong></td>
                                 <td colspan="3" class="sum" align="right"><span class="type-{if $sum_notbooked < 0}1{else}2{/if}"><strong>{if $sum_notbooked < 0}-{/if}{$sum_notbooked|mf}</strong></span></td>
                             </tr>
@@ -140,72 +140,71 @@
 
                     {* Ausgaben anzeigen *}
                     {assign var=order_by_date value=$smarty.session.user.settings.order_by_date}
-					{foreach from=$spendings item=spending name=spendings}
-					    {if $smarty.foreach.spendings.first}
-					        <tr><td colspan="4">&nbsp;</td></tr>
-					        <tr><td colspan="4"><h3>Gebuchte Ausgaben</h3></td></tr>
-					        {assign var=lastgroup value=0}
-					    {/if}
-					    {if !$order_by_date}
-						    {if $lastgroup ne $spending.spendinggroup_id}
-						        <tr>
-						            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
-						            <td class="subheader" align="right">{$sum_group[$spending.spendinggroup_id]|mf}</td>
-						        </tr>
-						        {assign var=lastgroup value=$spending.spendinggroup_id}
-						    {/if}
-					    {/if}
-					    {if $smarty.foreach.spendings.iteration is odd}
-					        <tr class="alt">
-					    {else}
-					        <tr>
-					    {/if}
-					        {if $summarize_months}
-					            <td>{$spending.date|date_format:'%d.'}</td>
-					        {else}
-					            <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
-					        {/if}
-					        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
-					        <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
-					        <td align="right" nowrap="true"><a name="{$spending.spending_id}"><span class="type-{$spending.type}">{$spending_config[$spending.type].sign}{$spending.value|mf}</span></a></td>
-					    </tr>
-					    {if $smarty.foreach.spendings.last}
-					        <tr class="sum">
-					        	<td class="sum" colspan="3"><strong>Summe</strong></td>
-					        	<td class="sum" align="right"><span class="type-{if $sum_type.0 < 0}1{else}2{/if}"><strong>{$sum_type.0|mf}</strong></span></td>
-					        </tr>
-					    {/if}
-					{/foreach}
-					<script type="text/javascript">
-					<!--
-					
-					    var Spendings = new Array();
-					    {foreach from=$spendings item=spending name=spendings }
-					        Spendings[{$spending.spending_id}] = new Array();
-					        {foreach from=$spending key=fieldname item=field_value}
-					            Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
-					        {/foreach}
-					    {/foreach}
-					
-					// -->
-					</script>
-                    
+                    {foreach from=$spendings item=spending name=spendings}
+                        {if $smarty.foreach.spendings.first}
+                            <tr><td colspan="4">&nbsp;</td></tr>
+                            <tr><td colspan="4"><h3>Gebuchte Ausgaben</h3></td></tr>
+                            {assign var=lastgroup value=0}
+                        {/if}
+                        {if !$order_by_date}
+                            {if $lastgroup ne $spending.spendinggroup_id}
+                                <tr>
+                                    <td colspan="4" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                </tr>
+                                {assign var=lastgroup value=$spending.spendinggroup_id}
+                            {/if}
+                        {/if}
+                        {if $smarty.foreach.spendings.iteration is odd}
+                            <tr class="alt">
+                        {else}
+                            <tr>
+                        {/if}
+                            {if $summarize_months}
+                                <td>{$spending.date|date_format:'%d.'}</td>
+                            {else}
+                                <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
+                            {/if}
+                            <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
+                            <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
+                            <td align="right" nowrap="true"><a name="{$spending.spending_id}"><span class="type-{$spending.type}">{$spending_config[$spending.type].sign}{$spending.value|mf}</span></a></td>
+                        </tr>
+                        {if $smarty.foreach.spendings.last}
+                            <tr class="sum">
+                                <td class="sum" colspan="3"><strong>Summe</strong></td>
+                                <td class="sum" align="right"><span class="type-{if $sum_type.0 < 0}1{else}2{/if}"><strong>{$sum_type.0|mf}</strong></span></td>
+                            </tr>
+                        {/if}
+                    {/foreach}
+                    <script type="text/javascript">
+                    <!--
+
+                        var Spendings = new Array();
+                        {foreach from=$spendings item=spending name=spendings }
+                            Spendings[{$spending.spending_id}] = new Array();
+                            {foreach from=$spending key=fieldname item=field_value}
+                                Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
+                            {/foreach}
+                        {/foreach}
+
+                    // -->
+                    </script>
+
                     {* Bar-Ausgaben anzeigen *}
                     {math equation='x*-1' assign=sum_withdrawal x=$sum_type.4}
                     {math equation='x+y' assign=sum_cash_all x=$sum_withdrawal y=$sum_type.3}
                     {section loop=$spendings_cash name=cash}
                         {if $smarty.section.cash.first}
-                        	<tr>
+                            <tr>
                                 <td colspan="4">&nbsp;</td>
                             </tr>
                             <tr>
                                 <td colspan="4"><h3>Bar-Ausgaben</h3></td>
                             </tr>
                             <tr class="alt">
-                            	<td>&nbsp;</td>
-                            	<td>Bar-Abhebungen</td>
-                            	<td><img src="lib/images/icons/spendingtype/4.gif" width="16" height="16" hspace="2" /></td>
-                            	<td align="right"><span class="type-{if $sum_withdrawal < 0}1{else}2{/if}">{$sum_withdrawal|mf}</span></td>
+                                <td>&nbsp;</td>
+                                <td>Bar-Abhebungen</td>
+                                <td><img src="lib/images/icons/spendingtype/4.gif" width="16" height="16" hspace="2" /></td>
+                                <td align="right"><span class="type-{if $sum_withdrawal < 0}1{else}2{/if}">{$sum_withdrawal|mf}</span></td>
                             </tr>
                         {/if}
                         {if $smarty.section.cash.iteration is odd}
@@ -213,27 +212,27 @@
                         {else}
                             <tr class="alt">
                         {/if}
-                        	{if $summarize_months}
-					            <td>{$spendings_cash[cash].date|date_format:'%d.'}</td>
-					        {else}
-					            <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'}</td>
-					        {/if}
+                            {if $summarize_months}
+                                <td>{$spendings_cash[cash].date|date_format:'%d.'}</td>
+                            {else}
+                                <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'}</td>
+                            {/if}
                             <td><a href="javascript:javascript:showEditor({$spendings_cash[cash].spending_id});">{$spendings_cash[cash].description|so}</a></td>
                             <td><img src="lib/images/icons/spendingtype/3.gif" width="16" height="16" hspace="2" /></td>
                             <td align="right"><span class="type-{$spendings_cash[cash].type}">-{$spendings_cash[cash].value|mf}</span></td>
                         </tr>
                         {if $smarty.section.cash.last}
-                        	<tr class="sum">
+                            <tr class="sum">
                                 <td colspan="3" class="sum"><strong>Summe</strong></td>
                                 <td colspan="3" class="sum" align="right"><span class="type-{if $sum_cash_all < 0}1{else}2{/if}"><strong>{$sum_cash_all|mf}</strong></span></td>
                             </tr>
-                            
+
                             <!-- tr>
                                 <td colspan="4">&nbsp;</td>
                             </tr -->
                         {/if}
                     {/section}
-            
+
                 </tbody>
             </table>
         </div>
@@ -341,21 +340,21 @@
 </div>
 <script type="text/javascript">
 <!--
-   
+
     {section loop=$spendings_notbooked name=notbooked}
         Spendings[{$spendings_notbooked[notbooked].spending_id}] = new Array();
         {foreach from=$spendings_notbooked[notbooked] key=fieldname item=field_value}
             Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
         {/foreach}
     {/section}
-    
+
     {section loop=$spendings_cash name=cash}
         Spendings[{$spendings_cash[cash].spending_id}] = new Array();
         {foreach from=$spendings_cash[cash] key=fieldname item=field_value}
             Spendings[{$spendings_cash[cash].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
         {/foreach}
     {/section}
-    
+
     var Descriptions = new Array();
     {foreach from=$descriptions name=descriptionpergroup key=spendinggroup_id item=descriptions}
         Descriptions[{$spendinggroup_id}] = new Array();
@@ -382,7 +381,7 @@
                     continue;
                 {rdelim}
                 if (fieldname == "type") {ldelim}
-                	document.addspending.type[(Spendings[spending_id][fieldname] - 1)].checked = true;
+                    document.addspending.type[(Spendings[spending_id][fieldname] - 1)].checked = true;
                     continue;
                 {rdelim}
                 if (fieldname == "spendinggroup_id") {ldelim}
@@ -403,7 +402,7 @@
         xMoveTo(spendingform, xTo, yTo);
         xShow(spendingform);
     {rdelim}
-    
+
     function updateDescriptionSelector (spendinggroup_id)
     {ldelim}
         document.addspending.descriptionSelector.length = 0;
@@ -411,7 +410,7 @@
         if (spendinggroup_id == '') {ldelim}
             document.addspending.descriptionSelector.disabled = true;
             return;
-        {rdelim}        
+        {rdelim}
         document.addspending.descriptionSelector.disabled = false;
         var n = 1;
         for (var description_id in Descriptions[spendinggroup_id]) {ldelim}
@@ -420,7 +419,7 @@
             n++;
         {rdelim}
     {rdelim}
-    
+
 // -->
 </script>
 {include file='html_foot.tpl'}
