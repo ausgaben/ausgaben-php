@@ -11,28 +11,23 @@
     
     require_once 'PEAR.php';
     
-    $CONFIG['DSN'] = 'mysql://ausgaben:HBkYXw_F@localhost/ausgaben';
-    $CONFIG['path'] = array(
-        'home' => '/var/www/tacker.org/www/htdoc/ausgaben',
-        'smarty' => '/usr/lib/php/Smarty/',
-    );
+    $CONFIG = parse_ini_file('lib/config.ini', true);
     $CONFIG['DataObject'] = array(
-        'database'        => $CONFIG['DSN'],
+        'database'        => $CONFIG['database']['dsn'],
         'schema_location' => "{$CONFIG['path']['home']}/lib/dataobjects",
         'class_location'  => "{$CONFIG['path']['home']}/lib/dataobjects",
         'require_prefix'  => "{$CONFIG['path']['home']}/lib/dataobjects",
         'class_prefix'    => 'DataObject_',
     );
     $CONFIG['auth'] = array(
-        'dsn'         => $CONFIG['DSN'],
+        'dsn'         => $CONFIG['database']['dsn'],
         'table'       => 'user',
         'usernamecol' => 'email',
         'passwordcol' => 'password',
     );
-    $CONFIG['secret'] = 'aWvFssAV9R8YyuZhX#Bm_FxU*Qed4!ad';
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
     
-    setlocale(LC_ALL, 'de_DE@euro');
+    setlocale(LC_ALL, $CONFIG['misc']['locale']);
     
 ?>
