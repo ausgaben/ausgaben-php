@@ -41,6 +41,13 @@
                 <input type="radio" name="enable_abf" value="1" {if $account.enable_abf eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
                 <input type="radio" name="enable_abf" value="0" {if $account.enable_abf eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
+            {section loop=$users name=users}
+                {if $smarty.section.users.first}<p>Benutzer dieses Kontos<br />{/if}
+                {assign var=user_id value=$users[users].user_id}
+                <input type="checkbox" name="user2account[]" value="{$users[users].user_id}" {if $user2account.$user_id}checked="true"{/if} />
+                {$users[users].prename} {$users[users].name}<br /> 
+                {if $smarty.section.users.last}</p>{/if}
+            {/section}
             {if $smarty.request.account_id}
                 <p>
                     <input type="checkbox" name="ifdelete" value="1" /> Konto löschen

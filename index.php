@@ -107,10 +107,12 @@
             }
         }
         // Load Accounts
-        $Account = DB_DataObject::factory('account');
-        $Account->orderBy('name');
-        if (!$Account->find()) break;
-        while ($Account->fetch()) {
+        // DB_DataObject::debugLevel(1);
+        $User2Account = DB_DataObject::factory('user2account');
+        $User2Account->user_id = $_SESSION['user']['user_id'];
+        if (!$User2Account->find()) break;
+        while ($User2Account->fetch()) {
+            $Account = $User2Account->getLink('account_id');
             $AccountData = $Account->toArray();
             $AccountData['sum_value'] = 0;
             // Load Values
@@ -448,8 +450,10 @@
         break;
     case 'accounts':
         if(!$ifauthed) break;
+        if (!$_SESSION['user']['admin']) break;
+        $account_id = getVar(&$_REQUEST['account_id'], 0);
         if ($ifsubmit) {
-            $account_id = getVar(&$_REQUEST['account_id'], 0);
+            $user2account = getVar(&$_REQUEST['user2account'], array());
             $Account = DB_DataObject::factory('account');
             if ($account_id) {
                 $Account->get($account_id);
@@ -459,13 +463,46 @@
             } else {
                 $Account->setFrom($_REQUEST);
                 if (!$Account->account_id) {
-                    $Account->insert();
+                    $result = $Account->insert();
                 } else {
-                    $Account->update();
+                    $result = $Account->update();
                 }
-                updateAbf($Account->account_id);
+                if ($result) {
+                    updateAbf($Account->account_id);
+                }
+                $User2Account  = DB_DataObject::factory('user2account');
+                $User2Account->account_id = $account_id;
+                $User2Account->delete();
+                if (!empty($user2account)) {
+                    foreach ($user2account as $user_id) {
+                        $User2Account = DB_DataObject::factory('user2account');
+                        $User2Account->account_id = $account_id;
+                        $User2Account->user_id = $user_id;
+                        $User2Account->insert();
+                    }
+                }
             }
         }
+        // Load users
+        $User = DB_DataObject::factory('user');
+        $User->orderBy('name');
+        $User->orderBy('prename');
+        if ($User->find()) {
+            while ($User->fetch()) {
+                $DISPLAYDATA['users'][] = $User->toArray();
+            }
+        }
+        // Load users to account
+        if ($account_id) {
+            $User2Account  = DB_DataObject::factory('user2account');
+            $User2Account->account_id = $account_id;
+            if ($User2Account->find()) {
+                while ($User2Account->fetch()) {
+                    $DISPLAYDATA['user2account'][$User2Account->user_id] = true;
+                }
+            }
+        }
+        // Load account
         $Account = DB_DataObject::factory('account');
         $Account->orderBy('name');
         if ($Account->find()) {
