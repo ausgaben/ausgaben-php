@@ -108,7 +108,12 @@
             }
             while($User2Account->fetch()) {
                 $User2Account->getLinks();
+                if (!$User2Account->_user_id->spendingmailer_notify) continue;
                 $this->_users[] = $User2Account->_user_id;
+            }
+            if (empty($this->_users)) {
+                PEAR::raiseError("SpendingMailer::setUser() - There is no one to notfiy");
+                return false;
             }
             $this->_status = true;
             return true;
@@ -137,8 +142,9 @@
             );
             $mime = new Mail_Mime;
             // Bilder anhängen
-            preg_match_all('/src="([^"]+)"/', $body, $matches);
-            foreach ($matches[1] as $image) {
+            preg_match_all('/src="([^"]+)"/', $body['html'], $matches);
+            $images = array_unique($matches[1]);
+            foreach ($images as $image) {
                 switch (substr($image, -3, 3)) {
                 case 'png':
                     $content_type = 'image/png';
@@ -149,24 +155,35 @@
                 default:
                     continue 2;
                 }
-                $body = str_replace($image, basename($image), $body);
+                $body['html'] = str_replace($image, basename($image), $body['html']);
                 $mime->addHTMLImage($image, $content_type);
             }
-            $mime->setHTMLBody($body);
+            $mime->setHTMLBody($body['html']);
+            $mime->setTextBody($body['text']);
             $body = $mime->get();
             $hdrs = array_merge($hdrs, $mime->headers());
 
             $mail =& Mail::factory('mail');
             foreach ($this->_users as $User) {
-                $mail->send("\"{$User->prename} {$User->name}\" <{$User->email}>", $hdrs, $body);
+                if (!$mail->send("\"{$User->prename} {$User->name}\" <{$User->email}>", $hdrs, $body)) {
+                    PEAR::raiseError("SpendingMailer::send() - Failed to send mail to '{$User->email}'.");
+                    return false;
+                }
             }
+            if ($this->_user->spendingmailer_cc) {
+                if (!$mail->send("\"{$this->_user->prename} {$this->_user->name}\" <{$this->_user->email}>", $hdrs, $body)) {
+                    PEAR::raiseError("SpendingMailer::send() - Failed to send mail to '{$this->_user->email}'.");
+                    return false;
+                }
+            }
+            return true;
         }
         
 
         /**
         * Erzeugt den Body eines Mailings
         *
-        * @return string|false
+        * @return array|false
         */
         function fetchBody() 
         {
@@ -183,7 +200,9 @@
             $DISPLAYDATA['user'] = $this->_user->toArray();
             $DISPLAYDATA['spendings'] = $this->_spendings;
             $SmartyPage = new SmartyPage;
-            return $SmartyPage->fetch('mailing.tpl');
+            $return['html'] = $SmartyPage->fetch('mailing.tpl');
+            $return['text'] = 'Diese E-Mail ist in HTML verfasst.';
+            return $return;
         }
     }
 
