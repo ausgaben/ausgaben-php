@@ -83,7 +83,6 @@
             $Spending->whereAdd("timestamp > {$User->last_login}");
             $Spending->orderBy('account_id');
             $Spending->orderBy('type');
-            $Spending->orderBy('spendinggroup_id');
             $Spending->orderBy('year desc');
             $Spending->orderBy('month desc');
             $Spending->orderBy('day desc');
@@ -201,7 +200,7 @@
             $DISPLAYDATA['spendings'] = $this->_spendings;
             $SmartyPage = new SmartyPage;
             $return['html'] = $SmartyPage->fetch('mailing.tpl');
-            $return['text'] = 'Diese E-Mail ist in HTML verfasst.';
+            $return['text'] = $SmartyPage->fetch('mailing_text.tpl');
             return $return;
         }
     }
