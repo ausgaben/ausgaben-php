@@ -34,9 +34,6 @@
     * Get Browser
     */
 	$Browser = new Net_Useragent_Detect;
-    if ($Browser->getAcceptType('de', 'language') == 'de') {
-        setlocale(LC_ALL, 'de_DE@euro');
-    }
 
     /**
     * Auth
@@ -53,8 +50,9 @@
         // Update last_login
         $User->last_login = strftime('%Y%m%d%H%M%S');
         $User->update();
-        // Set locale
-        setlocale(LC_ALL, $User->locale);
+    }
+    if (isset($_SESSION['user'])) {
+        setlocale(LC_ALL, $_SESSION['user']['locale']);
     }
 
     if ($logout) {
@@ -143,8 +141,13 @@
                 $relocateDo = 'spendings';
                 break;
             }
+            // Neue Werte setzen
             $Spending->setFrom($_REQUEST);
-            $Spending->value = str_replace(',', '.', $Spending->value);
+            $Spending->value = floatval(str_replace(',', '.', trim($Spending->value)));
+            if ($Spending->value < 0) {
+                $Spending->value = $Spending->value * -1;
+                $Spending->type = SPENDING_TYPE_OUT;
+            }
             $Spending->user_id = $_SESSION['user']['user_id'];
             $Spending->date = sprintf('%04d%02d%02d', $_REQUEST['year'], $_REQUEST['month'], $_REQUEST['day']);
             // If no spendinggroup_id isset maybe we should create a new one?
