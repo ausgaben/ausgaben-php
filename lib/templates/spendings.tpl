@@ -289,7 +289,7 @@
     {foreach from=$descriptions name=descriptionpergroup key=spendinggroup_id item=descriptions}
         Descriptions[{$spendinggroup_id}] = new Array();
         {section loop=$descriptions name=descriptions}
-            Descriptions[{$spendinggroup_id}][{$smarty.section.descriptions.index}] = "{$descriptions[descriptions]|so}";
+            Descriptions[{$spendinggroup_id}][{$smarty.section.descriptions.index}] = "{$descriptions[descriptions]|jso}";
         {/section}
     {/foreach}
 
