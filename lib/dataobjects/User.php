@@ -19,8 +19,6 @@ class DataObject_User extends DB_DataObject
     var $last_login;                      // string(14)  
     var $avatar;                          // blob(255)  not_null blob
     var $locale;                          // string(16)  not_null
-    var $spendingmailer_notify;           // int(1)  not_null unsigned
-    var $spendingmailer_cc;               // int(1)  not_null unsigned
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

@@ -16,7 +16,6 @@
     require_once 'lib/functions/getVar.php';
     require_once 'lib/functions/updateAbf.php';
     require_once 'lib/classes/SmartyPage.php';
-    require_once 'lib/classes/SpendingMailer.php';
     require_once 'lib/classes/SpendingFilter.php';
     require_once 'lib/classes/Settings.php';
     require_once 'Auth.php';
@@ -54,8 +53,10 @@
             $_SESSION['user'] = $User->toArray();
         }
         // Update last_login
+        /*
         $User->last_login = strftime('%Y%m%d%H%M%S');
         $User->update();
+        */
     }
     if (isset($_SESSION['user']) and isset($_SESSION['user']['locale'])) {
         setlocale(LC_ALL, $_SESSION['user']['locale']);
@@ -71,12 +72,6 @@
     if ($logout) {
         // Einstellungen speichern
         $Settings->save();
-        // Neue Ausgaben senden
-        if (isset($_SESSION['user'])) {
-            $SpendingMailer = new SpendingMailer;
-            $SpendingMailer->setUser($_SESSION['user']['user_id']);
-            $SpendingMailer->send();
-        }
         // Ausloggen
         session_destroy();
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
