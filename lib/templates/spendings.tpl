@@ -249,6 +249,9 @@
                     {rdelim}
                     continue;
                 {rdelim}
+                if (fieldname == "spendinggroup_id") {ldelim}
+                    document.addspending.spendinggroup_name.value = spendinggroups[Spendings[spending_id][fieldname]];
+                {rdelim}
                 eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
             {rdelim}
         {rdelim} else {ldelim}
