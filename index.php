@@ -343,7 +343,7 @@
                     'value' => $abf[$account_id][$last_month],
                     'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
                 );
-                $DISPLAYDATA['sum_type'][0] += $abf[$account_id][$last_month];
+                if (isset($DISPLAYDATA['sum_type'][0])) $DISPLAYDATA['sum_type'][0] += $abf[$account_id][$last_month];
             }
         }
         // Einstellungen
