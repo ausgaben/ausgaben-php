@@ -14,7 +14,20 @@ CREATE TABLE account (
   name tinytext NOT NULL,
   description text NOT NULL,
   summarize_months tinyint(1) unsigned NOT NULL default '1',
+  enable_abf tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (account_id)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table `account_abf`
+--
+
+DROP TABLE IF EXISTS account_abf;
+CREATE TABLE account_abf (
+  account_id int(10) unsigned NOT NULL default '0',
+  year int(4) unsigned NOT NULL default '0',
+  month int(2) unsigned NOT NULL default '0',
+  value tinytext NOT NULL
 ) TYPE=MyISAM;
 
 --
