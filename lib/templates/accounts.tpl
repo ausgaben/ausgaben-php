@@ -3,11 +3,11 @@
     <div class="boxcontent">
         <p class="frametitle">Konten</p>
         <p>
-            <a href="?do={$do}"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" /></a>Neu ...
+            <a href="?do={$do}"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a>
         </p>
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<p>{/if}
-            <a href="?do={$do}&amp;account_id={$list_account.account_id}"><img src="lib/images/icons/small/riot_edit_page.png" width="21" height="18" align="absmiddle" /></a>{$list_account.name}<br />
+            <a href="?do={$do}&amp;account_id={$list_account.account_id}"><img src="lib/images/icons/small/riot_edit_page.png" width="21" height="18" align="absmiddle" />{$list_account.name}</a><br />
             {if $smarty.foreach.list_account.last}</p>{/if}
         {/foreach}
     </div>

@@ -5,6 +5,8 @@
   <title>Ausgaben</title>
   <link rel="stylesheet" type="text/css" href="lib/css/ausgaben.css" />
   <script type="text/javascript" src="lib/js/cross-browser.com/x/x_core.js"></script>
+  <script type="text/javascript" src="lib/js/cross-browser.com/x/x_event.js"></script>
+  <script type="text/javascript" src="lib/js/cross-browser.com/x/x_drag.js"></script>
 </head>
 <body>
     <div class="masterbox">

@@ -6,9 +6,16 @@ body {
     margin: 0px;
     font-family: sans-serif;
     background-image: url(../images/gfx/bg.gif);
+    font-size: 11pt;
 }
 form {
     margin: 0;
+}
+img {
+    border: 0;
+}
+p {
+    margin: 0 0 10px 0;
 }
 select, input[type=text], input[type=password], textarea {
     border-top: 1px solid #565454;
@@ -16,9 +23,24 @@ select, input[type=text], input[type=password], textarea {
     border-bottom: 1px solid #e7e7e7;
     border-right: 1px solid #e7e7e7;
     background-color: #F1EAEC;
-    font-size: 9pt;
+    font-size: 10pt;
     width: 150px;
     padding: 0;
+}
+input[type=submit], input[type=button] {
+    border: 1px solid #565454;
+    background-color: #c0c0c0;
+    font-size: 10pt;
+    width: 150px;
+    padding: 0;
+}
+input.tiny {
+    width: 17px;
+    text-align: right;
+}
+input.small {
+    width: 34px;
+    text-align: right;
 }
 div.masterbox {
     width: 782px;
@@ -28,7 +50,7 @@ div.masterbox {
 }
 div.boxtitle {
     background-color: #e1e1e1;
-    font-size: 6pt;
+    font-size: 8pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;
@@ -47,7 +69,7 @@ div.boxsubtitle {
 }
 div.boxfooter {
     background-color: #e1e1e1;
-    font-size: 6pt;
+    font-size: 8pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;
@@ -66,7 +88,7 @@ div.boxsubtitle {
     color: #a00000;
 }
 div.boxcontent {
-    padding: 0 10px 0 10px;
+    padding: 10px 10px 10px 10px;
 }
 /** start.tpl **/
 #loginpassword {
@@ -88,18 +110,19 @@ a.icon {
     color: #000000;
     text-align: center;
     margin: 0 0 0 10px;
-    font-size: 6pt;
+    font-size: 10pt;
+    line-height: 10pt;
 }
 a.icon:hover {
     color: #ffffff;
 }
-div.floatright {
+.floatright {
     float: right;
 }
 div.frameleft {
     width: 135px;
     float: left;
-    font-size: 6pt;
+    font-size: 10pt;
 }
 div.framecenter {
     float: left;
@@ -115,4 +138,46 @@ div.clearall {
 p.frametitle {
     color: #a00000;
     font-weight: bold;
+}
+td.sum-2 {
+    background-color: #cdffb4;
+}
+td.sum-1 {
+    background-color: #ffddd5;
+}
+td.sum-all {
+    background-color: #ffffb6;
+}
+div.spendings-out {
+    border-top: 1px solid #ffddd5;
+    border-left: 1px solid #ffddd5;
+    border-right: 1px solid #ffddd5;
+}
+h3 {
+    font-size: 11pt;
+    margin: 0 0 10px 0;
+    color: #a00000;
+}
+thead, tfoot {
+    background-color: #e0e0e0;
+    font-weight: bold;
+}
+tbody {
+    font-size: 10pt;
+}
+tr.alt {
+    background-color: #f0f0f0;
+}
+td.subheader {
+    background-color: #e0e0e0;
+    border-top: 1px solid #a0a0a0;
+    font-weight: bold;
+}
+#spendingform {
+    position: absolute;
+    border: 1px solid #a00000;
+    background-color: #ffffff;
+    padding: 10px;
+    font-size: 10pt;
+    visibility: hidden;
 }
