@@ -31,6 +31,14 @@
     $display_month    = getVar(&$_REQUEST['display_month'], strftime('%Y%m01000000'));
 
     /**
+    * Get Browser
+    */
+	$Browser = new Net_Useragent_Detect;
+    if ($Browser->getAcceptType('de', 'language') == 'de') {
+        setlocale(LC_ALL, 'de_DE@euro');
+    }
+
+    /**
     * Auth
     */
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
@@ -48,6 +56,7 @@
         // Set locale
         setlocale(LC_ALL, $User->locale);
     }
+
     if ($logout) {
         if (isset($_SESSION['account_id']) and $_SESSION['account_id'] != $_SESSION['user']['last_account_id']) {
             $User = DB_DataObject::factory('user');
@@ -112,7 +121,7 @@
                     }
                 }
             }
-            $AccountData['sum_value'] = round($AccountData['sum_value']);
+            $AccountData['sum_value'] = $AccountData['sum_value'];
             $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
         }
         if(!$account_id) break;
@@ -199,15 +208,55 @@
             }
         } 
         if ($activeAccount['summarize_months']) {
-            // Load years
+            // Load months
             $Spending = DB_DataObject::factory('spending');
             $Spending->orderBy('year desc');
             $Spending->orderBy('month desc');
             $Spending->groupBy('year, month');
-            $Spending->whereAdd("account_id=$account_id");
+            $Spending->booked = 1;
+            $Spending->account_id = $account_id;
             if ($Spending->find()) {
                 while ($Spending->fetch()) {
                     $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
+                }
+            }
+        }
+        // Load not booked spendings
+        $Spending = DB_DataObject::factory('spending');
+        $Spending->orderBy('type');
+        $Spending->orderBy('spendinggroup_id');
+        $Spending->orderBy('year desc');
+        $Spending->orderBy('month desc');
+        $Spending->orderBy('day desc');
+        $Spending->booked = 0;
+        $Spending->account_id = $account_id;
+        if ($Spending->find()) {
+            while ($Spending->fetch()) {
+                $spendingData = $Spending->toArray();
+                $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
+                $DISPLAYDATA['spendings_notbooked'][] = $spendingData;
+            }
+        }
+        // Load sums per month
+        if ($activeAccount['summarize_months']) {
+            $DISPLAYDATA['month_sums'] = array();
+            foreach ($DISPLAYDATA['months'] as $date) {
+                $DISPLAYDATA['month_sums'][$date] = 0;
+                $Spending = DB_DataObject::factory('spending');
+                $Spending->year = substr($date, 0, 4);
+                $Spending->month = substr($date, 4, 2);
+                $Spending->groupBy('type');
+                $Spending->selectAdd('SUM(value) as sum');
+                $Spending->booked = 1;
+                $Spending->account_id = $account_id;
+                if ($Spending->find()) {
+                    while ($Spending->fetch()) {
+                        if ($Spending->type == SPENDING_TYPE_IN) {
+                            $DISPLAYDATA['month_sums'][$date] += $Spending->sum;
+                        } else {
+                            $DISPLAYDATA['month_sums'][$date] -= $Spending->sum;
+                        }
+                    }
                 }
             }
         }
@@ -216,6 +265,7 @@
         $Spending->orderBy('type');
         $Spending->orderBy('spendinggroup_id');
         $Spending->orderBy('day desc');
+        $Spending->booked = 1;
         if ($activeAccount['summarize_months']) {
             $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
             $Spending->whereAdd('year='.substr($display_month, 0, 4));
@@ -226,14 +276,8 @@
             $DISPLAYDATA['sum_group'] = array(SPENDING_TYPE_IN => array(), SPENDING_TYPE_OUT => array());
             while ($Spending->fetch()) {
                 $spendingData = $Spending->toArray();
-                // $spendingData['description'] = str_replace("\r\n", '-br-', $spendingData['description']);
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
-                if ($Spending->booked) {
-                    $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
-                } else {
-                    $DISPLAYDATA['spendings_notbooked'][] = $spendingData;
-                }
-                if (!$Spending->booked) continue;
+                $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
                 if (!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
                     $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
                 }
@@ -303,6 +347,7 @@
                     $Spending->month = substr($fields[1], 3, 2);
                     $Spending->day   = substr($fields[1], 0, 2);
                     $Spending->spendinggroup_id = 15; // Importiert vom Kontoauszug
+                    $Spending->spendingmethod_id = 3; // Überweisung
                     $fields[4] = str_replace(',', ', ', $fields[4]);
                     $Spending->description = preg_replace('/[0-9]{5,}/', '[n]', ucwords(strtolower((empty($fields[4])) ? $fields[3] : $fields[4].' - '.$fields[3])));
                     $Spending->description = str_replace("\n", ' ', $Spending->description);
@@ -379,15 +424,11 @@
         return;
     }
 	
-	/**
-	* Get Browser
-	*/
-	$Browser = new Net_Useragent_Detect;
-	$DISPLAYDATA['isIE'] = $Browser->isIE();
 
     /**
     * Display
     */
+	$DISPLAYDATA['isIE'] = $Browser->isIE();
     $DISPLAYDATA['do'] = $do;
     $DISPLAYDATA['action'] = $action;
     $DISPLAYDATA['version'] = $CONFIG['version'];

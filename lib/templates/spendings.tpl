@@ -18,16 +18,33 @@
             <p>Ein Konto auswählen:</p>
         {/if}
         {foreach from=$accounts name=list_account item=list_account}
-        {if $smarty.foreach.list_account.first}<p>{/if}
-            {if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}&nbsp;{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value}</span>{if $list_account.summarize_months}&sup1;{/if}<br />
+            {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
+            <tr>
+                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}</td>
+                <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|string_format:'%d'}</span></td>
+            </tr>
             {if $smarty.foreach.list_account.last}
-                </p>
-                <p class="tiny">
-                    &sup1; im {$display_month|date_format:'%b. %Y'}
-                </p> 
+                    <tr>
+                        <td colspan="2" align="right" class="tiny">&sup1; im {$display_month|date_format:'%b. %Y'}</td>
+                    </tr> 
+                </table>
+                <p></p>
             {/if}
         {/foreach}
         {if $smarty.session.account_id > 0}
+            {if $summarize_months}
+                {foreach from=$months name=months item=month}
+                    {if $smarty.foreach.months.first}
+                        <p class="frametitle">Monat</p>
+                        <table cellpadding="0" cellspacing="0" width="100%">
+                    {/if}
+                    <tr>
+                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%B '%y"}{if $display_month eq $month}</strong>{/if}</td>
+                        <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|string_format:'%d'}</span></td>
+                    </tr>
+                    {if $smarty.foreach.months.last}</table><p></p>{/if}
+                {/foreach}
+            {/if}
             <p class="frametitle">Ausgaben</p>
             <p><a href="javascript:showEditor();"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a></p>
         {/if}
@@ -42,18 +59,7 @@
         <div class="boxsubtitle">{$account.name}</div>
         <div class="boxcontent">
             {if $summarize_months}
-                <h3>
-                    {section loop=$months name=months}
-                        {if $smarty.section.months.first}
-                            <select onChange="document.location.href='{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month=' + this.value;" class="floatright">
-                        {/if}
-                        <option value="{$months[months]}" {if $display_month eq $months[months]}selected="true"{/if}>{$months[months]|date_format:'%B %Y'}</option>
-                        {if $smarty.section.months.last}
-                            </select>
-                        {/if}
-                    {/section}
-                    {$display_month|date_format:'%B %Y'}
-                </h3>
+                <h3>{$display_month|date_format:'%B %Y'}</h3>
             {/if}
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
@@ -64,9 +70,9 @@
                             </tr>
                         {/if}
                         {if $smarty.section.notbooked.iteration is odd}
-                            <tr>
-                        {else}
                             <tr class="alt">
+                        {else}
+                            <tr>
                         {/if}
                             <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description}</a></td>
                             <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
@@ -94,7 +100,7 @@
                     {if $smarty.foreach.spending.first}
                         <tr>
                             <td class="sum-{$type}" colspan="3">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
-                            <td class="sum-{$type}" align="right">{$sum_type[$type]|string_format:'%.2f'}</td>
+                            <td class="sum-{$type}" align="right" nowrap="true">{$sum_type[$type]|string_format:'%.2f'}</td>
                         </tr>
                         {assign var=lastgroup value=0}
                     {/if}
@@ -115,13 +121,11 @@
                         {else}
                             <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
                         {/if}
-                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{$spending.description}</a></td>
+                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description}{else}&mdash;{/if}</a></td>
                         <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
                         <td align="right" nowrap="true"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                     </tr>
-                    {if $smarty.foreach.spendings_out.last}
-
-                    {/if}
+                    {if $smarty.foreach.spendings_out.last}{/if}
                 {/foreach}
             {/foreach}
                 </tbody>
