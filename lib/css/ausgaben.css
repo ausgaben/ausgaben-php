@@ -126,14 +126,14 @@ a.icon:hover {
     float: right;
 }
 div.frameleft {
-    width: 150px;
+    width: 200px;
     float: left;
     font-size: 9pt;
 }
 div.framecenter {
     float: left;
     border-left: 1px dashed #dcdcdc;
-    width: 631px;
+    width: 581px;
 }
 div.clearall {
     clear: both;
@@ -141,8 +141,9 @@ div.clearall {
     line-height: 0px;
 }
 p.frametitle {
-    color: #a00000;
+    font-size: 10pt;
     font-weight: bold;
+    color: #a00000;
 }
 td.sum-2 {
     background-color: #cdffb4;
