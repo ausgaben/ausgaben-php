@@ -13,6 +13,7 @@
     require_once "{$CONFIG['path']['smarty']}/Smarty.class.php";
     require_once "{$CONFIG['path']['home']}/lib/functions/javaScriptOut.php";
     require_once "{$CONFIG['path']['home']}/lib/functions/screenOut.php";
+    require_once "{$CONFIG['path']['home']}/lib/functions/moneyFormat.php";
     
     /**
     * Class which handles general smarty configuration
@@ -39,6 +40,7 @@
 
             $this->register_modifier('so', 'screenOut');
             $this->register_modifier('jso', 'javaScriptOut');
+            $this->register_modifier('mf', 'moneyFormat');
             
             if(isset($GLOBALS['DISPLAYDATA'])) $this->assign($GLOBALS['DISPLAYDATA']);
         }

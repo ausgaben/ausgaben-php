@@ -231,10 +231,16 @@
         $Spending->booked = 0;
         $Spending->account_id = $account_id;
         if ($Spending->find()) {
+            $DISPLAYDATA['sum_notbooked'] = 0;
             while ($Spending->fetch()) {
                 $spendingData = $Spending->toArray();
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
                 $DISPLAYDATA['spendings_notbooked'][] = $spendingData;
+                if ($Spending->type == SPENDING_TYPE_IN) {
+                    $DISPLAYDATA['sum_notbooked'] += $Spending->value;
+                } else {
+                    $DISPLAYDATA['sum_notbooked'] -= $Spending->value;
+                }
             }
         }
         // Load sums per month
@@ -423,11 +429,11 @@
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?do=$relocateDo&display_month=$display_month");
         return;
     }
-	
 
     /**
     * Display
     */
+    $DISPLAYDATA['locale_conv'] = localeconv();
 	$DISPLAYDATA['isIE'] = $Browser->isIE();
     $DISPLAYDATA['do'] = $do;
     $DISPLAYDATA['action'] = $action;
