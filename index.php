@@ -105,6 +105,16 @@
     $_SESSION['user']['settings']['separate_sums'] = getVar(&$_SESSION['user']['settings']['separate_sums'], true);
     $separate_sums = $_SESSION['user']['settings']['separate_sums'];
 
+    // Load Settings for the app
+    $settings = array();
+    $app_settings = DB_DataObject::factory('settings');
+    $app_settings->scope = 0;
+    if ($app_settings->find()) {
+        while ($app_settings->fetch()) {
+            $settings[$app_settings->name] = $app_settings->value;
+        }
+    }
+    
     /**
     * Action
     */
@@ -595,6 +605,7 @@
     $DISPLAYDATA['action'] = $action;
     $DISPLAYDATA['version'] = $CONFIG['version'];
     $Smarty = new SmartyPage;
-    $Smarty->display("$do.tpl");
+    $Smarty->template_dir .= '/' . $settings['theme'];
+    $Smarty->display($do. '.tpl');
 
 ?>
