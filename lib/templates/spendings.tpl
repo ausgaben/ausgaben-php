@@ -10,10 +10,13 @@
         {/if}
         {foreach from=$accounts name=list_account item=list_account}
         {if $smarty.foreach.list_account.first}<p>{/if}
-            {if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}
-            <a href="?do={$do}&amp;account_id={$list_account.account_id}">{$list_account.name}</a><br />
-            {if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}
-            {if $smarty.foreach.list_account.last}</p>{/if}
+            {if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}&nbsp;({if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value}</span>){if $list_account.summarize_months}&sup1;{/if}<br />
+            {if $smarty.foreach.list_account.last}
+                </p>
+                <p class="tiny">
+                    &sup1; im {$display_month|date_format:'%b. %Y'}
+                </p> 
+            {/if}
         {/foreach}
         {if $smarty.session.account_id > 0}
             <p class="frametitle">Ausgaben</p>
@@ -43,19 +46,32 @@
                     {$display_month|date_format:'%B %Y'}
                 </h3>
             {/if}
+            <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
+                <tbody>
+                    {section loop=$spendings_notbooked name=notbooked}
+                        {if $smarty.section.notbooked.first}
+                            <tr>
+                                <td colspan="3" class="subheader">Noch nicht gebucht</td>
+                            </tr>
+                        {/if}
+                        {if $smarty.section.notbooked.iteration is odd}
+                            <tr>
+                        {else}
+                            <tr class="alt">
+                        {/if}
+                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description}</a></td>
+                            <td><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|string_format:'%.2f'}</span></td>
+                        </tr>
+                        {if $smarty.section.notbooked.last}
+                            <tr>
+                                <td colspan="3">&nbsp;</td>
+                            </tr>
+                        {/if}
+                    {/section}
             {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
                 {if $smarty.foreach.spendings_by_type.first}
-                    <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
-                        <thead>
                             <tr>
-                                <td>Tag</td>
-                                <td>Zweck</td>
-                                <td align="right">Betrag</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                {if $sum_type.0 > 0}
+                                {if $sum_type.0 >= 0}
                                     {assign var=sumall_class value=sum-2}
                                 {else}
                                     {assign var=sumall_class value=sum-1}
@@ -90,17 +106,15 @@
                             <td>{$spending.date|date_format:'%d. %b. %y'}</td>
                         {/if}
                         <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{$spending.description}</a></td>
-                        <td align="right"><span class="type-{$type}" {if !$spending.booked}style="text-decoration: line-through;"{/if}>{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
+                        <td align="right"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                     </tr>
                     {if $smarty.foreach.spendings_out.last}
 
                     {/if}
                 {/foreach}
-                {if $smarty.foreach.spendings_by_type.last}
-                        </tbody>
-                    </table>
-                {/if}
             {/foreach}
+                </tbody>
+            </table>
         </div>
     </div>
 {/if}
@@ -202,8 +216,8 @@
 <script type="text/javascript">
 <!--
 
+    var Spendings = new Array();
     {foreach from=$spendings key=spending_type name=spendings item=spendings_by_type}
-        {if $smarty.foreach.spendings.first}var Spendings = new Array();{/if}
         {foreach from=$spendings[$spending_type] item=spending}
             Spendings[{$spending.spending_id}] = new Array();
             {foreach from=$spending key=fieldname item=field_value}
@@ -211,6 +225,13 @@
             {/foreach}
         {/foreach}
     {/foreach}
+    
+    {section loop=$spendings_notbooked name=notbooked}
+        Spendings[{$spendings_notbooked[notbooked].spending_id}] = new Array();
+        {foreach from=$spendings_notbooked[notbooked] key=fieldname item=field_value}
+            Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|replace:"\r\n":""}";
+        {/foreach}
+    {/section}
 
     var spendingform = xGetElementById('spendingform');
 

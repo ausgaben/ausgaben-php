@@ -80,8 +80,35 @@
         $Account->orderBy('name');
         if (!$Account->find()) break;
         while ($Account->fetch()) {
-            $DISPLAYDATA['accounts'][$Account->account_id] = $Account->toArray();
+            $AccountData = $Account->toArray();
+            $AccountData['sum_value'] = 0;
+            // Load Values
+            $SpendingValue = DB_DataObject::factory('spending');
+            $SpendingValue->groupBy('type');
+            $SpendingValue->selectAdd('SUM(value) as sum_value');
+            $SpendingValue->whereAdd('account_id='.$Account->account_id);
+            $SpendingValue->whereAdd('booked=1');
+            if ($Account->summarize_months) {
+                $SpendingValue->whereAdd('month='.intval(substr($display_month, 4, 2)));
+                $SpendingValue->whereAdd('year='.substr($display_month, 0, 4));
+            }
+            if ($SpendingValue->find()) {
+                while ($SpendingValue->fetch()) {
+                    if ($SpendingValue->type == SPENDING_TYPE_IN) {
+                        $AccountData['sum_value'] += $SpendingValue->sum_value;
+                    } else {
+                        $AccountData['sum_value'] -= $SpendingValue->sum_value;
+                    }
+                }
+            }
+            $AccountData['sum_value'] = round($AccountData['sum_value']);
+            $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
         }
+        /*
+        echo '<pre>';
+        print_r($DISPLAYDATA['accounts']);
+        echo '</pre>';
+        */
         if(!$account_id) break;
         $activeAccount = $DISPLAYDATA['accounts'][$account_id];
         // Insert new spending
@@ -187,7 +214,11 @@
                 $spendingData = $Spending->toArray();
                 // $spendingData['description'] = str_replace("\r\n", '-br-', $spendingData['description']);
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
-                $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
+                if ($Spending->booked) {
+                    $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
+                } else {
+                    $DISPLAYDATA['spendings_notbooked'][] = $spendingData;
+                }
                 if (!$Spending->booked) continue;
                 if (!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
                     $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
