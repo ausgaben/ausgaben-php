@@ -1,0 +1,22 @@
+<?php
+
+    /**
+    * Local configuration settings
+    *
+    * @author Markus Tacker <m@tacker.org>
+    * @version $Id$
+    * @package Ausgaben
+    * @subpackage Configuration
+    */
+
+    $CONFIG = array(
+        'path' => array(
+            'smarty'    => '/usr/local/lib/smarty/libs', // Give the path to your smarty's libs directory
+            'home'      => '/www/localhost/htdoc/ausgaben', // Give the path where you've installed Ausgaben
+        ),
+        'database' => array(
+            'dsn' => 'mysql://ausgaben:HBkYXw_F@localhost/ausgaben',
+        ),
+    );
+
+?>

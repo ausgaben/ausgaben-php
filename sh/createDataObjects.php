@@ -12,7 +12,7 @@
     /**
     * Include required files
     */
-    require_once 'lib/config.php';
+    require_once 'lib/include/config.php';
 	require_once 'DB/DataObject/Generator.php';
 
 	DB_DataObject::debugLevel(1);

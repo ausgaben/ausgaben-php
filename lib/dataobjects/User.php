@@ -13,12 +13,13 @@ class DataObject_User extends DB_DataObject
     var $user_id;                         // int(11)  not_null primary_key auto_increment
     var $email;                           // blob(255)  not_null blob
     var $password;                        // string(32)  not_null
-    var $loginkey;                        // string(32)  not_null
     var $prename;                         // blob(255)  not_null blob
     var $name;                            // blob(255)  not_null blob
     var $admin;                           // int(4)  not_null
     var $last_account_id;                 // int(11)  not_null
     var $last_login;                      // string(14)  
+    var $avatar;                          // blob(255)  not_null blob
+    var $locale;                          // string(16)  not_null
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

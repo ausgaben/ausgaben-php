@@ -12,8 +12,8 @@
     error_reporting(E_ALL);
 
     require_once 'PEAR.php';
+    require_once 'lib/include/config_local.php';
 
-    $CONFIG = parse_ini_file('lib/config.ini', true);
     $CONFIG['DataObject'] = array(
         'database'        => $CONFIG['database']['dsn'],
         'schema_location' => "{$CONFIG['path']['home']}/lib/dataobjects",
@@ -33,7 +33,5 @@
     );
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
-
-    setlocale(LC_ALL, $CONFIG['misc']['locale']);
 
 ?>

@@ -12,7 +12,7 @@
     /**
     * Include required files
     */
-    require_once 'lib/config.php';
+    require_once 'lib/include/config.php';
     require_once 'lib/functions/getVar.php';
     require_once 'lib/classes/SmartyPage.php';
     require_once 'Auth.php';
@@ -44,6 +44,8 @@
         // Update last_login
         $User->last_login = strftime('%Y%m%d%H%M%S');
         $User->update();
+        // Set locale
+        setlocale(LC_ALL, $User->locale);
     }
     if ($logout) {
         if (isset($_SESSION['account_id']) and $_SESSION['account_id'] != $_SESSION['user']['last_account_id']) {
