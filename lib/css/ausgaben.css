@@ -7,6 +7,7 @@ body {
     font-family: sans-serif;
     background-image: url(../images/gfx/bg.gif);
     font-size: 11pt;
+    background-color: #a0a0a0;
 }
 form {
     margin: 0;
@@ -189,4 +190,13 @@ span.type-1 {
 }
 span.type-2 {
     color: #309c1d;
+}
+#loading {
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #a00000;
+    font-weight: bold;
+    font-size: 10pt;
+    line-height: 32pt;
+    padding: 5px;
 }

@@ -1,4 +1,13 @@
 {include file='html_head.tpl'}
+<div id="loading"><img src="lib/images/icons/large/riot_time.png" alt="" align="left" width="40" height="40" />&nbsp;Bitte warten. Seite wird geladen.&nbsp;</div>
+<script type="text/javascript">
+<!--
+    var loading = xGetElementById('loading');
+    xTo = ((xClientWidth() - xWidth(loading)) / 2) + xScrollLeft();
+    xMoveTo(loading, xTo, 150);
+    window.onload = function () {ldelim}xHide(loading);{rdelim}
+// -->
+</script>
 {*
     Kontos auswählen
 *}
@@ -252,6 +261,7 @@
             for (var fieldname in Spendings[spending_id]) {ldelim}
                 if (fieldname == "date") continue;
                 if (fieldname == "user_id") continue;
+                if (fieldname == "timestamp") continue;
                 if (fieldname == "booked") {ldelim}
                     if (Spendings[spending_id][fieldname] == "1") {ldelim}
                         document.addspending.booked[0].checked = true;

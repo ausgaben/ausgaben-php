@@ -15,6 +15,7 @@
     require_once 'lib/include/config.php';
     require_once 'lib/functions/getVar.php';
     require_once 'lib/classes/SmartyPage.php';
+    require_once 'lib/classes/SpendingMailer.php';
     require_once 'Auth.php';
     require_once 'DB/DataObject.php';
 	require_once 'Net/UserAgent/Detect.php';
@@ -53,6 +54,11 @@
             $User->get($_SESSION['user']['user_id']);
             $User->last_account_id = $_SESSION['account_id'];
             $User->update();
+        }
+        if (isset($_SESSION['user'])) {
+            $SpendingMailer = new SpendingMailer;
+            $SpendingMailer->setUser($_SESSION['user']['user_id']);
+            $SpendingMailer->send();
         }
         session_destroy();
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
@@ -130,6 +136,7 @@
             }
             $Spending->setFrom($_REQUEST);
             $Spending->value = str_replace(',', '.', $Spending->value);
+            $Spending->user_id = $_SESSION['user']['user_id'];
             $Spending->date = sprintf('%04d%02d%02d', $_REQUEST['year'], $_REQUEST['month'], $_REQUEST['day']);
             // If no spendinggroup_id isset maybe we should create a new one?
             // -> spendinggroup_name must be set

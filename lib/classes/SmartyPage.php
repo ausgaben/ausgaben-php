@@ -31,6 +31,7 @@
 
             $this->caching          = false;
             $this->compile_check    = true;
+            $this->debugging_ctrl   = 'URL';
             
             $this->error_reporting  = E_ALL ^ E_NOTICE;
             
