@@ -14,6 +14,7 @@
     */
     require_once 'lib/include/config.php';
     require_once 'lib/functions/getVar.php';
+    require_once 'lib/functions/updateAbf.php';
     require_once 'lib/classes/SmartyPage.php';
     require_once 'lib/classes/SpendingMailer.php';
     require_once 'Auth.php';
@@ -29,6 +30,7 @@
     $ifdelete         = getVar(&$_REQUEST['ifdelete'], false);
     $logout           = getVar(&$_REQUEST['logout'], false);
     $display_month    = getVar(&$_REQUEST['display_month'], strftime('%Y%m01000000'));
+    $DISPLAYDATA['display_month'] = $display_month;
 
     /**
     * Get Browser
@@ -74,6 +76,21 @@
 
     if ($ifauthed and $do == 'start') $do = 'spendings';
     if (!$ifauthed) $do = 'start';
+    
+    // Selected Account
+    $account_id = getVar(&$_REQUEST['account_id'], 0);
+    if ($account_id) {
+        $_SESSION['account_id'] = $account_id;
+    } else {
+        if (isset($_SESSION['account_id'])) {
+            $account_id = $_SESSION['account_id'];
+        } else {
+            if (isset($_SESSION['user']) and $_SESSION['user']['last_account_id']) {
+                $account_id = $_SESSION['user']['last_account_id'];
+                $_SESSION['account_id'] = $account_id;
+            }
+        }
+    }
 
     /**
     * Action
@@ -81,17 +98,12 @@
     switch ($do) {
     case 'spendings':
         if(!$ifauthed) break;
-        $account_id = getVar(&$_REQUEST['account_id'], 0);
-        if ($account_id) {
-            $_SESSION['account_id'] = $account_id;
-        } else {
-            if (isset($_SESSION['account_id'])) {
-                $account_id = $_SESSION['account_id'];
-            } else {
-                if ($_SESSION['user']['last_account_id']) {
-                    $account_id = $_SESSION['user']['last_account_id'];
-                    $_SESSION['account_id'] = $account_id;
-                }
+        // Load abf (amount brought forward)
+        $abf = array();
+        $Account_abf = DB_DataObject::factory('account_abf');
+        if ($Account_abf->find()) {
+            while ($Account_abf->fetch()) {
+                $abf[$Account_abf->account_id][sprintf('%d%02d', $Account_abf->year, $Account_abf->month)] = $Account_abf->value;
             }
         }
         // Load Accounts
@@ -120,11 +132,18 @@
                     }
                 }
             }
-            $AccountData['sum_value'] = $AccountData['sum_value'];
+            $last_month = strftime('%Y%m', mktime(0, 0, 0, substr($display_month, 4, 2) - 1, 1, substr($display_month, 0, 4)));
+            if (isset($abf[$Account->account_id][$last_month])) {
+                $AccountData['sum_value'] += $abf[$Account->account_id][$last_month];
+            }
             $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
         }
         if(!$account_id) break;
-        $activeAccount = $DISPLAYDATA['accounts'][$account_id];
+        if (isset($DISPLAYDATA['accounts'][$account_id])) {
+            $activeAccount = $DISPLAYDATA['accounts'][$account_id];
+        } else {
+            break;
+        }
         // Insert new spending
         if ($ifsubmit) {
             $spending_id        = getVar(&$_REQUEST['spending_id'], 0);
@@ -139,6 +158,7 @@
             // Delete spending
             if ($ifdelete and $spending_id) {
                 $Spending->delete();
+                updateAbf($account_id);
                 $relocateDo = 'spendings';
                 break;
             }
@@ -181,6 +201,7 @@
                     die();
                 }
             }
+            updateAbf($account_id);
             $relocateDo = 'spendings';
         }
         // Actions
@@ -221,7 +242,7 @@
             $Spending->account_id = $account_id;
             if ($Spending->find()) {
                 while ($Spending->fetch()) {
-                    $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
+                    $DISPLAYDATA['months'][] = sprintf('%d%02d01000000', $Spending->year, $Spending->month);
                 }
             }
         }
@@ -250,6 +271,7 @@
         // Load sums per month
         if ($activeAccount['summarize_months']) {
             $DISPLAYDATA['month_sums'] = array();
+            $DISPLAYDATA['month_sums']['_all'] = 0;
             foreach ($DISPLAYDATA['months'] as $date) {
                 $DISPLAYDATA['month_sums'][$date] = 0;
                 $Spending = DB_DataObject::factory('spending');
@@ -263,10 +285,19 @@
                     while ($Spending->fetch()) {
                         if ($Spending->type == SPENDING_TYPE_IN) {
                             $DISPLAYDATA['month_sums'][$date] += $Spending->sum;
+                            $DISPLAYDATA['month_sums']['_all'] += $Spending->sum;
                         } else {
                             $DISPLAYDATA['month_sums'][$date] -= $Spending->sum;
+                            $DISPLAYDATA['month_sums']['_all'] -= $Spending->sum;
                         }
                     }
+                }
+            }
+            // Load abf
+            if ($activeAccount['enable_abf'] and !empty($abf[$account_id])) {
+                foreach ($abf[$account_id] as $abf_yearmonth => $value) {
+                    $abf_date = strftime('%Y%m01000000', mktime(0, 0, 0, substr($abf_yearmonth, 4, 2) + 1, 1, substr($abf_yearmonth, 0, 4)));
+                    if (isset($DISPLAYDATA['month_sums'][$abf_date])) $DISPLAYDATA['month_sums'][$abf_date] += $value;
                 }
             }
         }
@@ -302,8 +333,19 @@
                 }
             }
         }
+        // Load abf from last month
+        if ($activeAccount['enable_abf'] and !empty($abf[$account_id])) {
+            $last_month = strftime('%Y%m', mktime(0, 0, 0, substr($display_month, 4, 2) - 1, 1, substr($display_month, 0, 4)));
+            if (isset($abf[$account_id][$last_month])) {
+                $DISPLAYDATA['abf'] = array(
+                    'value' => $abf[$account_id][$last_month],
+                    'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
+                );
+                $DISPLAYDATA['sum_type'][0] += $abf[$account_id][$last_month];
+            }
+        }
+        // Einstellungen
         $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
-        $DISPLAYDATA['display_month'] = $display_month;
         // Beschreibungen laden
         $Spending = DB_DataObject::factory('spending');
         if ($Spending->find()) {
@@ -421,6 +463,7 @@
                 } else {
                     $Account->update();
                 }
+                updateAbf($Account->account_id);
             }
         }
         $Account = DB_DataObject::factory('account');
@@ -431,6 +474,10 @@
             }
         }
         break;
+    case 'update_abf':
+        $relocateDo ='spendings';
+        updateAbf($account_id);
+        break;
     default:
         // Benutzer zum Login laden
         $User = DB_DataObject::factory('user');
@@ -440,7 +487,7 @@
         }
         $do = 'start';
     }
-
+    
     /**
     * Relocate if required
     */

@@ -152,6 +152,9 @@ td.sum-1 {
     background-color: #ffddd5;
     border-top: 2px solid #a0a0a0;
 }
+td.leftsum {
+    border-top: 1px dashed #a0a0a0;
+}
 div.spendings-out {
     border-top: 1px solid #ffddd5;
     border-left: 1px solid #ffddd5;

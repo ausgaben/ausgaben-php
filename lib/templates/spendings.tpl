@@ -8,6 +8,9 @@
     window.onload = function () {ldelim}xHide(loading);{rdelim}
 // -->
 </script>
+{if $smarty.session.account_id > 0}
+    {assign var=account value=$accounts[$smarty.session.account_id]}
+{/if}
 {*
     Kontos auswählen
 *}
@@ -20,12 +23,13 @@
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
             <tr>
-                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}</td>
-                <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf:0}</span></td>
+                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}{if $list_account.enable_abf}<sup>,</sup>&sup2;{/if}</td>
+                <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf}</span></span></td>
             </tr>
             {if $smarty.foreach.list_account.last}
                     <tr>
-                        <td colspan="2" align="right" class="tiny">&sup1; im {$display_month|date_format:'%b. %Y'}</td>
+                        <td colspan="2" align="right" class="tiny">&sup1; im {$display_month|date_format:'%b. %Y'}<br />
+                        &sup2; mit Überträgen</td>
                     </tr> 
                 </table>
                 <p></p>
@@ -35,14 +39,25 @@
             {if $summarize_months}
                 {foreach from=$months name=months item=month}
                     {if $smarty.foreach.months.first}
-                        <p class="frametitle">Monat</p>
+                        <p class="frametitle">Monat{if $account.enable_abf eq 1}&sup2;{/if}</p>
                         <table cellpadding="0" cellspacing="0" width="100%">
                     {/if}
                     <tr>
-                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%B '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
-                        <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf:0}</span></td>
+                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
+                        <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf}</span></span></td>
                     </tr>
-                    {if $smarty.foreach.months.last}</table><p></p>{/if}
+                    {if $smarty.foreach.months.last}
+                        {if $account.enable_abf eq 1}
+                            <tr>
+                                <td colspan="2" align="right" class="tiny">&sup2; mit Überträgen</td>
+                            </tr>
+                        {else}
+                            <tr>
+                                <td colspan="2" align="right" class="leftsum">{if $month_sums._all >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums._all|mf}</span></span></td>                                
+                            </tr>
+                        {/if}
+                        </table><p></p>
+                    {/if}
                 {/foreach}
             {/if}
             <p class="frametitle">Ausgaben</p>
@@ -54,7 +69,6 @@
     Ausgaben anzeigen
 *}
 {if $smarty.session.account_id > 0}
-    {assign var=account value=$accounts[$smarty.session.account_id]}
     <div class="framecenter">
         <div class="boxsubtitle">{$account.name}</div>
         <div class="boxcontent">
@@ -85,17 +99,27 @@
                             </tr>
                         {/if}
                     {/section}
+
             {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
                 {if $smarty.foreach.spendings_by_type.first}
                             <tr>
                                 <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Gesamt</strong></td>
                                 <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_type.0|mf}</strong></td>
                             </tr>
+                            {* Übertrag anzeigen *}
+                            {if $account.enable_abf and $abf}
+                                <tr>        
+                                    <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">&raquo;</td>
+                                    <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" colspan="2">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
+                                    <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">{$abf.value|mf}</td>
+                                </tr>    
+                            {/if}
                 {/if}
                 {foreach from=$spendings_by_type item=spending name=spending}
                     {if $smarty.foreach.spending.first}
                         <tr>
-                            <td class="sum-{$type}" colspan="3">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
+                            <td class="sum-{$type}" align="right">&raquo;</td>
+                            <td class="sum-{$type}" colspan="2">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
                             <td class="sum-{$type}" align="right" nowrap="true">{$sum_type[$type]|mf}</td>
                         </tr>
                         {assign var=lastgroup value=0}

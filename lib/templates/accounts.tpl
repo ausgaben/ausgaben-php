@@ -14,7 +14,7 @@
 </div>
 <div class="framecenter">
     <div class="boxsubtitle">Konten</div>
-    <form method="post" action="{$SCRIPT_NAME}">
+    <form method="post" action="{$SCRIPT_NAME}" name="account_form">
         {if $smarty.request.account_id}
             {assign var=account value=$accounts[$smarty.request.account_id]}
             <input type="hidden" name="account_id" value="{$account.account_id}" />
@@ -33,8 +33,13 @@
             </p>
             <p>
                 Konto-Bewegungen monatlich zusammenfassen?<br />
-                <input type="radio" name="summarize_months" value="1" {if $account.summarize_months eq 1 or !$account}checked="true"{/if} /> Ja
-                <input type="radio" name="summarize_months" value="0" {if $account.summarize_months eq 0 and $account}checked="true"{/if} /> Nein
+                <input type="radio" name="summarize_months" value="1" {if $account.summarize_months eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
+                <input type="radio" name="summarize_months" value="0" {if $account.summarize_months eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
+            </p>
+            <p>
+                Monatlichen Übertrag erzeugen?<br />
+                <input type="radio" name="enable_abf" value="1" {if $account.enable_abf eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
+                <input type="radio" name="enable_abf" value="0" {if $account.enable_abf eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
             {if $smarty.request.account_id}
                 <p>
@@ -48,4 +53,15 @@
     </form>
 </div>
 <div class="clearall"></div>
+<script type="text/javascript">
+<!--
+    function updateForm ()
+    {ldelim}
+        if (document.account_form.summarize_months[1].checked) {ldelim}
+            document.account_form.enable_abf[1].checked = true;
+        {rdelim}
+    {rdelim}
+    updateForm();
+// -->
+</script>
 {include file='html_foot.tpl'}
