@@ -30,17 +30,18 @@
     /**
     * Auth
     */
-    $AUTH = new Auth('DB', $CONFIG['auth'], '', false);
-    $AUTH->start();
+    $Auth = new Auth('DB', $CONFIG['auth'], '', false);
+    $Auth->start();
     if ($logout) {
         session_destroy();
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
     }
-    $ifauthed = $AUTH->getAuth();
+    $ifauthed = $Auth->getAuth();
     $DISPLAYDATA['AUTH'] = $ifauthed;
+    $DISPLAYDATA['AUTH_STATUS'] = $Auth->getStatus();
     if ($ifauthed and !isset($_SESSION['user'])) {
         $User = DB_DataObject::factory('user');
-        $User->whereAdd("email='".$AUTH->getUsername()."'");
+        $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) $_SESSION['user'] = $User->toArray();
     }
     
@@ -240,6 +241,12 @@
         }
         break;
     default:
+        // Benutzer zum Login laden
+        $User = DB_DataObject::factory('user');
+        if (!$User->find()) break;
+        while ($User->fetch()) {
+            $DISPLAYDATA['users'][] = $User->toArray();
+        }
         $do = 'start';
     }
     
