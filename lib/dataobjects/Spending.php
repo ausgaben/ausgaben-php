@@ -4,6 +4,7 @@
  */
 require_once 'DB/DataObject.php';
 
+define('SPENDING_TYPE_ALL',    0);
 define('SPENDING_TYPE_OUT',    1);
 define('SPENDING_TYPE_IN',     2);
 
