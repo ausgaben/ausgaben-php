@@ -3,9 +3,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Ausgaben {$version.major}.{$version.minor}</title>
-	{if $mailing}<style type="text/css">{$css}</style>{else}<link rel="stylesheet" type="text/css" href="lib/css/ausgaben.css" />{/if}
-  	{if $isIE}<link rel="stylesheet" type="text/css" href="lib/css/ausgaben_ie.css" />{/if}
+	{if $mailing}<style type="text/css">{$css}</style>{else}<link rel="stylesheet" type="text/css" href="lib/css/{$settings.theme}.css" />{/if}
+  	{if $isIE}<link rel="stylesheet" type="text/css" href="lib/css/{$settings.theme}-ie.css" />{/if}
   	<script type="text/javascript" src="lib/js/cross-browser.com/x/x_core.js"></script>
+  	<script type="text/javascript" language="JavaScript" src="lib/js/overlib/overlib_config.js"></script>
+  	<script type="text/javascript" language="JavaScript" src="lib/js/overlib/overlib.js"></script>
 </head>
 <body>
     <div class="masterbox">

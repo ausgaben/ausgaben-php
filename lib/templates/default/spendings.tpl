@@ -24,7 +24,7 @@
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
             <tr>
-                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}</td>
+                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}" {if $list_account.summarize_months}{popup text=$display_month|date_format:'im %B %Y'}{/if}>{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}</td>
                 <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf:0}</span></span></td>
             </tr>
             {if $smarty.foreach.list_account.last}
@@ -60,7 +60,6 @@
                     {/if}
                 {/foreach}
             {/if}
-            {if $accounts}<p class="tiny">&sup1; im {$display_month|date_format:'%b. %Y'}</p>{/if}
             <p class="frametitle">Ausgaben</p>
             <p><a href="javascript:showEditor();"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a></p>
             <p class="frametitle">Ansicht</p>
@@ -68,8 +67,8 @@
                 <input type="hidden" name="ifviewsettings" value="1" />
                 <p>
                     <strong>Einnahmen und Ausgaben</strong><br />
-                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1">getrennt</label><br />
-                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2">zusammen</label><br />
+                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1">getrennt anzeigen</label><br />
+                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2">zusammen anzeigen</label><br />
                 </p>
             </form>
         {/if}

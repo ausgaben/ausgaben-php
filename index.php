@@ -114,6 +114,7 @@
             $settings[$app_settings->name] = $app_settings->value;
         }
     }
+    $DISPLAYDATA['settings'] = $settings;
     
     /**
     * Action
