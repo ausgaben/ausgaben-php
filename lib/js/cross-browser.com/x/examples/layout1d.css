@@ -1,0 +1,52 @@
+/*
+  layout1d.css
+  mfoster, cross-browser.com
+*/  
+
+html {
+  margin:0; padding:0;
+}
+body {
+  color:#000; background:#FED953;
+  margin:0; padding:0;
+  font-family:verdana,arial,sans-serif;
+  font-size:12px;
+}
+h4 {
+  margin:0; padding:0;
+}
+a {
+  color:#666;
+  font-family:verdana,arial,helvetica,sans-serif;
+  font-size:12px;
+}
+a:hover {
+  color:#fff; background:#333;
+  font-family:verdana,arial,helvetica,sans-serif;
+  font-size:12px;
+  text-decoration:none;
+}
+.marker {
+  position:relative;
+  visibility:hidden;
+}
+#header {
+  color:#000; background:#FFBA1E;
+  margin:10px; padding:10px;
+}
+#menu {
+  color:#000; background:#FED953;
+  margin:10px; padding:10px;
+}
+#what {
+  color:#000; background:#f90;
+  margin:10px; padding:10px;
+}
+#how {
+  color:#000; background:#fff;
+  margin:10px; padding:10px;
+}
+#footer {
+  color:#000; background:#2F3863;
+  margin:10px; padding:10px;
+}

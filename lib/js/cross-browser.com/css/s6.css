@@ -1,0 +1,240 @@
+/* s6.css
+   cross-browser.com
+*/
+
+body, body div, body p, body th, body td, body li, body dd, body pre {
+  font-size:x-small; /* trick WinIE4/5 */
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dd, html>body pre {
+  font-size:small; /* be nice to Opera */
+}
+
+html {
+  color:#000; background:#cc9;
+  margin:0; padding:0;
+}
+body {
+  color:#000; background:#cc9;
+  margin:0; padding:0;
+  font-family:verdana,arial,sans-serif;
+}
+
+/* Anchor Elements */
+
+a:link {
+  color:#000; background:transparent;
+  text-decoration:underline;
+  padding:1px;
+}
+a:visited {
+  color:#330; background:transparent;
+  text-decoration:underline;
+  padding:1px;
+}
+a:active {
+  color:#330; background:transparent;
+  text-decoration:underline;
+  padding:1px;
+}
+a:hover {
+  color:#fff; background:#996;
+  text-decoration:none;
+  padding:0;
+  border:1px solid #660;
+}
+            
+/* Heading Elements */
+
+h1 {
+  color:#cc9; /* #330; */
+  background-color:#fff;
+  font-style:normal;
+  margin:0; padding:4px 8px;
+  text-align:right;
+  height:22px;
+  background-image:url(../images/grn_bnr1.jpg);
+  /* */
+  font-size:medium;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:large;
+}
+html>body h1 {
+  font-size:large;
+}
+h2 {
+  color:#330; background:transparent;
+  font-style:normal;
+  margin:.6em 0 .5em 0; padding:4px 0px;
+  border-bottom:1px dotted #330;
+  /* */
+  font-size:small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:medium;
+}
+html>body h2 {
+  font-size:medium;
+}
+h3 {
+  color:#000;
+  margin:1em 0; padding:0 0 0 .8em;
+  font-weight:bold;
+  border-left:2px solid #663;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h3 {
+  font-size:small;
+}
+h4 {
+  color:#663; /* 996; */
+  margin:0; padding:0;
+  font-weight:bold;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h4 {
+  font-size:small;
+}
+h5 {
+  color:#996; background:transparent;
+  margin:0; padding:2px;
+  font-weight:bold;
+  border-bottom:1px dotted #996;
+  /* */
+  font-size:xx-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:x-small;
+}
+html>body h5 {
+  font-size:x-small;
+}
+
+/* Misc. Elements */
+
+b {
+  font-weight:bold;
+  color:#996; background:transparent;
+}
+p {
+  color:#000; background:transparent;
+  margin:.3em 0 .5em 0; padding:0;
+  line-height:1.5em;
+}
+li {
+  margin-bottom:.5em;
+}
+pre {
+  font-family:'courier new',monospace;
+  color:#330; background:transparent;
+  border:1px dotted #cc9;
+  margin:0; padding:10px;
+  overflow:hidden;
+}
+
+/* Misc. Classes */
+
+.smaller {
+  font-size:smaller;
+}
+.textInput {
+  font-family:'courier new',monospace;
+  color:#000; background:#fff;
+  width:140px;
+}
+.noDisp {
+  display:none;
+}
+.collapsible {
+  margin:0; padding:0;
+}
+
+/* Sidebar Menu */
+
+.mnuContainer {
+  margin:0; padding:0;
+}
+.mnuBox {
+  margin:0 0 4px 0; padding:4px 2px 4px 2px;
+}
+.mnuBox a:link, .mnuBox a:visited, .mnuBox a:active, .mnuBox a:hover {
+  display:block;
+  text-decoration:none;
+  font-size:smaller;
+}
+.mnuBox p {
+  margin:0; padding:0;
+  line-height:1.2em;
+}
+
+/* Layout Rules */
+
+#header {
+  height:50px;
+  background:transparent;
+  /* position:relative; */
+  overflow:hidden;
+  margin:10px 2% 0 2%; padding:0;
+}
+.subtitle {
+  color:#330; background:transparent;
+  padding:2px 0px;
+  margin:0;
+  height:16px;
+  font-weight:bold;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body.subtitle {
+  font-size:small;
+}
+
+.column {
+  top:70px;
+  position:absolute; overflow:hidden;
+  background:transparent;
+  margin:0; padding:0;
+}
+#leftColumn {
+  left:2%; width:70%;
+}
+#rightColumn {
+  left:72%; width:27%;
+}
+.leftContent {
+  background:#fff;
+  overflow:hidden;
+  margin:0 0 10px 0;
+  padding:10px 20px 20px 20px;
+}
+.rightContent {
+  background:transparent;
+  overflow:hidden;
+  margin:0 0 10px 0;
+  padding:10px 20px 20px 20px;
+}
+
+/* min/max buttons (not being used) */
+
+.ColMMBtn {
+  position:absolute; overflow:hidden;
+  width:7px; height:10px;
+  /* border:1px solid #330; */
+  top:46px; right:20px; margin:0; padding:0;
+  font-size:2px; cursor:pointer;
+  color:#330; background:#996;
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>DHTML Popup/Timer Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<link rel='stylesheet' type='text/css' href='../../css/s6.css' />
+<style type='text/css'>
+h3 {
+  margin:20px 0 20px 0;
+}
+.popupStyle {
+  width:150px; height:150px;
+  border:1px solid #330;
+  border-top:4px solid #330;
+  margin:0; padding:0;
+}
+</style>
+<script type='text/javascript' src='../x_load.js'></script> 
+<script type='text/javascript'>
+
+xInclude('../x_core.js', '../x_slide.js', '../x_popup.js', '../x_timer.js');
+
+var pop1, pop2;
+
+window.onload = function() {
+  
+  pop1 = new xPopup(
+             'timeout',       // timer type
+             10000,           // timeout in ms
+             'cen',           // position
+             'popupStyle',    // style class name
+             'popup1',        // id
+             'popup1.html');  // popup url
+
+  pop2 = new xPopup(
+             'interval',    
+             5000,          
+             'se',          
+             'popupStyle',  
+             'popup2',      
+             'popup2.html');
+
+} // end onload
+</script>
+</head>
+<body>
+
+<div id='header'>
+<h1>Cross-Browser.com</h1>
+<div class='subtitle'>DHTML Popup/Timer Demo</div>
+</div> <!-- end header -->
+
+<div id='rightColumn' class='column'>
+<div class='rightContent'>
+<h2>Intro</h2>
+<p><b>xPopup</b> is a simple alternative to pop-up windows. It uses dynamically created iFrames.</p>
+<p>The implementation of xPopup demonstrates the use of the <b>xTimer</b> object.</p>
+</div> <!-- end rightContent -->
+</div> <!-- end rightColumn -->
+
+<div id='leftColumn' class='column'>
+<div class='leftContent'>
+
+<h3>Application</h3>
+<p>xPopup is a simple alternative to pop-up windows. It uses dynamically created iFrames. Here's how to use it.</p>
+<p>&nbsp;</p>
+<pre>
+&lt;style type='text/css'&gt;
+.popupStyle {
+  width:150px; height:150px;
+  border:1px solid #330;
+  border-top:4px solid #330;
+  margin:0; padding:0;
+}
+&lt;/style&gt;
+&lt;script type='text/javascript' src='../x_load.js'&gt;&lt;/script&gt; 
+&lt;script type='text/javascript'&gt;
+
+xInclude('../x_core.js', '../x_slide.js', '../x_popup.js', '../x_timer.js');
+
+var pop1, pop2;
+
+window.onload = function() {
+  
+  pop1 = new xPopup(
+             'timeout',       // timer type
+             10000,           // timeout in ms
+             'cen',           // position
+             'popupStyle',    // style class name
+             'popup1',        // id
+             'popup1.html');  // popup url
+
+  pop2 = new xPopup(
+             'interval',    
+             5000,          
+             'se',          
+             'popupStyle',  
+             'popup2',      
+             'popup2.html');
+
+} // end onload
+&lt;/script&gt;
+</pre>
+
+<h3>xPopup Implementation</h3>
+<p>The implementation of xPopup demonstrates the use of the xTimer object.</p>
+<p>&nbsp;</p>
+<pre>
+// sTmrType: 'timeout' or 'interval'
+function xPopup(sTmrType, uTimeout, sPosition, sStyle, sId, sUrl)
+{
+  if (document.getElementById &amp;&amp;
+      document.createElement &amp;&amp;
+      document.body &amp;&amp;
+      document.body.appendChild)
+  { 
+    // create popup element
+    var e = document.createElement('IFRAME');
+    this.ele = e;
+    e.id = sId;
+    e.style.position = 'absolute';
+    e.className = sStyle;
+    e.src = sUrl
+    document.body.appendChild(e);
+    xShow(e);
+    this.tmr = xTimer.set(sTmrType, this, sTmrType, uTimeout);
+    // timer event listeners
+    this.timeout = function() // hide popup
+    {
+      var e = this.ele;
+      xSlideTo(e, -xWidth(e), -xHeight(e), this.slideTime);
+    }
+    this.interval = function() // size, position and show popup
+    {
+      var x=0, y=0, e = this.ele;
+      var ew = xWidth(e), eh = xHeight(e);
+      var cw = xClientWidth(), ch = xClientHeight();
+      switch (this.pos) {
+        case 'e':
+          x = cw - ew - this.margin;
+          y = (ch - eh)/2;
+          break;
+        case 'se':
+          x = cw - ew - this.margin;
+          y = ch - eh - this.margin;
+          break;
+        case 'w':
+          x = this.margin;
+          y = (ch - eh)/2;
+          break;
+        case 'cen': default:
+          x = (cw - ew)/2;
+          y = (ch - eh)/2;
+          break;
+      } // end switch    
+      xSlideTo(e, xScrollLeft() + x, xScrollTop() + y, this.slideTime);
+    }
+    // init
+    this.margin = 10;
+    this.pos = sPosition;
+    this.slideTime = 500; // slide time in ms
+    this.interval();
+  } 
+} // end xPopup
+</pre>
+
+</div> <!-- end leftContent -->
+
+<div class='leftContent'>
+For more <b>DHTML Toys</b> visit <a href='http://cross-browser.com/'>Cross-Browser.com</a>.
+</div> <!-- end leftContent -->
+
+</div> <!-- end leftColumn -->
+
+</body>
+</html>

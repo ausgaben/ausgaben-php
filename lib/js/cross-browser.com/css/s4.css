@@ -1,0 +1,136 @@
+/* s4.css
+   cross-browser.com
+*/
+
+body, body div, body p, body th, body td, body li, body dd, body pre {
+  font-size:x-small; /* trick WinIE4/5 */
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dd, html>body pre {
+  font-size:small; /* be nice to Opera */
+}
+
+html {
+  color:#000; background:#fff;
+  margin:0; padding:0;
+}
+body {
+  color:#000; background:#fff;
+  margin:0; padding:0;
+  font-family:verdana,arial,sans-serif;
+}
+
+a:link {
+  color:#000; background:transparent;
+  text-decoration:underline;
+}
+a:visited {
+  color:#333; background:transparent;
+  text-decoration:underline;
+}
+a:hover {
+  color:#000; background:#cc9;
+  text-decoration:none;
+}
+a:active {
+  color:#000; background:transparent;
+  text-decoration:underline;
+}
+            
+b {
+  font-weight:bold;
+  color:#996; background:transparent;
+}
+
+p {
+  color:#000; background:#fff;
+  margin:.3em 0 .5em 0; padding:0;
+  line-height:1.5em;
+}
+.smaller {
+  font-size:smaller;
+}
+
+.textInput {
+  font-family:'courier new',monospace;
+  color:#000; background:#fff;
+  width:140px;
+}
+
+pre {
+  font-family:'courier new',monospace;
+  color:#000; background:#f0f0f0;
+  margin:0; padding:0;
+}
+
+
+h1 {
+  color:#330; background:transparent;
+  font-style:normal;
+  margin:0; padding:4px 8px;
+  text-align:right;
+  /* */
+  font-size:small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:medium;
+}
+html>body h1 {
+  font-size:medium;
+}
+h2 {
+  color:#330; background:#cc9;
+  font-style:normal;
+  margin:0 0 .25em 0; padding:4px 8px;
+  /* */
+  font-size:small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:medium;
+}
+html>body h2 {
+  font-size:medium;
+}
+h3 {
+  color:#000;
+  margin:1em 0; padding:0 0 0 .8em;
+  font-weight:bold;
+  border-left:2px solid #663;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h3 {
+  font-size:small;
+}
+h4 {
+  color:#663; /* 996; */
+  margin:0; padding:0;
+  font-weight:bold;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h4 {
+  font-size:small;
+}
+h5 {
+  color:#996; background:transparent;
+  margin:0; padding:2px;
+  font-weight:bold;
+  border-bottom:1px dotted #996;
+  /* */
+  font-size:xx-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:x-small;
+}
+html>body h5 {
+  font-size:x-small;
+}

@@ -1,0 +1,260 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id='idHtml' xmlns="http://www.w3.org/1999/xhtml">
+<head id='idHead'>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>xMenu2 Demo</title>
+<meta name='author' content='Mike Foster, cross-browser.com' />
+<meta name='description' content='Programming example for X, a cross-browser DHTML API for Internet Explorer, Netscape Navigator, Gecko, and Opera, available at cross-browser.com' />
+<style type="text/css"><!--
+html {
+  margin:0; padding:0;
+}
+body {
+  font-family:verdana,arial,sans-serif,helvetica; font-size:12px;
+  color:#000; background:#bba;
+  margin:0; padding:0;
+}
+p {
+  font-family:verdana,arial,sans-serif,helvetica; font-size:12px;
+  color:#000000; background:#ffffff; 
+}
+h1 {
+  font-family:verdana,arial,sans-serif,helvetica; font-size:14px;
+  color:#333; background:#cc9; font-style:normal; text-align:center;
+  margin:0 0 1.2em 0; padding:0;
+}
+h2 {
+  font-family:verdana,arial,sans-serif,helvetica; font-size:14px;
+  color:#333; background:#ffffff; font-style:italic;
+  margin:0 0 1em 0;
+}
+h3 {
+  font-family:verdana,arial,sans-serif,helvetica; font-size:10px;
+  color:#333; background:#ffffff; font-style:normal;
+  margin:0 0 1em 0;
+}
+
+a {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:12px;
+  color:#000;
+}
+a:link, a:active {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:12px;
+  color:#000;
+}
+a:visited {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:12px;
+  color:#666;
+}
+a:hover {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:12px;
+  color:#fff; background:#999;
+  text-decoration:none;
+}
+
+a.m {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:10px;
+  color:#000;
+  margin:0; padding:0;
+  display:block; text-decoration:none; cursor:default;
+}
+a.m:link, a.m:active {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:10px;
+  color:#000;
+  margin:0; padding:0;
+  display:block; text-decoration:none; cursor:default;
+}
+a.m:visited {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:10px;
+  color:#666;
+  margin:0; padding:0;
+  display:block; text-decoration:none; cursor:default;
+}
+a.m:hover {
+  font-family:verdana,arial,helvetica,sans-serif; font-size:10px;
+  color:#fff; background:#999;
+  margin:0; padding:0;
+  display:block; text-decoration:none; cursor:default;
+}
+
+.rMenu {
+  position:relative; visibility:visible; overflow:visible;
+  background:#cc9;
+  margin:0; padding:0;
+  text-align:left;
+  height:20px;
+/*
+  border-left:1px outset #ccc;
+  border-top:1px outset #ccc;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+*/  
+}
+.aMenu {
+  position:absolute; visibility:hidden; overflow:visible;
+  margin:0; padding:0 2px 0 0;
+  text-align:left;
+/*
+  border-left:1px outset #ccc;
+  border-top:1px outset #ccc;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+*/  
+}
+.mLabel {
+  position:absolute; visibility:hidden; overflow:hidden;
+  margin:0; padding:2px;
+  cursor:default;
+  border-left:1px outset #ccc;
+  border-top:1px outset #ccc;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+}
+.mLabelOver {
+  position:absolute; visibility:hidden; overflow:hidden;
+  margin:0; padding:2px;
+  cursor:default;
+  border-left:1px outset #333;
+  border-top:1px outset #333;
+  border-right:1px solid #ccc;
+  border-bottom:1px solid #ccc;
+}
+.mBox {
+  position:absolute; visibility:hidden; overflow:hidden;
+  margin:0; padding:4px 2px 4px 2px;
+  cursor:default;
+  width:150px; /* wrapping col for nn4, over-ride in page-specific css */
+  line-height:1.25em;
+  border-left:1px solid #ccc;
+  border-top:1px solid #ccc;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+}
+
+#header {
+  margin:20px 80px 0px 80px; 
+  padding:0;
+}
+#banner {
+  margin:0; padding:6px 4px;
+  background:#333;
+}
+.section {
+  margin:0px 80px 20px 80px; 
+  padding:10px;
+  font-family:verdana,arial,sans-serif,helvetica;
+  font-size:12px; color:#000000; background:#ffffff;
+}
+--></style>
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'>
+xInclude('../x_core.js', '../x_event.js', '../x_slide.js', 'xmenu2_html.js', 'xmenu2.js');
+</script>
+</head>
+
+<body id='idBody'>
+
+<div id='header'>
+<div id='banner'><a href='http://cross-browser.com/'><img src='../../images/xbanner.gif' hspace='0' vspace='0' border='0' alt='Cross-Browser.com' /></a></div>
+<script type='text/javascript'>
+  insertMenu(1,'r');
+</script>
+</div><!-- end header -->
+
+<div class='section'>
+<p>This menu is implemented with <b>X</b> instead of CBE.</p>
+<p>This is still a work in progress ;-)</p>
+
+<h1>xMenu2</h1>
+
+<h2>CSS</h2>
+
+<p>The elements of class mLabel and mBox are contained by an element of class aMenu or rMenu. aMenu elements are absolutely positioned. rMenu elements are relatively positioned. The horizontal menu at the top-left of this page is relatively positioned. The others are absolutely positioned.</p>
+<pre>.aMenu {
+  position:absolute;
+  overflow:visible;
+}
+.rMenu {
+  position:relative;
+  overflow:visible;
+}
+.mLabel {
+  position:absolute;
+  overflow:hidden;
+}
+.mBox {
+  position:absolute;
+  overflow:hidden;
+}</pre>
+
+<h2>HTML</h2>
+
+<p>The menu's HTML elements require the following id naming convention:<br>
+<b>Menus</b>: <i>menuM</i> - where M is the menu number<br>
+<b>Labels</b>: <i>labelML</i> - where M is the menu number and L is the label number for this menu<br>
+<b>Boxes</b>: <i>boxMB</i> - where M is the menu number and B is the box number for this menu</p>
+<pre>&lt;div id='menu1' class='aMenu'&gt;
+  &lt;div id='label11' class='mLabel'&gt;Label&lt;/div&gt;"
+  &lt;div id='box11' class='mBox'&gt;
+    &lt;a class='m' href=''&gt;Item&lt;/a&gt;
+    &lt;a class='m' href=''&gt;Item&lt;/a&gt;
+  &lt;/div&gt;
+  &lt;div id='label12' class='mLabel'&gt;Menus&lt;/div&gt;"
+  &lt;div id='box12' class='mBox'&gt;"
+    &lt;a class='m' href=''&gt;Item&lt;/a&gt;
+    &lt;a class='m' href=''&gt;Item&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</pre>
+
+<h2>Javascript</h2>
+
+<p>Multiple menus can be instantiated on the same page. Menu labels can be aligned horizontal or vertical. Each menu has a <i>floating</i> option. The 3 absolute menus in the corners of this window all float when the window is scrolled. The relative menu doesn't float. Each menu has its own z-index. Each menu has its own set of colors.</p>
+
+<h3>Creating the Menu Object</h3>
+<pre>var menu1, menu2, menu3, menu4;
+window.onload = function() {
+  // absolute, top-right
+  menu2 = new xMenu2(
+    true, false, true,          // absolute, horizontal, floating,      
+    xClientWidth() - 75, 20, 5, // menuX, menuY, menuZ                  
+    0, [75,75,75], 20,          // lblOffset, lblWidthsArray, lblHeight,
+    [140,170,155],              // boxWidthsArray,                      
+    '#ffccff', '#000080',       // activeLblColor, inactiveLblColor,    
+    '#FF6600', '#CC6600',       // activeLblBkgnd, inactiveLblBkgnd     
+    '#FF6600'                   // boxBkgnd                             
+  );
+
+  ...
+}</pre>
+
+<h3>Size</h3>
+<p>Different widths can be specified for each label and box. If a menu box will be clipped by the right or bottom edge of the window it will be aligned to the left or top side of its label.</p> <!--Resize the window and watch what happens to the horizontal menu. -->
+
+<h3>Position</h3>
+<p>The label and box positions are calculated by the menu's paint() method which is called once when the menu object is created and each time the window is resized. Specify the position of the first label and other labels are positioned automatically. For absolute menus the first label position is given by an absolute coordinate. For relative menus the first label position is determined by the placement of the rMenu DIV in the HTML.</p>
+
+<h1>Misc</h1>
+
+<h2>Downloads</h2>
+<p>xMenu2 is not yet included in the download package since it is still somewhat experimental. But if you want to look deeper, grab these files: <a href='../x.js'>x.js</a>, <a href='xmenu2.js'>xmenu2.js</a>, <a href='xmenu2_html.js'>xmenu2_html.js</a>, and the page you are viewing: <a href='xmenu2.html'>xmenu2.html</a>.</p>
+
+<h2>Notes</h2>
+<p>I'm using a javascript function to insert the html for each menu. This is convenient for this example. In real usage you would use something like PHP to insert the menu html.</p>
+<p>Note that I've been using this demo to experiment with this menu. You'll find some things commented out, and some things that are experimental.</p>
+
+<h2>Last Update</h2>
+<p>This page was last updated on Mar. 5, 2003</p>
+
+</div><!-- end section -->
+
+<!-- Absolutely Positioned Elements -->
+
+<script type='text/javascript'>
+insertMenu(2,'a');
+insertMenu(3,'a');
+insertMenu(4,'a');
+</script>
+
+</body>
+</html>

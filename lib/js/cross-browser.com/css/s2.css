@@ -1,0 +1,85 @@
+/* cross-browser.com/css/s2.css */
+
+body, body div, body p, body th, body td, body li, body dd, body pre {
+  font-size:x-small; /* trick WinIE4/5 */
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dd, html>body pre {
+  font-size:small; /* be nice to Opera */
+}
+
+html {
+  color:#000; background:#fff;
+  margin:0; padding:0;
+}
+body {
+  color:#000; background:#fff; margin:0; padding:0;
+  font-family:verdana,arial,sans-serif;
+}
+
+a:link {
+  color:#000; background:transparent;
+  text-decoration:underline; padding:1px;
+}
+a:visited {
+  color:#333; background:transparent;
+  text-decoration:underline; padding:1px;
+}
+a:hover {
+  color:#000; background:#ccc;
+  text-decoration:none; padding:0;
+  border:1px solid #008;
+}
+a:active {
+  color:#000; background:transparent;
+  text-decoration:underline;
+}
+
+h1 {
+  color:#008; background:#eee; font-weight:normal;
+  margin:10px 20px 0 20px; padding:8px;
+  border-left:3px solid #ccc;
+  border-top:1px solid #ccc;
+  /* */
+  font-size:medium;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:large;
+}
+html>body h1 {
+  font-size:large;
+}
+h2 {
+  color:#008; background:transparent; font-weight:normal;
+  margin:1% 0 0 0; padding:2px 4px;
+  border-left:3px solid #ccc;
+  border-top:1px solid #ccc;
+  /* */
+  font-size:small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:medium;
+}
+html>body h2 {
+  font-size:medium;
+}
+h3 {
+  color:#008; background:transparent; font-weight:bold;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h3 {
+  font-size:small;
+}
+
+pre {
+  font-family:'courier new',monospace;
+  color:#000; background:#eee; border:1px dotted #ccc;
+  padding:10px; overflow:hidden;
+}
+

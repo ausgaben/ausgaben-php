@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>X Tooltips Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s1.css' />
+<style type='text/css'>
+#xTooltip {
+  position:absolute; visibility:hidden;
+}
+.tip1 {
+  color:#666; border-bottom:1px dashed #ccc;
+}
+.tip2 {
+  color:#66f; border-bottom:1px dashed #ccf;
+}
+.tip3 {
+}
+.xtip1 {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#000; background:#ccc; border:1px solid #666;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+.xtip2 {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#008; background:#ccf; border:1px solid #008;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+.xtip3 {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#800; background:#fcc; border:1px solid #800;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+</style>
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'>
+xInclude('../x_core.js', '../x_event.js', '../x_dom.js', '../x_slide.js');
+window.onload = function() {
+  xInitTooltips(3);
+}
+function xInitTooltips(n) {
+  var i, j, tips;
+  for (i = 1; i <= n; ++i) {
+    tips = xGetElementsByClassName('tip' + i);
+    for (j = 0; j < tips.length; ++j) {
+      tips[j].isTip = true;
+      tips[j].onmouseover = xttOnMouseover;
+    }
+  }
+  xAddEventListener(document, 'mousemove', xttOnMousemove, false);
+}
+function xttOnMouseover(e) {
+  var tt = xGetElementById('xTooltip');
+  tt.className = 'x' + this.className;
+  tt.innerHTML = this.getAttribute('title');
+  xMoveTo(tt, -200, xPageY(this) - xHeight(tt) - 2);
+  xShow(tt);
+  xSlideTo(tt, xPageX(this), xPageY(this) - xHeight(tt) - 2, 250);
+}
+function xttOnMousemove(e) {
+  var evnt = new xEvent(e);
+  var ele = evnt.target;
+  if (!ele || !ele.isTip) {
+    xHide('xTooltip');
+  }
+}
+</script>
+</head>
+<body>
+
+<h1>X Tooltips Demo</h1>
+
+<p>Tested on Win2K with Opera 7.23, Mozilla 1.5, and IE 4, 5 &amp; 6.</p>
+<h2>Sed ut perspiciatis...</h2>
+<p><span class='tip1' title='But I must explain'>Sed ut perspiciatis</span> unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui do<a class='tip3' href="http://lipsum.com/" title="Read about Lorem Ipsum at lipsum.com">lorem ipsum</a> quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+<h2>But I must explain...</h2>
+<p><span class='tip2' title='Sed ut perspiciatis'>But I must explain</span> to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p>
+<h2>At vero eos et...</h2>
+<p><span class='tip1' title='On the other hand'>At vero eos et</span> accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+<h2>On the other hand...</h2>
+<p><span class='tip2' title='At vero eos et'>On the other hand</span>, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.</p>
+<h2>Home...</h2>
+<p><a class='tip3' href="http://cross-browser.com/" title="Cross-Browser DHTML">Cross-Browser.com</a></p>
+
+<div id='xTooltip'></div>
+
+</body>
+</html>
+

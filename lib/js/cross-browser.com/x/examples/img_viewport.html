@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Cross-Browser.com</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='dhtml,crossbrowser,menu,layout,css,dom,api,library,demo,example,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/v3.css'>
+<style type='text/css'>
+.imgVP {
+  position:absolute;
+  overflow:hidden;
+  visibility:hidden;
+/*  border:1px solid #900; */
+}
+#vpFormContainer {
+  position:relative;
+  margin:20px 0;
+  width:25%;
+}
+</style>
+<script type='text/javascript' src='../x_core.js'></script>
+<script type='text/javascript'>
+
+window.onload = function()
+{
+  var ele = xGetElementById('imgVP1');
+  xResizeTo(ele, 300, 300);
+  // center it in the window
+  xMoveTo(ele, (xClientWidth()-xWidth(ele))/2, (xClientHeight()-xHeight(ele))/2);
+  xShow(ele);
+}
+
+// Manual setting of viewport
+
+function setVP(x, y, w, h)
+{
+  var ele = xGetElementById('imgVP1');
+  if (!w) {
+    xClip(ele, 0, xWidth(ele), xHeight(ele), 0);
+  }
+  else {
+    xClip(ele, y, x+w, y+h, x);
+  }
+}
+function vpOnSubmit()
+{
+  var txt = xGetElementById('vpX');
+  var x = parseInt(txt.value);
+  txt = xGetElementById('vpY');
+  var y = parseInt(txt.value);
+  txt = xGetElementById('vpW');
+  var w = parseInt(txt.value);
+  txt = xGetElementById('vpH');
+  var h = parseInt(txt.value);
+  setVP(x, y, w, h);
+  return false;
+}
+
+// Viewport Scan Demo
+
+var demo = new Object();
+
+function demoStart()
+{
+  demoSetup();
+  demoRun();
+}
+function demoSetup()
+{
+  if (demo.running) return;
+  demo.running = true;
+  demo.stop = false;
+  demo.w = 150;
+  demo.h = 150;
+  demo.x = -demo.w;
+  demo.y = 0; //-demo.h;
+  demo.f = .1; // factor, if 0 then vp moves by w and h
+  var ele = xGetElementById('imgVP1');
+  demo.r = parseInt(1 + (-1 + (xHeight(ele) / demo.h)) / demo.f); // rows
+  demo.rp = demo.r; // row preset
+  demo.c = parseInt((1 + (xWidth(ele) / demo.w)) / demo.f); // cols
+  demo.cp = demo.c; // col preset
+  demo.to = 40; // animation time
+}
+function demoRun()
+{
+  if (demo.c == 0) {
+    demo.c = demo.cp;
+    --demo.r;
+    demo.x = -demo.w;
+    demo.y += demo.h * demo.f;
+  }
+  if (demo.stop || demo.r == 0) {
+    demo.running = false;
+    setVP();
+    return;
+  }
+  setVP(demo.x, demo.y, demo.w, demo.h);
+  demo.x += demo.w * demo.f;
+  --demo.c;
+  setTimeout('demoRun()', demo.to);
+}
+function demoStop()
+{
+  demo.stop = true;
+}
+</script>
+</head>
+<body>
+
+<div id='header'>
+<h1>Cross-Browser.com</h1>
+</div> <!-- end header -->
+
+<div id='leftColumn' class='column'>
+
+<h2>Image Viewport Demo</h2>
+<div class='leftContent'>
+
+<div id='vpFormContainer'>
+<form onsubmit='return vpOnSubmit()'>
+<hr />
+<p>Manually Set the Viewport:</p>
+<p>X <input id='vpX' type='text' value='20' /></p>
+<p>Y <input id='vpY' type='text' value='20' /></p>
+<p>W <input id='vpW' type='text' value='50' /></p>
+<p>H <input id='vpH' type='text' value='50' /></p>
+<p><input type='submit' value='Set Viewport' /></p>
+<p><input type='button' value='Reset Viewport' onclick='setVP()' /></p>
+<hr />
+<p>Viewport Scan Demo:</p>
+<p><input type='button' value='Run Demo' onclick='demoStart()' /></p>
+<p><input type='button' value='Stop Demo' onclick='demoStop()' /></p>
+<hr />
+</form>
+</div>
+
+</div> <!-- end leftContent -->
+</div> <!-- end leftColumn -->
+
+<div id='rightColumn' class='column'>
+<div class='rightContent'>
+<p>For more dhtml toys visit <a href='http://cross-browser.com/'>Cross-Browser.com</a></p>
+</div> <!-- end rightContent -->
+<div class='rightContent'>
+<p><i>Special thanks to Mars for posing for the picture</i></p>
+</div> <!-- end rightContent -->
+</div> <!-- end rightColumn -->
+
+<div id='imgVP1' class='imgVP'>
+<img src='../../images/mars.jpg' width='300' height='300' />
+</div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+/*
+  layout1x.css
+  mfoster, cross-browser.com
+*/  
+
+#header {
+  position:absolute;
+  visibility:hidden;
+  margin:0;
+}
+#menu {
+  position:absolute;
+  visibility:hidden;
+  margin:0;
+}
+#what {
+  position:absolute;
+  visibility:hidden;
+  margin:0;
+}
+#how {
+  position:absolute;
+  visibility:hidden;
+  margin:0;
+}
+#footer {
+  position:absolute;
+  visibility:hidden;
+  margin:0;
+}

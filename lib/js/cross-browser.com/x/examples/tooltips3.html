@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>X Tooltips 3 Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s1.css' />
+<style type='text/css'>
+/* Tooltip Groups - for elements which trigger tooltips */
+.tipGrp1 {
+  color:#666; border-bottom:1px dashed #000;
+  cursor:default;
+}
+.tipGrp2 {
+  color:#686; border-bottom:1px dashed #080;
+  cursor:default;
+}
+.tipGrp3 {
+  color:#866; border-bottom:1px dashed #800;
+}
+.tipGrp4 {
+  color:#668; border-bottom:1px dashed #008;
+  cursor:default;
+}
+/* Tooltip styles for each group */
+.tipGrp1s {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#000; background:#ccc; border:1px solid #000;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+.tipGrp2s {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#080; background:#ccc; border:1px solid #080;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+.tipGrp3s {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#800; background:#fcc; border:1px solid #800;
+  font-size:10px; margin:0; padding:1px;
+  width:180px; height:14px;
+}
+.tipGrp4s {
+  position:absolute; visibility:hidden; overflow:hidden;
+  color:#008; background:#ccf; border:1px solid #008;
+  margin:0; padding:2px;
+  width:180px; height:auto;
+}
+</style>
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'>
+
+xInclude('../x_core.js', '../x_event.js', '../x_dom.js', '../x_tip.js');
+
+window.onload = function()
+{
+  new xTooltipGroup('tipGrp1', 'tipGrp1s', 'right', 4, 0);
+  new xTooltipGroup('tipGrp2', 'tipGrp2s', 'top', 0, -2);
+  new xTooltipGroup('tipGrp3', 'tipGrp3s', 'mouse', 20, -10);
+  new xTooltipGroup(['p0','p1','p2','p3', 'p4','p5'],
+                    'tipGrp4s', 'right', 4, 0,
+                    ["<p align='center'><b>X Tooltips</b></p><p align='center'>Demo 3</p>",
+                    "<p><b>grpClassOrIdList</b></p><p>The css class name which you add to any element you want to trigger a tooltip - Or - an array of id strings.</p>",
+                    "<p><b>tipClass</b></p><p>The css class name applied to the tooltip triggered by elements with the grpClass class name (or elements whose id is in the IdList)</p>",
+                    "<p><b>origin</b></p><p>One of 'right', 'top', or 'mouse'. For 'right' or 'top', the tooltip is positioned to the right (or top) of the trigger element. For 'mouse' the tooltip will follow the mouse. In all three cases the offsets are applied.</p>",
+                    "<p><b>xOffset, yOffset</b></p><p>The tooltip is positioned relative to the above origin, offset by these amounts</p>",
+                    "<p><b>textList</b></p><p>If grpClassOrIdList is an array of IDs, then textList provides the tooltip text for the corresponding array index. If grpClassOrIdList is a class name then textList is not needed (tooltip text is taken from the element's TITLE attribute).</p>"]);
+}
+</script>
+</head>
+<body>
+
+<h1>X Tooltips 3 Demo</h1>
+
+<h2>Intro</h2>
+<p>Tested on Win2K with Opera 7.23, Mozilla 1.5, and IE 4, 5 &amp; 6.</p>
+<p><span class='tipGrp2' title='An X Toy From Cross-Browser.com'>xTooltipGroup</span> provides for multiple groups of tooltips. For each group you create two style classes. One is applied to all elements which will trigger the tooltip. The other specifies the tooltip style for the group. The tooltip takes its text from the element's TITLE attribute - or you provide an array of strings.</p>
+<p>There are four different tooltip groups on this demo page: <span class='tipGrp1' title="class='tipGrp1'">Group 1</span>, <span class='tipGrp2' title="class='tipGrp2'">Group 2</span>, <span class='tipGrp3' title="class='tipGrp3'">Group 3</span>, and <span id='p0' class='tipGrp4'>Group 4</span>. Tooltip size and styling is controlled by the <i>tipClass</i> argument. Tooltip positioning is controlled by the origin and offset arguments.</p>
+<h2>The xTooltipGroup Object</h2>
+<h3>Syntax</h3>
+<pre>new xTooltipGroup(grpClassOrIdList, tipClass, origin, xOffset, yOffset, textList)</pre>
+<h3>Parameters</h3>
+<p><i id='p1' class='tipGrp4'>grpClassOrIdList</i> - The css class name which you add to any element you want to trigger a tooltip - Or - an array of id strings.</p>
+<p><i id='p2' class='tipGrp4'>tipClass</i> - The css class name applied to the tooltip triggered by elements with the grpClass class name (or elements whose id is in the IdList).</p>
+<p><i id='p3' class='tipGrp4'>origin</i> - One of 'right', 'top', or 'mouse'. For 'right' or 'top', the tooltip is positioned to the right (or top) of the trigger element. For 'mouse' the tooltip will follow the mouse. In all three cases the following offsets are applied.
+<p><i id='p4' class='tipGrp4'>xOffset, yOffset</i> - The tooltip is positioned relative to the above origin, offset by these amounts.</p>
+<p><i id='p5' class='tipGrp4'>textList</i> - If grpClassOrIdList is an array of IDs, then textList provides the tooltip text for the corresponding array index. If grpClassOrIdList is a class name then textList is not needed (tooltip text is taken from the element's TITLE attribute).</p>
+<h3>Usage</h3>
+<p>The following shows how the four tooltip groups on this page are initialized.</p>
+<pre>
+window.onload = function()
+{
+  new xTooltipGroup('tipGrp1', 'tipGrp1s', 'right', 4, 0);
+  new xTooltipGroup('tipGrp2', 'tipGrp2s', 'top', 0, -2);
+  new xTooltipGroup('tipGrp3', 'tipGrp3s', 'mouse', 20, -10);
+  new xTooltipGroup(['p0','p1','p2','p3', 'p4','p5'],
+                    'tipGrp4s', 'right', 4, 0,
+                    ["&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>",
+                    "&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>",
+                    "&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>",
+                    "&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>",
+                    "&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>",
+                    "&lt;p>&lt;b>heading&lt;/b>&lt;/p>&lt;p>text&lt;/p>"]);
+}
+</pre>
+
+<h2>Sed ut perspiciatis...</h2>
+<p><span class='tipGrp1' title='But I must explain'>Sed ut perspiciatis</span> unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui do<a class='tipGrp3' href="http://lipsum.com/" title="Read about Lorem Ipsum at lipsum.com">lorem ipsum</a> quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+<h2>But I must explain...</h2>
+<p><span class='tipGrp2' title='Sed ut perspiciatis'>But I must explain</span> to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p>
+<h2>At vero eos et...</h2>
+<p><span class='tipGrp1' title='On the other hand'>At vero eos et</span> accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+<h2>On the other hand...</h2>
+<p><span class='tipGrp2' title='At vero eos et'>On the other hand</span>, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, every pleasure is to be welcomed and every pain avoided. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.</p>
+<h2>Home...</h2>
+<p><a class='tipGrp3' href="http://cross-browser.com/" title="Cross-Browser DHTML Libraries">Cross-Browser.com</a></p>
+
+</body>
+</html>
+

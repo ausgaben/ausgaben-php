@@ -1,0 +1,86 @@
+/* cross-browser.com/css/s1.css */
+
+body, body div, body p, body th, body td, body li, body dd, body pre {
+  font-size:x-small; /* trick WinIE4/5 */
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body, html>body div, html>body p, html>body th, html>body td, html>body li, html>body dd, html>body pre {
+  font-size:small; /* be nice to Opera */
+}
+
+html {
+  color:#000; background:#fff;
+  margin:0; padding:0;
+}
+body {
+  color:#000; background:#fff;
+  margin:0; padding:10px 20px;
+  font-family:'trebuchet ms',verdana,arial,sans-serif;
+}
+
+a:link {
+  color:#009; background:transparent;
+  text-decoration:underline; padding:1px;
+}
+a:visited {
+  color:#333; background:transparent;
+  text-decoration:underline; padding:1px;
+}
+a:active {
+  color:#333; background:transparent;
+  text-decoration:underline;
+}
+a:hover {
+  color:#000; background:#ccc;
+  text-decoration:none; padding:0;
+  border:1px solid #009;
+}
+
+h1 {
+  color:#009; background:transparent;
+  margin:.25em 0 1em 0; padding:0x;
+  font-weight:normal;
+  /* border-top:1px solid #333; */
+  /* */
+  font-size:large;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:x-large;
+}
+html>body h1 {
+  font-size:x-large;
+}
+h2 {
+  color:#009; background:transparent;
+  margin:1.5em 0 1em 0;
+  font-weight:normal; border-top:1px dotted #333;
+  /* */
+  font-size:small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:medium;
+}
+html>body h2 {
+  font-size:medium;
+}
+h3 {
+  color:#900; background:transparent;
+  font-weight:normal;
+  /* */
+  font-size:x-small;
+  voice-family: "\"}\"";
+  voice-family: inherit;
+  font-size:small;
+}
+html>body h3 {
+  font-size:small;
+}
+
+pre {
+  overflow:hidden;
+  color:#009; background:#eee;
+  padding:10px;
+  font-family:'courier new',monospace;
+}

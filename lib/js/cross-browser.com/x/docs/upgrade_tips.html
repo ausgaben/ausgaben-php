@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Upgrading to X 3.15</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='dhtml,crossbrowser,menu,layout,css,dom,api,library,demo,javascript,code,unobtrusive dhtml' />
+<link rel='stylesheet' type='text/css' href='../../css/v3.css' />
+</head>
+<body>
+
+<a name='topofpg'>&nbsp;</a>
+
+<div id='leftColumn' class='column'> <!-- Begin left column -->
+
+<div class='leftContent'> <!-- Begin left content -->
+
+<div id='header'>
+<h1>Cross-Browser.com
+</h1>
+</div> <!-- end header -->
+<!-- end v3_1.php -->
+
+<h2>Upgrading to X 3.15</h2>
+
+<p>The following provides tips for upgrading from a previous version of X. Come to the forums and I'll help with the upgrade. Utilize the new X reference - it provides function and file dependencies for all X functions.</p>
+
+<h3>Tips</h3>
+<div class='collapsible'>
+<ul>
+  <li>The file 'x.js' has been split into 'x_core.js', 'x_event.js', 'x_slide.js', etc.</li>
+  <li>All event-related functions are now in 'x_event.js'.</li>
+  <li>The function xSlideTo is now in 'x_slide.js'.</li>
+  <li>The function xGetElementsByClassName is now in 'x_dom.js' (it was previously in 'x_util.js').</li>
+  <li>The main library files no longer provide support for NN4. Two files were affected by this change: If you need NN4 support use 'x_core_nn4.js' and 'x_event_nn4.js' instead of 'x_core.js' and 'x_event.js'.</li>
+</ul>
+</div> <!-- end collapsible -->
+
+</div> <!-- end leftContent -->
+
+<!-- begin v3_2.php -->
+<div id='footer' class='leftContent'>
+All content Copyright (c) 2001-2004 Michael Foster<br />
+All Javascript distributed under the terms of the <a href='../../license.html'>LGPL</a><br />
+</div> <!-- end leftContent -->
+<!-- end v3_2.php -->
+
+</div> <!-- end leftColumn -->
+
+<div id='rightColumn' class='column'>
+<div class='rightContent'>
+
+<!-- begin v3_8.php -->
+<h3>License</h3>
+<div class='collapsible'>
+<p>By your use of X and/or CBE and/or any Javascript from this site you consent to the LGPL License - please <a href='../../license.html'>read it</a>.</p>
+</div> <!-- end collapsible -->
+<!-- end v3_8.php --><!-- begin v3_4.php -->
+<h3>Developer Support</h3>
+<div class='collapsible'>
+<p>We offer free DHTML developer support at the following forums. I hope you visit us.</p>
+<p><a href='http://webdev.inhuntsville.com/'>North Alabama Web Developers</a></p>
+<p><a href='http://www.sitepoint.com/forums/forumdisplay.php?f=15'>SitePoint Javascript Forum</a></p>
+<p><a href='http://www.hftonline.com/forum/forumdisplay.php?forumid=16'>HFTOnline Webmastering Forum</a></p>
+</div> <!-- end collapsible -->
+<!-- end v3_4.php -->
+
+</div> <!-- end rightContent -->
+</div> <!-- end rightColumn -->
+
+</body>
+</html>

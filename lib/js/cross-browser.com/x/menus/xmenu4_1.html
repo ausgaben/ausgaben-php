@@ -1,0 +1,309 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>xMenu4 - cascading menus from nested ULs</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='dhtml,crossbrowser,menu,layout,css,dom,api,library,demo,javascript,code,unobtrusive dhtml' />
+<link rel='stylesheet' type='text/css' href='../../css/v3.css' />
+<link rel='stylesheet' type='text/css' href='xmenu4_1.css' />
+<script type='text/javascript' src='../x_core.js'></script>
+<script type='text/javascript' src='../x_event.js'></script>
+<script type='text/javascript' src='../x_dom.js'></script>
+<script type='text/javascript' src='xmenu4.js'></script>
+<script type='text/javascript' src='xmenu4_1.js'></script>
+<style type='text/css'>
+#rightColumn {
+  overflow:visible;
+}
+.rightContent {
+  overflow:visible;
+}
+</style>
+</head>
+
+<body>
+
+<a name='topofpg'>&nbsp;</a>
+
+<div id='leftColumn' class='column'> <!-- Begin left column -->
+
+<div class='leftContent'> <!-- Begin left content -->
+
+<div id='header'>
+<h1>Cross-Browser.com
+</h1>
+</div> <!-- end header -->
+
+<div id='menuMarker'>&nbsp;</div> <!-- Menu will be positioned here -->
+
+<h2>xMenu4 Horizontal - Cascading menus from nested ULs</h2>
+<h3>Intro</h3>
+<p><em>This is still experimental.</em>  ;-)</p>
+<p>Also have a look at the <a href='xmenu4_2.html'>xMenu4 Vertical</a> demo.</p>
+<p>This code will turn a set of nested ULs into a cascading dhtml menu. It is completely downgradeable. Disable javascript and reload the page - you'll see the nested ULs with my downgrade css applied.</p>
+<h3>Revisions</h3>
+<p>2 Mar 04<br />No changes to xMenu4.js, but I moved the menu to a page with a different layout and experimented with a few things - so it may be a little <i>less</i> cross-browser right now. There's plenty of tweaking that could still be done - but I'm tired of foolin with it for now ;-)</p>
+<p>v0.07, 15 Jan 04<br />Now supports vertical positioning of main labels. Special thanks to <a href='http://www.hftonline.com/forum/showthread.php?s=&amp;threadid=14063'>Chris</a> for helping with this.</p>
+<p>v0.06, 3 Nov 03<br />Many improvements this time - rewrote the css and changed some menu code; found an Opera7 bug (130324); IE6's css-support gave me headaches.</p>
+<p>v0.05, 27 Oct 03<br />Separated css and js into two files each. Tweaked css. The menu code now applies the styles on load, so the inline class names can be for downgrade mode. Improved downgrade styles - disable js and reload page to see it. Much remains to be done.</p>
+<p>v0.04, 25 Oct 03<br />More tweaks. As a test I moved the UL to several different places in the html. It is now in one of the content DIVs.</p>
+<p>v0.03, 24 Oct 03<br />Improved event handling and tweaked over-all design.</p>
+<p>v0.02, 23 Oct 03<br />I rewrote the event handling and added A elements in each label element.</p>
+
+<h2 id='js' >Javascript</h2>
+<p>The js is in two files. One is for page-related js - the loader and onload listener, the other is the menu system code.</p>
+<p><a href='xmenu4.js'>xmenu4.js</a> - the menu system, don't rename this file.</p>
+<p><a href='xmenu4_1.js'>xmenu4_1.js</a> - your page onload code, rename this to 'myPage.js'. The contents of this file follow.</p>
+<pre>
+////--- Loader
+
+if (!xIE4 &amp;&amp; !xNN4) {
+  document.write("<"+"link rel='stylesheet' type='text/css' href='xmenu4_1_dhtml.css'>");
+  window.onload = xOnload;
+}
+
+////--- Load Event Listener
+
+function xOnload()
+{
+  var me = xGetElementById('myMenu1');
+  if (!xDef(me.nodeName, me.firstChild, me.nextSibling)) {
+    return;
+  }
+  
+  var mo = new xMenu4(
+    me,                       // id str or ele obj of outermost UL
+    true,                     // outer UL position: true=absolute, false=static
+    true,                     // main label positioning: true=horizontal, false=vertical
+    0, 1,                     // box horizontal and vertical offsets
+    [-3, -10, -6, -10],       // lbl focus clip array
+    [-30, null, null, null],  // box focus clip array
+    // css class names:
+    'xmBar', 'xmBox',
+    'xmBarLbl', 'xmBarLblHvr',
+    'xmBarItm', 'xmBarItmHvr',
+    'xmBoxLbl', 'xmBoxLblHvr',
+    'xmBoxItm', 'xmBoxItmHvr'
+  );
+
+  xMnuMgr.add(mo);
+  xMnuMgr.load();
+  xmWinOnResize();
+  xAddEventListener(window, 'resize', xmWinOnResize, false);
+}
+
+////--- Window Resize Event Listener
+
+function xmWinOnResize()
+{
+  // !!!
+  var me = xMnuMgr.activeMenu.ele;
+  var rc = xGetElementById('rightColumn');
+  var mm = xGetElementById('menuMarker');
+  var mmp = xParent(mm);
+  xMoveTo(me, xPageX(mmp)-xPageX(rc), xPageY(mmp)-xPageY(rc));
+  xMnuMgr.paint();
+}
+</pre>
+
+<h2 id='css'>CSS</h2>
+<p>The css is in two files. One supplies default and downgrade mode styles, the other supplies dhtml-related style rules.</p>
+<p><a href='xmenu4_1.css'>xmenu4_1.css</a> - default and downgrade styles, rename this to 'myPage.css'.</p>
+<p><a href='xmenu4_1_dhtml.css'>xmenu4_1_dhtml.css</a> - dhtml-related styles, rename this to 'myPage_dhtml.css'.</p>
+
+<h2 id='xhtml'>XHTML</h2>
+<p>No IDs are required, except for the outermost UL. The inline class names are for downgrade mode. Non-downgrade mode class names are passed to the menu object constructor. When Javascript and/or CSS are disabled the menu downgrades to standard nested ULs.</p>
+<pre>
+&lt;ul id='myMenu1' class='myBar'&gt; &lt;!-- Begin myMenu1 --&gt;
+
+  &lt;!-- Bar Label 1 --&gt;
+
+  &lt;li&gt;&lt;a class='myBarLblA' href=''&gt;lbl-1&lt;/a&gt;
+    &lt;ul class='myBox'&gt;
+
+      &lt;li&gt;&lt;a href=''&gt;item 1-1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=''&gt;item 1-2&lt;/a&gt;&lt;/li&gt;
+
+      &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-1-1&lt;/a&gt;
+        &lt;ul class='myBox'&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 1-1-1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 1-1-2&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt; &lt;!-- end box-1-1 --&gt;
+      &lt;/li&gt; &lt;!-- end lbl-1-1 --&gt;
+
+      &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-1-2&lt;/a&gt;
+        &lt;ul class='myBox'&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 1-2-1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 1-2-2&lt;/a&gt;&lt;/li&gt;
+
+          &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-1-2-1&lt;/a&gt;
+            &lt;ul class='myBox'&gt;
+              &lt;li&gt;&lt;a href=''&gt;item 1-2-1-1&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=''&gt;item 1-2-1-2&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt; &lt;!-- end box-1-2-1 --&gt;
+          &lt;/li&gt; &lt;!-- end lbl-1-2-1 --&gt;
+
+        &lt;/ul&gt; &lt;!-- end box-1-2 --&gt;
+      &lt;/li&gt; &lt;!-- end lbl-1-2 --&gt;
+
+    &lt;/ul&gt; &lt;!-- end box-1 --&gt;
+  &lt;/li&gt; &lt;!-- end lbl-1 --&gt;
+
+  &lt;!-- Bar Label 2 --&gt;
+
+  &lt;li&gt;&lt;a class='myBarLblA' href=''&gt;lbl-2&lt;/a&gt;
+    &lt;ul class='myBox'&gt;
+
+      &lt;li&gt;&lt;a href=''&gt;item 2-1&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=''&gt;item 2-2&lt;/a&gt;&lt;/li&gt;
+
+      &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-2-1&lt;/a&gt;
+        &lt;ul class='myBox'&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 2-1-1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 2-1-2&lt;/a&gt;&lt;/li&gt;
+
+          &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-2-1-1&lt;/a&gt;
+            &lt;ul class='myBox'&gt;
+              &lt;li&gt;&lt;a href=''&gt;item 2-1-1-1&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=''&gt;item 2-1-1-2&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt; &lt;!-- end box-2-1-1 --&gt;
+          &lt;/li&gt; &lt;!-- end lbl-2-1-1 --&gt;
+
+        &lt;/ul&gt; &lt;!-- end box-2-1 --&gt;
+      &lt;/li&gt; &lt;!-- end lbl-2-1 --&gt;
+
+      &lt;li&gt;&lt;a class='myBoxLblA' href=''&gt;lbl-2-2&lt;/a&gt;
+        &lt;ul class='myBox'&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 2-2-1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=''&gt;item 2-2-2&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt; &lt;!-- end lbl-2-2 --&gt;
+      &lt;/li&gt; &lt;!-- end box-2-2 --&gt;
+
+    &lt;/ul&gt; &lt;!-- end box-2 --&gt;
+  &lt;/li&gt; &lt;!-- end lbl-2 --&gt;
+
+  &lt;!-- Bar Item 1 --&gt;
+
+  &lt;li&gt;&lt;a class='myBarItmA' href=''&gt;item-1&lt;/a&gt;&lt;/li&gt;
+
+&lt;/ul&gt; &lt;!-- end myMenu1 --&gt;
+</pre>
+</div> <!-- end leftContent -->
+
+<div id='footer' class='leftContent'>
+All content Copyright (c) 2001-2004 Michael Foster<br />
+All Javascript distributed under the terms of the <a href='../../license.html'>LGPL</a><br />
+<a href='#topofpg' title='Top of Page'>Top</a>
+</div> <!-- end leftContent -->
+
+</div> <!-- end leftColumn -->
+
+<div id='rightColumn' class='column'> <!-- Begin Right Column -->
+
+<div class='rightContent'>
+<ul id='myMenu1' class='myBar'> <!-- Begin myMenu1 --> <!-- Menu will downgrade here -->
+
+  <!-- Bar Label 1 -->
+
+  <li><a class='myBarLblA' href=''>Welcome</a>
+    <ul class='myBox'>
+
+      <li><a class='myBoxLblA' href=''>This Page</a>
+        <ul class='myBox'>
+          <li><a href='#js'>Javascript</a></li>
+          <li><a href='#css'>CSS</a></li>
+          <li><a href='#xhtml'>XHTML</a></li>
+        </ul>
+      </li> <!-- end 'This Page' -->
+
+      <li><a href=''>item 1-2</a></li>
+
+      <li><a class='myBoxLblA' href=''>Support</a>
+        <ul class='myBox'>
+          <li><a href='http://webdev.inhuntsville.com/index.php' title='North Alabama Web Developers'>N A W D</a></li>
+          <li><a href='http://www.sitepointforums.com/forumdisplay.php?forumid=15'>SitePoint Forums</a></li>
+          <li><a href='http://www.hftonline.com/forum/forumdisplay.php?forumid=16'>HFTOnline Forums</a></li>
+        </ul>
+      </li> <!-- end 'Support' -->
+
+      <li><a class='myBoxLblA' href=''>lbl-1-2</a>
+        <ul class='myBox'>
+          <li><a href=''>item 1-2-1</a></li>
+          <li><a href=''>item 1-2-2</a></li>
+
+          <li><a class='myBoxLblA' href=''>lbl-1-2-1</a>
+            <ul class='myBox'>
+              <li><a href=''>item 1-2-1-1</a></li>
+              <li><a href=''>item 1-2-1-2</a></li>
+            </ul> <!-- end box-1-2-1 -->
+          </li> <!-- end lbl-1-2-1 -->
+
+        </ul> <!-- end box-1-2 -->
+      </li> <!-- end lbl-1-2 -->
+
+    </ul> <!-- end box-1 -->
+  </li> <!-- end 'Welcome' -->
+
+  <!-- Bar Label 2 -->
+
+  <li><a class='myBarLblA' href=''>More</a>
+    <ul class='myBox'>
+
+      <li><a href=''>item 2-1</a></li>
+      <li><a href=''>item 2-2</a></li>
+
+      <li><a class='myBoxLblA' href=''>lbl-2-1</a>
+        <ul class='myBox'>
+          <li><a href=''>item 2-1-1</a></li>
+          <li><a href=''>item 2-1-2</a></li>
+
+          <li><a class='myBoxLblA' href=''>lbl-2-1-1</a>
+            <ul class='myBox'>
+              <li><a href=''>item 2-1-1-1</a></li>
+              <li><a href=''>item 2-1-1-2</a></li>
+            </ul> <!-- end box-2-1-1 -->
+          </li> <!-- end lbl-2-1-1 -->
+
+        </ul> <!-- end box-2-1 -->
+      </li> <!-- end lbl-2-1 -->
+
+      <li><a class='myBoxLblA' href=''>X Demos</a>
+        <ul class='myBox'>
+          <li><a href='http://cross-browser.com/x/hawk/'>Hawk</a></li>
+          <li><a href='http://cross-browser.com/x/examples/tooltips.html'>Tooltips</a></li>
+          <li><a href='http://cross-browser.com/x/examples/arrowkeys.html'>Key Events</a></li>
+          <li><a href='http://cross-browser.com/x/examples/slideouts.html'>Slideouts</a></li>
+          <li><a href='http://cross-browser.com/x/examples/drag1.html'>Drag 1</a></li>
+        </ul>
+      </li> <!-- end 'X Demos' -->
+
+    </ul> <!-- end box-2 -->
+  </li> <!-- end 'More' -->
+
+  <!-- Bar Item 1 -->
+
+  <li><a class='myBarItmA' href='http://cross-browser.com/'>Home</a></li>
+
+</ul> <!-- end myMenu1 -->
+</div> <!-- end rightContent -->
+
+<div class='rightContent'>
+
+<h3>Developer Support</h3>
+<div class='collapsible'>
+<p>We offer free DHTML developer support at the following forums. I hope you visit us.</p>
+<p><a href='http://webdev.inhuntsville.com/'>North Alabama Web Developers</a></p>
+<p><a href='http://www.sitepoint.com/forums/forumdisplay.php?f=15'>SitePoint Javascript Forum</a></p>
+<p><a href='http://www.hftonline.com/forum/forumdisplay.php?forumid=16'>HFTOnline Webmastering Forum</a></p>
+</div> <!-- end collapsible -->
+
+</div> <!-- end rightContent -->
+
+</div> <!-- end rightColumn -->
+
+</body>
+</html>
+

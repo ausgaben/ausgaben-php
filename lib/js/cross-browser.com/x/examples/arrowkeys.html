@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>X ArrowKeys Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s1.css' />
+<style type='text/css'><!--
+a:link {
+  color:#009; background:#ccc;
+  text-decoration:none; padding:1px;
+}
+a:visited {
+  color:#009; background:#ccc;
+  text-decoration:none; padding:1px;
+}
+a:hover {
+  color:#ccc; background:#009;
+  text-decoration:none; padding:0;
+  border-left:1px solid #ccc;
+  border-top:1px solid #ccc;
+  border-right:1px solid #333;
+  border-bottom:1px solid #333;
+}
+a:active {
+  color:#009; background:#ccc;
+  text-decoration:none;
+}
+input {
+  border:1px solid #333;
+  color:#000; background:#eee;
+  width:60px;
+}
+.clsX {
+  position:absolute; margin:0; padding:0;
+}
+--></style>
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'><!--
+xInclude('../x_core.js', '../x_event.js');
+var delta = 10;
+window.onload = function() {
+  xResizeTo('id1', 200, 50);
+  xMoveTo('id1', (xClientWidth()-200)/2, (xClientHeight()-50)/2);
+  xShow('id1');
+  xAddEventListener(document, 'keypress', onKeypress, false);
+  xAddEventListener(document, 'keyup', onKeyup, false);
+  xAddEventListener(document, 'keydown', onKeydown, false);
+}
+function onKeypress(evt)
+{
+  var e = new xEvent(evt);
+  xGetElementById('kp').value = e.keyCode;
+}
+function onKeyup(evt)
+{
+  var e = new xEvent(evt);
+  xGetElementById('ku').value = e.keyCode;
+}
+function onKeydown(evt)
+{
+  var e = new xEvent(evt);
+
+  xGetElementById('kd').value = e.keyCode;
+
+/*
+  var dbgMsg =  'type: ' + e.type + ',  keyCode: ' + e.keyCode;
+  if (xOp7) { window.opera.postError(dbgMsg); }
+  else { window.status = dbgMsg; }
+*/
+
+  switch (e.keyCode) {
+    case 37:    // IE and Moz
+    case 57387: // Opera 7
+      xLeft('id1', xLeft('id1')-delta); // Left
+      break;
+    case 38:
+    case 57385:
+      xTop('id1', xTop('id1')-delta);   // Up
+      break;
+    case 39:
+    case 57388:
+      xLeft('id1', xLeft('id1')+delta); // Right
+      break;
+    case 40:
+    case 57386:
+      xTop('id1', xTop('id1')+delta);   // Down
+      break;
+  }
+}
+//--></script>
+</head>
+<body>
+<h1>X ArrowKeys Demo</h1>
+<p>Use the Arrow Keys to move the element</p>
+<p>Tested with Opera 7.11, IE 6.0, Mozilla 1.4, and Firebird 0.6.1. Does not work with NN4. All tests on Win98.</p>
+
+<form id='form1' onsubmit='return false'>
+<h2>Event keyCodes:</h2>
+<p>The following will show the keyCode for events <i>keypress</i>, <i>keydown</i>, and <i>keyup</i>.</p>
+<p><div>keypress</div><input type='text' id='kp'></p>
+<p><div>keydown</div><input type='text' id='kd'></p>
+<p><div>keyup</div><input type='text' id='ku'></p>
+</form>
+
+<div id='id1' class='clsX'>
+<a href='http://cross-browser.com/'>Cross-Browser.com</a>
+</div>
+
+</body>
+</html>

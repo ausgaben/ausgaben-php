@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Bookmarklets / Favelets</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Experiments with bookmarklets/favelets.' />
+<meta name='keywords' content='bookmarklets,favelets,menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s5.css' />
+<style type='text/css'>
+</style>
+<script type='text/javascript'>
+window.onload = function()
+{
+}
+</script>
+</head>
+<body>
+
+<h1>Experiments with Bookmarklets / Favelets</h1>
+
+<h2>Intro</h2>
+
+<p><span class='fw'>There's</span> nothing new here, this is just my first time to play around with bookmarklets, also called <em>favelets</em>. The focus of these bookmarklets is javascript debugging.</p>
+<p>I've tested this (quickly) on Win2K with the latest versions of Opera, Firebird, and IE. (21Nov03)</p>
+
+<h2>Bookmarklets</h2>
+<p><span class='fw'>Click</span> on a link to run it on this page. Save it as a bookmark to run it on other pages.</p>
+<p><a title='EvalTextArea' href="javascript:function xEvalTA_load(){var f=document.createElement('FORM');f.onsubmit='return false';var t=document.createElement('TEXTAREA');t.id='xDebugTA';t.name='xDebugTA';t.rows='20';t.cols='60';var b=document.createElement('INPUT');b.type='button';b.value='Evaluate';b.onclick=function(){eval(this.form.xDebugTA.value);};f.appendChild(t);f.appendChild(b);document.body.appendChild(f);}xEvalTA_load();void(0)">EvalTextArea</a> (410 bytes) - adds a form with a textarea and a button to the end of the document. Type expressions into the text area and click the button to evaluate them in the context of the current page.</p>
+<p><a title='xWalkTree' href="javascript:function xWalkTree(n,v){if(n){if(n.nodeType==1){v(n);}for(var c=n.firstChild;c;c=c.nextSibling){xWalkTree(c,v);}}}void(0)">xWalkTree</a> (132 bytes) - defines the function xWalkTree(), which can then be called from the EvalTextArea.</p>
+<p><a title='xLoadScript' href="javascript:function xLoadScript(url){var s=document.createElement('script');s.src=url;document.getElementsByTagName('head')[0].appendChild(s);}void(0)">xLoadScript</a> (150 bytes) - defines the function xLoadScript(), which can then be called from the EvalTextArea.</p>
+
+<h2 title='A few examples'>Usage</h2>
+<p><span class='fw'>You</span> can type any Javascript in the textarea and click the button to evaluate it within the context of the current page. Here's a few examples using xWalkTree. Click the EvalTextArea link. Click the xWalkTree link. Now copy one of the following, paste it into the textarea, and click 'Evaluate'.</p>
+<h3>Example 1</h3>
+<pre>
+function myVF(n) {
+  if (n.tagName == 'P') n.style.border = '1px dotted red';
+  else if (n.tagName == 'DIV') n.style.border = '1px dotted blue';
+  else if (n.tagName == 'PRE') {
+    n.style.color = '#369';
+    n.style.background = '#ccc';
+  }
+}
+xWalkTree(document.body, myVF);
+</pre>
+<h3>Example 2</h3>
+<pre>
+function myVF(n) {
+  var t = n.getAttribute('title');
+  if (t && t.length) n.style.border = '2px solid #000';
+}
+xWalkTree(document.body, myVF);
+</pre>
+<h3>Example 3</h3>
+<pre>
+function myVF(n) {
+  if (n.tagName == 'H1') n.style.fontSize = '3em';
+  else if (n.tagName == 'H2') n.style.fontSize = '2em';
+  else if (n.tagName == 'H3') n.style.fontSize = '1em';
+}
+xWalkTree(document.body, myVF);
+</pre>
+
+<h2>Bookmarklets' Source Code</h2>
+<h3>EvalTextArea</h3>
+<pre>
+function xEvalTA_load()
+{
+  var f = document.createElement('FORM');
+  f.onsubmit = 'return false';
+  var t = document.createElement('TEXTAREA');
+  t.id='xDebugTA';
+  t.name='xDebugTA';
+  t.rows='20';
+  t.cols='60';
+  var b = document.createElement('INPUT');
+  b.type = 'button';
+  b.value = 'Evaluate';
+  b.onclick = function() {eval(this.form.xDebugTA.value);};
+  f.appendChild(t);
+  f.appendChild(b);
+  document.body.appendChild(f);
+}
+xEvalTA_load();
+</pre>
+
+<h3>xWalkTree</h3>
+<pre>
+/* xWalkTree()
+   Perform a preorder traversal
+   on the subtree starting at node 'n'
+   and pass each Element node to function 'v'.
+*/
+function xWalkTree(n, v)
+{
+  if (n) {
+    if (n.nodeType == 1) {v(n);}
+    for (var c = n.firstChild; c; c = c.nextSibling) {
+      xWalkTree(c, v);
+    }
+  }
+}
+</pre>
+
+<h3>xLoadScript</h3>
+<pre>
+function xLoadScript(url)
+{
+  var s = document.createElement('script');
+  s.src = url;
+  document.getElementsByTagName('head')[0].appendChild(s);
+}
+</pre>
+
+<hr />
+<p><span class='fw'>For</span> more DHTML toys visit <a href='http://cross-browser.com/'>Cross-Browser.com</a></p>
+
+</body>
+</html>

@@ -1,0 +1,330 @@
+/*
+	xMenu3_1.css
+	Cross-Browser.com
+*/
+
+html {
+  margin:0; padding:0; background:#999;
+}
+body {
+  color:#000; background:#999;
+  margin:0; padding:0;
+  font-family:verdana,arial,sans-serif;
+  font-size:12px;
+}
+a {
+  text-decoration:none;
+  color:#633; background:transparent;
+  border-bottom:1px dashed #633;
+  padding:1px 1px 0 1px;
+}
+a:hover {
+  text-decoration:none;
+  color:#000; background:#999;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  padding:0;
+}
+h1 {
+  color:#633; background:transparent;
+  margin:1.5em 0 .2em 0;
+  padding:.5em 0;
+  font-size:16px;
+  font-weight:bold;
+}
+h2 {
+  color:#633; background:transparent;
+  margin:1.5em 0 .2em 0;
+  padding:.5em 0;
+  font-size:14px;
+  font-weight:normal;
+}
+h3 {
+  color:#633; background:transparent;
+  margin:1.5em 0 .2em 0;
+  padding:.5em 0;
+  font-size:10px;
+  font-weight:bold;
+}
+ol {
+  margin:.2em 0 .2em 1.75em;
+}
+ul {
+  margin:.2em 0 .2em 1.75em;
+  list-style-type:circle;
+}
+li {
+/*  margin:0 0 4px 10px; */
+}
+pre {
+  color:#333; background:#eee;
+  margin:0; padding:6px 4px;
+  font-family:monospace,courier;
+  font-size:12px;
+  overflow:hidden;
+}
+
+.fw { /* firstWord */
+  color:#633; background:transparent;
+  font-size:14px;
+}
+
+.myHead {
+  color:#999; background:#633;
+  margin:0; padding:4px;
+  font-weight:bold;
+  font-size:12px;
+  border-bottom:1px solid #bbb;
+  width:100%; /* for downgrade mode */
+}
+.myColumn {
+  color:#000; background:#fff;
+  margin:0; padding:10px;
+  font-size:12px;
+  font-family:georgia,verdana,arial,sans-serif;
+  border-left:1px solid #000;
+  width:50%; /* for downgrade mode */
+  float:left; /* for downgrade mode */
+}
+.myFoot {
+  color:#000; background:#999;
+  margin:0; padding:4px;
+  font-size:10px;
+  text-align:right;
+  width:100%;
+  clear:both;
+}
+
+.xmBox { /* for downgrade mode */
+  margin-left:8px;
+}
+#xMenu1 { /* for downgrade mode */
+  float:left;
+  width:20%;
+}
+#xMenu2 { /* for downgrade mode */
+  float:left;
+  width:20%;
+}
+
+/* Title for horizontal and vertical menus */
+
+.myHMTitle {
+  color:#999; background:#633;
+  border-bottom:1px solid #bbb;
+  display:block;
+  margin:0 0 2px 0; padding:0 4px 0 0;
+  text-align:right;
+  font-weight:bold;
+  font-size:10px;
+/*
+  display:block;
+  color:#633; background:transparent;
+  margin:0 4px 0 0; padding:0;
+  text-align:right;
+  font-weight:bold;
+  font-size:10px;
+*/
+}
+.myVMTitle {
+  color:#999; background:#633;
+  border-bottom:1px solid #bbb;
+  margin:26px 2px 10px 2px; padding:2px;
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+}
+
+/* Menu items in boxes */
+
+a.xmItm {
+  text-decoration:none;
+  display:block;
+  margin:2px; padding:1px;
+  color:#633; background:transparent;
+  border:none;
+  font-size:10px;
+}
+a.xmItm:hover {
+  text-decoration:none;
+  color:#000; background:transparent;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  margin:2px; padding:0;
+  display:block;
+  font-size:10px;
+}
+
+/* Inline bar links, for horizontal menu bar */
+
+a.xmLnk {
+  position:relative;
+  top:2px;
+  text-decoration:none;
+  margin:0 10px 0 0; padding:2px;
+  color:#633; background:transparent;
+  border:none;
+  display:inline;
+  font-size:10px;
+}
+a.xmLnk:hover {
+  position:relative;
+  top:1px;
+  text-decoration:none;
+  margin:0 10px 0 0; padding:1px;
+  color:#000; background:transparent;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  display:inline;
+  font-size:10px;
+}
+
+/* Block bar links, for vertical menu bar */
+
+a.xmVLnk {
+  text-decoration:none;
+  margin:2px; padding:2px;
+  color:#633; background:transparent;
+  border:none;
+  display:block;
+  font-size:10px;
+}
+a.xmVLnk:hover {
+  text-decoration:none;
+  margin:2px; padding:1px;
+  color:#000; background:#999;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  display:block;
+  font-size:10px;
+}
+
+/* Bar for horizontal menu */
+
+div.myHMBar {
+  background:#999;
+  padding:1px 0 1px 0;
+  border-bottom:1px solid #000;
+/*  text-align:right; */
+}
+
+/* Bar for vertical menu */
+
+div.myVMBar {
+  background:transparent;
+  padding:6px;
+  border:none;
+}
+
+/* Boxes other than bars */
+
+div.myMBox {
+  width:140px;
+  padding:4px;
+  color:#000; background:#999;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  font-size:10px;
+  text-align:left;
+}
+
+/* Inline bar labels, for horizontal menu bar */
+
+.myHMBarLbl {
+  top:2px;
+  margin:0 10px 0 0; padding:2px;
+  color:#633; background:transparent;
+  border:none;
+  display:inline;
+  cursor:default;
+  font-size:10px;
+}
+.myHMBarLblHvr {
+  top:2px;
+  margin:0 10px 0 0; padding:1px;
+  color:#000; background:transparent;
+  border-top:solid 1px #633;
+  border-left:solid 1px #633;
+  border-right:solid 1px #bbb;
+  border-bottom:solid 1px #bbb;
+  display:inline;
+  cursor:default;
+  font-size:10px;
+}
+.myHMBarLblHvrClosed {
+  top:1px;
+  margin:0 10px 0 0; padding:1px;
+  color:#000; background:transparent;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  display:inline;
+  cursor:default;
+  font-size:10px;
+}
+
+/* Block bar labels, for vertical menu bar */
+
+.myVMBarLbl {
+  margin:2px; padding:2px;
+  color:#633; background:transparent;
+  border:none;
+  display:block;
+  cursor:default;
+  font-size:10px;
+}
+.myVMBarLblHvr {
+  margin:2px; padding:1px;
+  color:#000; background:#999;
+  border-top:solid 1px #633;
+  border-left:solid 1px #633;
+  border-right:solid 1px #bbb;
+  border-bottom:solid 1px #bbb;
+  display:block;
+  cursor:default;
+  font-size:10px;
+}
+.myVMBarLblHvrClosed {
+  margin:2px; padding:1px;
+  color:#000; background:#999;
+  border-top:solid 1px #bbb;
+  border-left:solid 1px #bbb;
+  border-right:solid 1px #633;
+  border-bottom:solid 1px #633;
+  display:block;
+  cursor:default;
+  font-size:10px;
+}
+
+/* Block labels, for menu boxes */
+
+.myMLbl {
+  margin:2px; padding:1px;
+  color:#633; background:transparent;
+  border:none;
+  display:block;
+  cursor:default;
+  font-size:10px;
+}
+.myMLblHvr {
+  margin:2px; padding:0;
+  color:#000; background:transparent;
+  border-top:solid 1px #633;
+  border-left:solid 1px #633;
+  border-right:solid 1px #bbb;
+  border-bottom:solid 1px #bbb;
+  display:block;
+  cursor:default;
+  font-size:10px;
+}

@@ -1,0 +1,76 @@
+/* layout2.css
+   Cross-Browser.com & SitePoint.com - Equal Column Height Demo
+*/
+
+body {
+  margin: 0;
+  padding: 0;
+  font: medium verdana, arial, sans-serif;
+  color: #000000;
+  background: #33CCFF;
+}
+#header, #footer {
+  background-color: #33CCFF;
+  text-align: center;
+  margin: 0;
+}
+#header {
+  height: 60px;
+  padding: 20px 0 0 0;
+}
+#footer {
+  height: 40px;
+  padding: 16px 0 0 0;
+  font-size: small;
+  font-weight: bold;
+}
+#centerColumn {
+  background-color: #66FF66;
+  padding: 0;
+  margin: 0;
+  margin-left: 150px;
+  margin-right: 150px;
+}
+#leftColumn, #rightColumn {
+  background-color: #FF9999;
+  position: absolute;
+  top: 80px;
+  width: 150px;
+  margin: 0;
+  padding: 0;
+  font-size: small;
+}
+#leftColumn {
+  left: 0;
+}
+#rightColumn {
+  right: 0;
+}
+#leftColumnContent, #centerColumnContent, #rightColumnContent {
+  margin: 0;
+  padding: 1em;
+}
+h1 {
+  margin: 0;
+  padding: 0;
+  font-size: large;
+}
+h2 {
+  margin: 0;
+  padding: 0;
+  font-size: small;
+  font-weight: normal;
+}
+h3 {
+  font-size: medium;
+}
+p {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+.fw {
+  font-weight:bold;
+}
+li {
+  margin-bottom:.5em;
+}

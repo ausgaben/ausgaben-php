@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>xWalkTree: Node Traversal Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s5.css' />
+<style type='text/css'>
+#vfta {
+  width:90%;
+}
+#leftColumn {
+  width:30%;
+  float:left;
+  padding-right:1em;
+}
+#rightColumn {
+  width:65%;
+  float:left;
+  padding-left:1em;
+  border-left:1px dotted #999;
+}
+</style>
+<script type='text/javascript'>
+
+var node = null;
+
+window.onload = function()
+{
+
+  /* First we see if the browser supports the
+     methods and properties we will use.
+     Then we walk the tree starting at document.body
+     and visit each element with the visit function.
+  */
+  var b = document.body;
+  if (b.getAttribute && b.nodeType && b.firstChild) {
+    xWalkTree(document.body, visit);
+  }
+}
+
+// Apply js from textarea to node.
+function visit(node)
+{
+  node = node;
+  eval(document.getElementById('vfta').value);
+}
+
+/* xWalkTree()
+   Perform a preorder traversal
+   on the subtree starting at oNode
+   and pass each Element node to fnVisit.
+*/
+function xWalkTree(oNode, fnVisit)
+{
+  if (oNode) {
+    if (oNode.nodeType == 1) {fnVisit(oNode);}
+    for (var c = oNode.firstChild; c; c = c.nextSibling) {
+      xWalkTree(c, fnVisit);
+    }
+  }
+}
+
+</script>
+</head>
+<body>
+
+<h1>Node Traversal Demo</h1>
+
+<div id='leftColumn'>
+<h2>Intro</h2>
+<p><span class='fw'>This</span> demonstrates how to traverse the nodes of a subtree of the document.</p>
+<p><span class='fw'>The</span> function <em>xWalkTree(oNode, fnVisit)</em> walks the subtree starting at oNode. It applies the fnVisit function to each Element node.</p>
+<p><span class='fw'>IE4</span> doesn't have 'firstChild' nor 'nextSibling'. Are there alternatives?</p>
+<p>For more dhtml toys visit<br /><a href='http://cross-browser.com/'>Cross-Browser.com</a>.</p>
+<hr />
+<p><span class='fw'>Lorem ipsum</span> dolor sit amet, consectetaur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+<p><span class='fw'>Ut enim</span> ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+<p><span class='fw' title='class=fw'>Duis aute irure</span> dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+<p><span class='fw' title=''>Excepteur</span> sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+</div>
+
+<div id='rightColumn'>
+<h2>Visit Function</h2>
+<p>The following code is applied to every Element node in the document. Use the variable <em>node</em> as a reference to the current node in the traversal.</p>
+<form onsubmit='xWalkTree(document.body, visit); return false;'>
+<textarea id='vfta' rows='14'>
+var t = node.getAttribute('title');
+if (t && t.length) {
+  node.style.border = '1px dotted red';
+  node.parentNode.style.border = '1px dotted blue';
+}
+</textarea>
+<input type='submit' value='Apply' />
+</form>
+<h2>xWalkTree()</h2>
+<pre>
+/* xWalkTree()
+   Perform a preorder traversal
+   on the subtree starting at oNode
+   and pass each Element node to fnVisit.
+*/
+function xWalkTree(oNode, fnVisit)
+{
+  if (oNode) {
+    if (oNode.nodeType == 1) {fnVisit(oNode);}
+    for (var c = oNode.firstChild; c; c = c.nextSibling) {
+      xWalkTree(c, fnVisit);
+    }
+  }
+}
+</pre>
+<h2>Sed ut perspiciatis...</h2>
+<p><span class='fw'>Sed ut perspiciatis</span> unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui do<a href="http://lipsum.com/" title="Read about Lorem Ipsum at lipsum.com">lorem ipsum</a> quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?</p>
+<h2>But I must explain...</h2>
+<p><span class='fw' title='class=fw'>But I must explain</span> to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in which toil and pain can procure him some great pleasure. To take a trivial example, which of us ever undertakes laborious physical exercise, except to obtain some advantage from it? But who has any right to find fault with a man who chooses to enjoy a pleasure that has no annoying consequences, or one who avoids a pain that produces no resultant pleasure?</p>
+<h2>At vero eos et...</h2>
+<p><span class='fw'>At vero eos et</span> accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.</p>
+<h2>On the other hand...</h2>
+<p><span class='fw'>On the other hand</span>, we denounce with righteous indignation and dislike men who are so beguiled and demoralized by the charms of pleasure of the moment, so blinded by desire, that they cannot foresee the pain and trouble that are bound to ensue; and equal blame belongs to those who fail in their duty through weakness of will, which is the same as saying through shrinking from toil and pain. These cases are perfectly simple and easy to distinguish. In a free hour, when our power of choice is untrammelled and when nothing prevents our being able to do what we like best, <em>every pleasure is to be welcomed and <strong title='oh yes, avoid pain'>every pain</strong> avoided</em>. But in certain circumstances and owing to the claims of duty or the obligations of business it will frequently occur that pleasures have to be repudiated and annoyances accepted. The wise man therefore always holds in these matters to this principle of selection: he rejects pleasures to secure other greater pleasures, or else he endures pains to avoid worse pains.</p>
+</div>
+</body>
+</html>

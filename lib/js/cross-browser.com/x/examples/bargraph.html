@@ -1,0 +1,212 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>xBar - Bar Graph Demo</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<style type='text/css'>
+.hBarC { /* horizontal bar container */
+  position:absolute;
+  overflow:hidden;
+  border:1px solid #333;
+  background:#ccc;
+}
+.hBar { /* horizontal bar */
+  position:absolute; overflow:hidden;
+  margin:0; padding:0;
+  background:#900;
+}
+.vBarC { /* vertical bar container */
+  position:absolute; overflow:hidden;
+  margin:0; padding:0;
+  border:1px solid #333;
+  background:#ccc;
+}
+.vBar { /* vertical bar */
+  position:absolute; overflow:hidden;
+  margin:0; padding:0;
+  background:#009;
+}
+.marker {
+  position:relative;
+  visibility:hidden;
+}
+#content1 {
+  position:absolute;
+  overflow:hidden;
+  margin:0; padding:8px;
+  color:#369; background:#fff;
+}
+</style>
+<link rel='stylesheet' type='text/css' href='../../css/s1.css' />
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'>
+
+//// Application
+
+if (xInclude('../x_core.js', '../x_event.js', '../x_bar.js')) {
+  window.onload = xWinOnLoad;
+}
+
+var bars = new Array();
+
+function xWinOnLoad()
+{
+  if (xNN4 || xIE4 || !document.createElement) return;
+  
+  bars[0] = new xBar('ltr', 'hBarC', 'hBar');
+  bars[1] = new xBar('ttb', 'vBarC', 'vBar');
+  bars[2] = new xBar('rtl', 'hBarC', 'hBar');
+  bars[3] = new xBar('btt', 'vBarC', 'vBar');
+
+  winOnResize(); // initial setup
+  
+  xAddEventListener(document, 'mousemove', docOnMouseMove, false);
+  xAddEventListener(window, 'resize', winOnResize, false);
+}
+
+function docOnMouseMove(evt)
+{
+  var e = new xEvent(evt);
+  bars[0].update(e.pageX);
+  bars[1].update(e.pageY);
+  bars[2].update(e.pageX);
+  bars[3].update(e.pageY);
+}
+
+function winOnResize()
+{
+  var l = 200, s = 20;
+  var cw = xClientWidth();
+  var ch = xClientHeight();
+  var x = cw - l - s - 20;
+  var y = xPageY('m1');
+
+  bars[0].paint(x, y, l, s);
+  bars[1].paint(x+l, y, s, l);
+  bars[2].paint(x+s, y+l, l, s);
+  bars[3].paint(x, y+s, s, l);
+
+  bars[0].reset(xClientWidth(), 0);
+  bars[1].reset(xClientHeight(), 0);
+  bars[2].reset(xClientWidth(), 0);
+  bars[3].reset(xClientHeight(), 0);
+
+  xResizeTo('content1', l-s, l-s);
+  xMoveTo('content1', x+s, y+s);
+
+/* debug
+  var ele = xGetElementById('content1');
+  var s = 'content1:\n' + xWidth(ele) + ', ' + xHeight(ele) + '\n' + ele.offsetWidth + ', ' + ele.offsetHeight;
+  ele = xGetElementById(bars[0].con);
+  s += '\n\nbars[0]:\n' + xWidth(ele) + ', ' + xHeight(ele) + '\n' + ele.offsetWidth + ', ' + ele.offsetHeight;
+  alert(s);
+*/
+}
+
+</script>
+</head>
+<body>
+<h1>xBar - Bar Graph Demo</h1>
+<div id='m1' class='marker'></div>
+<div id='content1' class='content'>
+<p><strong>xBar</strong> and the <strong>X</strong> library are licensed LGPL.</p>
+<p>Visit <a href='http://cross-browser.com/' title='Cross-Browser DHTML Libraries and Applications'>Cross-Browser.com</a></p>
+</div>
+<div id='content2' class='content'>
+<h2>Application</h2>
+<pre>
+if (xInclude('../x_core.js', '../x_event.js', '../x_bar.js')) {
+  window.onload = xWinOnLoad;
+}
+
+var bars = new Array();
+
+function xWinOnLoad()
+{
+  if (xNN4 || xIE4 || !document.createElement) return;
+  
+  bars[0] = new xBar('ltr', 'hBarC', 'hBar');
+  bars[1] = new xBar('ttb', 'vBarC', 'vBar');
+  bars[2] = new xBar('rtl', 'hBarC', 'hBar');
+  bars[3] = new xBar('btt', 'vBarC', 'vBar');
+
+  winOnResize(); // initial setup
+  
+  xAddEventListener(document, 'mousemove', docOnMouseMove, false);
+  xAddEventListener(window, 'resize', winOnResize, false);
+}
+
+function docOnMouseMove(evt)
+{
+  var e = new xEvent(evt);
+  bars[0].update(e.pageX);
+  bars[1].update(e.pageY);
+  bars[2].update(e.pageX);
+  bars[3].update(e.pageY);
+}
+
+function winOnResize()
+{
+  var l = 200, s = 20;
+  var cw = xClientWidth();
+  var ch = xClientHeight();
+  var x = cw - l - s - 20;
+  var y = xPageY('m1');
+
+  bars[0].paint(x, y, l, s);
+  bars[1].paint(x+l, y, s, l);
+  bars[2].paint(x+s, y+l, l, s);
+  bars[3].paint(x, y+s, s, l);
+
+  bars[0].reset(xClientWidth(), 0);
+  bars[1].reset(xClientHeight(), 0);
+  bars[2].reset(xClientWidth(), 0);
+  bars[3].reset(xClientHeight(), 0);
+
+  xResizeTo('content1', l-s, l-s);
+  xMoveTo('content1', x+s, y+s);
+}
+</pre>
+
+<h2>CSS</h2>
+<pre>
+.hBarC { /* horizontal bar container */
+  position:absolute;
+  overflow:hidden;
+  border:1px solid #333;
+  background:#ccc;
+}
+.hBar { /* horizontal bar */
+  position:absolute;
+  overflow:hidden;
+  background:#900;
+}
+.vBarC { /* vertical bar container */
+  position:absolute;
+  overflow:hidden;
+  border:1px solid #333;
+  background:#ccc;
+}
+.vBar { /* vertical bar */
+  position:absolute;
+  overflow:hidden;
+  background:#009;
+}
+.marker {
+  position:relative;
+  visibility:hidden;
+}
+#content1 {
+  position:absolute;
+  overflow:hidden;
+  padding:1em;
+  color:#369; background:#fff;
+}
+</pre>
+</div>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>X Slideouts</title>
+<meta name='author' content='Mike Foster (Cross-Browser.com)' />
+<meta name='description' content='Cross-Browser DHTML Libraries and Applications' />
+<meta name='keywords' content='menu,dhtml,crossbrowser,layout,css,dom,api,library,demo,javascript,code' />
+<link rel='stylesheet' type='text/css' href='../../css/s3.css' />
+<style type='text/css'><!--
+#header {
+  margin:2px; padding:0; color:#000;
+  font-family:verdana,arial,sans-serif,helvetica; font-size:14px;
+  font-weight:normal; text-align:right;
+}
+#main {
+  color:#000; background:#fff; margin:30px 100px 0 100px; padding:10px;
+  font-family:verdana,arial,sans-serif,helvetica; font-size:12px;
+  border:1px solid #666;
+}
+.term {
+  color:#ccc; background:#639; padding:10px;
+  font-family:verdana,arial,sans-serif,helvetica; font-size:12px;
+  font-weight:bold; border:1px solid #ccc;
+}
+.definition {
+  color:#000; background:#ccc; margin:2px; padding:2px;
+  font-family:verdana,arial,sans-serif,helvetica; font-size:10px;
+  border:1px solid #000;
+}
+#t1 { margin:0 0 40px 0px; }
+#t2 { margin:0 0 40px 70px; }
+#t3 { margin:0 0 40px 140px; }
+#t4 { margin:0 0 40px 210px; }
+#t5 { margin:0 0 40px 280px; }
+
+/* dhtml style over-rides */
+/* should be dynamically included for down-gradeability */
+
+.term {
+  position:relative;
+  left:0; top:0;
+  width:150px; /* height:60px; */
+}
+.definition {
+  position:absolute; visibility:hidden;
+  margin:0; width:200px;
+}
+--></style>
+<script type='text/javascript' src='../x_load.js'></script>
+<script type='text/javascript'><!--
+xInclude('../x_core.js', '../x_event.js', '../x_slide.js');
+var defOffset = 2;
+var defSlideTime = 200;
+var tnActive = 0;
+window.onload = function() {
+  var i=1, t, d;
+  t = xGetElementById('t1');
+  while (t) {
+    t.termNumber = i;
+    xZIndex(t, 2);
+    d = 'd' + i;
+    xHide(d);
+    xZIndex(d, 1);
+    xMoveTo(d, xPageX(t), xPageY(t));
+    t = xGetElementById('t' + ++i);
+  }
+  xAddEventListener(document, 'mousemove', docOnMousemove, false);
+}
+function docOnMousemove(evt) {
+  var e = new xEvent(evt);
+  var t = getTermEle(e.target);
+  if (!tnActive) { // no def is active
+    if (t) { // mouse is over a term, activate its def
+      xShow('d'+t.termNumber);
+      xSlideTo('d'+t.termNumber, xPageX(t)+xWidth(t)+defOffset, xPageY(t), defSlideTime);
+      tnActive = t.termNumber;
+    }
+  }
+  else { // a def is active
+    if (!t) { // mouse is not over a term, deactivate active def
+      xSlideTo('d'+tnActive, xPageX('t'+tnActive), xPageY('t'+tnActive), defSlideTime);
+      setTimeout("xHide('d"+tnActive+"')", defSlideTime);
+      tnActive = 0;
+    }
+  }
+}
+function getTermEle(ele) {
+//window.status = ele;
+  while(ele && !ele.termNumber) {
+    if (ele == document) return null;
+    ele = xParent(ele);
+  }
+  return ele;
+}
+//--></script>
+</head>
+<body>
+
+<div id='header'>
+<a href='http://cross-browser.com/'>Cross-Browser.com</a><br>
+X Slideouts Demo
+</div>
+
+<div id='main'>
+
+<div id='t1' class='term'>Introduction</a></div>
+<div id='d1' class='definition'><b>X &amp; CBE</b><br>Introduction to the <i>X Library</i> and the <i>CBE API</i></div>
+
+<div id='t2' class='term'>Menus</div>
+<div id='d2' class='definition'><b>Menus</b><br>horizontal, vertical, mouseover, floating, etc.</div>
+
+<div id='t3' class='term'>Interfaces</div>
+<div id='d3' class='definition'><b>Dynamic Interfaces</b><br>Page <i>templates</i> with pure DHTML layout that adjusts to the screen size</div>
+
+<div id='t4' class='term'>Examples</div>
+<div id='d4' class='definition'><b>Examples</b><br>learn how to use X and/or CBE with documented examples</div>
+
+<div id='t5' class='term'>Documentation</div>
+<div id='d5' class='definition'><b>Documentation</b><br>Extensive documentation for X and CBE including complete reference manuals</div>
+
+</div> <!-- end main -->
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+/*
+  xMenu3_1_dhtml.css
+  This code is distributed under the terms of the LGPL (cross-browser.com/license.html)
+*/
+
+.xmLbl {
+  float:none;
+  position:relative;
+  overflow:hidden;
+}
+
+.xmBox {
+  float:none;
+  position:absolute;
+  overflow:visible;
+  visibility:hidden;
+  margin:0;
+}
+
+#xColumn {
+  float:none;
+  position:absolute;
+  overflow:hidden;
+  visibility:hidden;
+  margin:0;
+  height:auto;
+}
+
+#xHead {
+  float:none;
+  position:absolute;
+  overflow:hidden;
+  visibility:hidden;
+  margin:0;
+}
+
+#xBody {
+  float:none;
+  position:absolute;
+  overflow:visible;
+  visibility:hidden;
+  margin:0;
+  width:auto; height:auto;
+}
+
+#xFoot {
+  float:none;
+  position:absolute;
+  overflow:hidden;
+  visibility:hidden;
+  margin:0;
+}
