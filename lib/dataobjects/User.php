@@ -18,6 +18,7 @@ class DataObject_User extends DB_DataObject
     var $name;                            // blob(255)  not_null blob
     var $admin;                           // int(4)  not_null
     var $last_account_id;                 // int(11)  not_null
+    var $last_login;                      // string(14)  
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

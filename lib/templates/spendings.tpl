@@ -104,7 +104,7 @@
                         {if $summarize_months}
                             <td>{$spending.date|date_format:'%d.'}</td>
                         {else}
-                            <td>{$spending.date|date_format:'%d. %b. %y'}</td>
+                            <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
                         {/if}
                         <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{$spending.description}</a></td>
                         <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>

@@ -41,6 +41,9 @@
         $User = DB_DataObject::factory('user');
         $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) $_SESSION['user'] = $User->toArray();
+        // Update last_login
+        $User->last_login = strftime('%Y%m%d%H%M%S');
+        $User->update();
     }
     if ($logout) {
         if (isset($_SESSION['account_id']) and $_SESSION['account_id'] != $_SESSION['user']['last_account_id']) {
