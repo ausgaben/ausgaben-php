@@ -115,7 +115,7 @@
                         </tr>
                     {/if}
                     <tr>
-                        <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Summe der Ein- und Ausgaben</strong></td>
+                        <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Summe der Einnahmen und Ausgaben</strong></td>
                         <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_type.0|mf}</strong></td>
                     </tr>
                 {/if}
