@@ -8,6 +8,8 @@
     * @package Ausgaben
     * @subpackage Frontend
     */
+	
+	$separate_sums = $Settings->get('separate_sums');
 
 	// Load abf (amount brought forward)
 	$abf = array();

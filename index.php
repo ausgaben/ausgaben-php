@@ -18,6 +18,7 @@
     require_once 'lib/classes/SmartyPage.php';
     require_once 'lib/classes/SpendingMailer.php';
     require_once 'lib/classes/SpendingFilter.php';
+    require_once 'lib/classes/Settings.php';
     require_once 'Auth.php';
     require_once 'Date.php';
     require_once 'DB/DataObject.php';
@@ -39,10 +40,8 @@
     * Get Browser
     */
     $Browser = new Net_Useragent_Detect;
-
-    /**
-    * Auth
-    */
+    
+    // Login User
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
     $Auth->start();
     $ifauthed = $Auth->getAuth();
@@ -53,8 +52,6 @@
         $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) {
             $_SESSION['user'] = $User->toArray();
-            $_SESSION['user']['settings'] = unserialize($_SESSION['user']['settings']);
-            if (!is_array($_SESSION['user']['settings'])) $_SESSION['user']['settings'] = array();
         }
         // Update last_login
         $User->last_login = strftime('%Y%m%d%H%M%S');
@@ -63,13 +60,17 @@
     if (isset($_SESSION['user']) and isset($_SESSION['user']['locale'])) {
         setlocale(LC_ALL, $_SESSION['user']['locale']);
     }
+    
+    // Settings for the current User
+    $Settings = new Settings();
+    if ($ifauthed) {
+    	$Settings->init($_SESSION['user']['user_id']);
+    	$_SESSION['user']['settings'] = $Settings->get();
+    }
 
     if ($logout) {
         // Einstellungen speichern
-        $User = DB_DataObject::factory('user');
-        $User->get($_SESSION['user']['user_id']);
-        $User->settings = serialize($_SESSION['user']['settings']);
-        $User->update();
+        $Settings->save();
         // Neue Ausgaben senden
         if (isset($_SESSION['user'])) {
             $SpendingMailer = new SpendingMailer;
@@ -88,30 +89,20 @@
     // Selected Account
     $account_id = getVar(&$_REQUEST['account_id'], 0);
     if ($account_id) {
-        $_SESSION['user']['settings']['last_account_id'] = $account_id;
+        $Settings->set('last_account_id', $account_id);
     } else {
-        if (isset($_SESSION['user']['settings']['last_account_id'])) {
-            $account_id = $_SESSION['user']['settings']['last_account_id'];
-        }
+    	$account_id = intval($Settings->get('last_account_id'));
     }
     $_SESSION['account_id'] = $account_id;
     $_SESSION['display_month'] = $display_month;
 
-    // Display settings
-    $ifviewsettings = getVar(&$_REQUEST['ifviewsettings'], false);
-    if ($ifauthed and $ifviewsettings) {
-        $_SESSION['user']['settings']['separate_sums'] = getVar(&$_REQUEST['separate_sums'], true);
-    }
-    $_SESSION['user']['settings']['separate_sums'] = getVar(&$_SESSION['user']['settings']['separate_sums'], true);
-    $separate_sums = $_SESSION['user']['settings']['separate_sums'];
-
     // Load Settings for the app
     $settings = array();
-    $app_settings = DB_DataObject::factory('settings');
-    $app_settings->scope = 0;
-    if ($app_settings->find()) {
-        while ($app_settings->fetch()) {
-            $settings[$app_settings->name] = $app_settings->value;
+    $AppSettings = DB_DataObject::factory('settings');
+    $AppSettings->scope = 0;
+    if ($AppSettings->find()) {
+        while ($AppSettings->fetch()) {
+            $settings[$AppSettings->name] = $AppSettings->value;
         }
     }
     $DISPLAYDATA['settings'] = $settings;

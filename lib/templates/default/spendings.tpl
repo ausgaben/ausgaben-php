@@ -64,11 +64,11 @@
             <p><a href="javascript:showEditor();"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a></p>
             <p class="frametitle">Ansicht</p>
             <form name="viewsettings" method="post" action="{$SCRIPT_NAME}">
-                <input type="hidden" name="ifviewsettings" value="1" />
                 <p>
-                    <strong>Einnahmen und Ausgaben</strong><br />
-                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1">getrennt anzeigen</label><br />
-                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2">zusammen anzeigen</label><br />
+                    <input type="radio" name="_set_separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1" {popup text="Die Ausgaben über den Einnahmen anzeigen"}>Getrennt</label><br />
+                    <input type="radio" name="_set_separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2" {popup text="Die Ausgaben und die Einnahmen zusammen anzeigen"}>Zusammen</label><br />
+                    <input type="radio" name="_set_order_by_date" value="1" {if $smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_1" /> <label for="order_by_date_1" {popup text="Gruppiert die Einnahmen und Ausgaben nach ihrer Art"}>Nach Art gruppieren</label><br />
+                    <input type="radio" name="_set_order_by_date" value="0" {if !$smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_2" /> <label for="order_by_date_2" {popup text="Ordnet die Einnahmen und Ausgaben nach dem Datum"}>Nach Datum sortieren</label><br />
                 </p>
             </form>
         {/if}
