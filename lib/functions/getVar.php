@@ -3,8 +3,7 @@
     /**
     * @author Markus Tacker <m@tacker.org>
     * @version $Id$
-    * @package SuprMail
-    * @subpackage Functions
+    * @package Utilities
     */
 
     /**

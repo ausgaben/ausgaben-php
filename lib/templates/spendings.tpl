@@ -60,7 +60,7 @@
                             <tr class="alt">
                         {/if}
                             <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description}</a></td>
-                            <td><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|string_format:'%.2f'}</span></td>
+                            <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|string_format:'%.2f'}</span></td>
                         </tr>
                         {if $smarty.section.notbooked.last}
                             <tr>
