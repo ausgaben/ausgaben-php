@@ -10,7 +10,7 @@
         {/if}
         {foreach from=$accounts name=list_account item=list_account}
         {if $smarty.foreach.list_account.first}<p>{/if}
-            {if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}&nbsp;({if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value}</span>){if $list_account.summarize_months}&sup1;{/if}<br />
+            {if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}&nbsp;{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value}</span>{if $list_account.summarize_months}&sup1;{/if}<br />
             {if $smarty.foreach.list_account.last}
                 </p>
                 <p class="tiny">
@@ -152,14 +152,14 @@
             <tr>
                 <td>
                     <select onChange="document.addspending.day.value=this.value.substr(6,2);document.addspending.month.value=this.value.substr(4,2);document.addspending.year.value=this.value.substr(0,4);">
-                            <option value="">( Datum wählen )</option>
-                            <option value="{$smarty.now|date_format:'%Y%m%d'}">{$smarty.now|date_format:'%d.%m. - Heute'}</option>
-                            <option value="{$smarty.now-86400|date_format:'%Y%m%d'}">{$smarty.now-86400|date_format:'%d.%m. - %A'}</option>
-                            <option value="{$smarty.now-86400*2|date_format:'%Y%m%d'}">{$smarty.now-86400*2|date_format:'%d.%m. - %A'}</option>
-                            <option value="{$smarty.now-86400*3|date_format:'%Y%m%d'}">{$smarty.now-86400*3|date_format:'%d.%m. - %A'}</option>
-                            <option value="{$smarty.now-86400*4|date_format:'%Y%m%d'}">{$smarty.now-86400*4|date_format:'%d.%m. - %A'}</option>
-                            <option value="{$smarty.now-86400*5|date_format:'%Y%m%d'}">{$smarty.now-86400*5|date_format:'%d.%m. - %A'}</option>
-                            <option value="{$smarty.now-86400*6|date_format:'%Y%m%d'}">{$smarty.now-86400*6|date_format:'%d.%m. - %A'}</option>
+                            <option value="">( Datum )</option>
+                            <option value="{$smarty.now|date_format:'%Y%m%d'}">{$smarty.now|date_format:'%d. Heute'}</option>
+                            <option value="{$smarty.now-86400|date_format:'%Y%m%d'}">{$smarty.now-86400|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now-86400*2|date_format:'%Y%m%d'}">{$smarty.now-86400*2|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now-86400*3|date_format:'%Y%m%d'}">{$smarty.now-86400*3|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now-86400*4|date_format:'%Y%m%d'}">{$smarty.now-86400*4|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now-86400*5|date_format:'%Y%m%d'}">{$smarty.now-86400*5|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now-86400*6|date_format:'%Y%m%d'}">{$smarty.now-86400*6|date_format:'%d. %A'}</option>
                     </select>
                 </td>
                 <td>
@@ -177,7 +177,7 @@
                     // -->
                     </script>
                     <select name="spendinggroup_id" onChange="document.addspending.spendinggroup_name.value=spendinggroups[this.value];">
-                            <option value="">( Art wählen )</option>
+                            <option value="">( Art )</option>
                             {foreach from=$spendinggroups item=spendinggroup}
                             <option value="{$spendinggroup.spendinggroup_id}">{$spendinggroup.name}</option>
                             {/foreach}
