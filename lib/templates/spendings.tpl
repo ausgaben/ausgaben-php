@@ -104,6 +104,7 @@
 <div id="spendingform">
     <form name="addspending" method="post" action="{$SCRIPT_NAME}">
         <input type="hidden" name="spending_id" value="0" />
+        <input type="hidden" name="do" value="{$do}" />
         <table cellspacing="0" cellpadding="2">
             <tr>
                 <td align="right">Konto</td>
@@ -117,7 +118,7 @@
                 </td>
             </tr>
             <tr>
-                <td align="right">Type</td>
+                <td align="right">Typ</td>
                 <td>
                     <select name="type">
                         <option>( Typ wählen )</option>
@@ -173,8 +174,12 @@
                 <td><input type="text" name="value" class="small" tabindex="6" size="5" {if isset($edit_spending)}value="{$edit_spending.value}"{/if} /></td>
             </tr>
             <tr>
+                <td align="right">Eintrag löschen</td>
+                <td><input type="checkbox" name="ifdelete" value="1" /></td>
+            </tr>
+            <tr>
                 <td align="right"><input type="button" value="Abbrechen" onclick="xHide(spendingform);" /></td>
-                <td><input type="submit" value="Speichern" /></td>
+                <td><input type="submit" name="ifsubmit" value="Speichern" /></td>
             </tr>
         </table>
     </form>
@@ -194,13 +199,6 @@
 
     var spendingform = xGetElementById('spendingform');
 
-    xEnableDrag(spendingform, false, myOnDrag, false);
-
-    function myOnDrag (ele, mdx, mdy)
-    {ldelim}
-        xMoveTo(ele, xLeft(ele) + mdx, xTop(ele) + mdy);
-    {rdelim}
-
     function showEditor (spending_id)
     {ldelim}
         if (spending_id != null) {ldelim}
@@ -211,6 +209,7 @@
             {rdelim}
         {rdelim} else {ldelim}
             document.addspending.reset();
+            document.addspending.spending_id.value = 0;
         {rdelim}
         xTo = ((xClientWidth() - xWidth(spendingform)) / 2) + xScrollLeft();
         yTo = (((xClientHeight() / 7) * 3) - (xHeight(spendingform) / 2)) + xScrollTop();

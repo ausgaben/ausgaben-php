@@ -68,7 +68,7 @@
         if(!$account_id) break;
         // Insert new spending
         if ($ifsubmit) {
-            $spending_id       = getVar(&$_REQUEST['spending_id'], 0);
+            $spending_id        = getVar(&$_REQUEST['spending_id'], 0);
             $spendinggroup_id   = getVar(&$_REQUEST['spendinggroup_id'], 0);
             $spendinggroup_name = getVar(&$_REQUEST['spendinggroup_name'], '');
             $Spending = DB_DataObject::factory('spending');
@@ -76,6 +76,12 @@
                 if (!$Spending->get($spending_id)) {
                     break;
                 }
+            }
+            // Delete spending
+            if ($ifdelete and $spending_id) {
+                $Spending->delete();
+                $relocateDo = 'spendings';
+                break;
             }
             $Spending->setFrom($_REQUEST);
             $Spending->value = str_replace(',', '.', $Spending->value);
@@ -168,22 +174,6 @@
             }
         }
         $DISPLAYDATA['display_month'] = $display_month;
-        break;
-    case 'statistics':
-        if(!$ifauthed) break;
-        // Lade Monate und Ausgaben
-        $Spending = DB_DataObject::factory('spending');
-        $Spending->selectAdd('SUM(value) as value');
-        $Spending->orderBy('year desc');
-        $Spending->orderBy('month desc');
-        $Spending->groupBy('year, month');
-        $Spending->find();
-        while($Spending->fetch()) {
-            $DISPLAYDATA['spendings'][] = array(
-                'month' => sprintf('%04d%02d01000000', $Spending->year, $Spending->month, $Spending->day),
-                'value' => $Spending->value,
-            );
-        }
         break;
     case 'import':
         if (!$ifauthed) break;

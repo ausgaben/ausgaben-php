@@ -5,8 +5,6 @@
   <title>Ausgaben</title>
   <link rel="stylesheet" type="text/css" href="lib/css/ausgaben.css" />
   <script type="text/javascript" src="lib/js/cross-browser.com/x/x_core.js"></script>
-  <script type="text/javascript" src="lib/js/cross-browser.com/x/x_event.js"></script>
-  <script type="text/javascript" src="lib/js/cross-browser.com/x/x_drag.js"></script>
 </head>
 <body>
     <div class="masterbox">
@@ -21,9 +19,9 @@
                 <img src="lib/images/icons/large/riot_projects.png" width="40" height="40" /><br />
                 Konten
             </a>
-            <a href="?do=statistics" class="icon">
-                <img src="lib/images/icons/large/riot_statistics.png" width="40" height="40" /><br />
-                Statistik
+            <a href="?do=import" class="icon">
+                <img src="lib/images/icons/large/riot_refresh.png" width="40" height="40" /><br />
+                Import
             </a>
             <a href="?logout=1" class="icon">
                 <img src="lib/images/icons/large/riot_accounts.png" width="40" height="40" /><br />
