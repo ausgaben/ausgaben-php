@@ -28,8 +28,8 @@
         'passwordcol' => 'password',
     );
     $CONFIG['version'] = array(
-        'major'        => 0,
-        'minor'        => 2,
+        'major'        => 'BETA',
+        'minor'        => 4,
     );
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];

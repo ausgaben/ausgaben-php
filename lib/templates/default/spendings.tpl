@@ -65,8 +65,6 @@
             <p class="frametitle">Ansicht</p>
             <form name="viewsettings" method="post" action="{$SCRIPT_NAME}">
                 <p>
-                    <input type="radio" name="_set_separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1" {popup text="Die Ausgaben über den Einnahmen anzeigen"}>Getrennt</label><br />
-                    <input type="radio" name="_set_separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2" {popup text="Die Ausgaben und die Einnahmen zusammen anzeigen"}>Zusammen</label><br />
                     <input type="radio" name="_set_order_by_date" value="0" {if !$smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_1" /> <label for="order_by_date_1" {popup text="Gruppiert die Einnahmen und Ausgaben nach ihrer Art"}>Nach Art gruppieren</label><br />
                     <input type="radio" name="_set_order_by_date" value="1" {if $smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_2" /> <label for="order_by_date_2" {popup text="Ordnet die Einnahmen und Ausgaben nach dem Datum"}>Nach Datum sortieren</label><br />
                 </p>
@@ -79,49 +77,45 @@
 *}
 {if $smarty.session.account_id > 0}
     <div class="framecenter">
-        <div class="boxsubtitle">{$account.name}</div>
+        <div class="boxsubtitle">{$account.name}{if $summarize_months} - {$display_month|date_format:'%B %Y'}{/if}</div>
         <div class="boxcontent">
-            {if $summarize_months}
-                <h3>{$display_month|date_format:'%B %Y'}</h3>
-            {/if}
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
+                	<tr>
+                		<tr colspan="4"><h3>Zusammenfassung</h3></td>
+                	</tr>
                     {* Summen anzeigen *}
-                    <tr>
-                        <td class="sum-2" align="right">&raquo;</td>
-                        <td class="sum-2" colspan="2">Einnahmen</td>
-                        <td class="sum-2" align="right" nowrap="true">{$sum_type.2|mf}</td>
+                    <tr class="alt">
+                        <td colspan="3">Einnahmen</td>
+                        <td align="right" nowrap="true">{$sum_type.2|mf}</td>
                     </tr>
                     <tr>
-                        <td class="sum-1" align="right">&raquo;</td>
-                        <td class="sum-1" colspan="2">Ausgaben</td>
-                        <td class="sum-1" align="right" nowrap="true">{$sum_type.1|mf}</td>
+                        <td colspan="3">Ausgaben</td>
+                        <td align="right" nowrap="true">{$sum_type.1|mf}</td>
                     </tr>
-                    <tr>
-                        <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Summe der Einnahmen und Ausgaben</strong></td>
-                        <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_type.0|mf}</strong></td>
+                    <tr class="sum">
+                        <td class="sum" colspan="3"><strong>Summe</strong></td>
+                        <td class="sum" align="right"><span class="type-{if $sum_type.0 < 0}1{else}2{/if}"><strong>{$sum_type.0|mf}</strong></class></td>
                     </tr>
                     {if $account.enable_abf and $abf}
-                        <tr>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">&raquo;</td>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" colspan="2">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">{$abf.value|mf}</td>
+                        <tr class="alt">
+                            <td colspan="3">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
+                            <td align="right">{$abf.value|mf}</td>
                         </tr>
-                        <tr>
-                            <td class="{if $sum_abf >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
-                            <td class="{if $sum_abf >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_abf|mf}</strong></td>
+                        <tr class="sum">
+                            <td class="sum" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
+                            <td class="sum" align="right"><span class="type-{if $sum_abf < 0}1{else}2{/if}"><strong>{$sum_abf|mf}</strong></span></td>
                         </tr>
                     {/if}
 
                     {* Nicht gebuchte Ausgaben anzeigen *}
                     {section loop=$spendings_notbooked name=notbooked}
                         {if $smarty.section.notbooked.first}
-                            <tr>
+                        	<tr>
                                 <td colspan="4">&nbsp;</td>
                             </tr>
                             <tr>
-                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}"><strong>Noch nicht gebucht</strong></td>
-                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_notbooked|mf}</strong></td>
+                                <td colspan="4"><h3>Noch nicht gebuchte Ausgaben</h3></td>
                             </tr>
                         {/if}
                         {if $smarty.section.notbooked.iteration is odd}
@@ -130,10 +124,14 @@
                             <tr>
                         {/if}
                             <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a></td>
-                            <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
+                            <td><img src="lib/images/icons/spendingtype/{$spendings_notbooked[notbooked].type}.gif" width="16" height="16" hspace="2" /></td>
                             <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|mf}</span></td>
                         </tr>
                         {if $smarty.section.notbooked.last}
+                        	<tr class="sum">
+                                <td colspan="3" class="sum"><strong>Summe</strong></td>
+                                <td colspan="3" class="sum" align="right"><span class="type-{if $sum_notbooked < 0}1{else}2{/if}"><strong>{if $sum_notbooked < 0}-{/if}{$sum_notbooked|mf}</strong></span></td>
+                            </tr>
                             <!-- tr>
                                 <td colspan="4">&nbsp;</td>
                             </tr -->
@@ -141,11 +139,100 @@
                     {/section}
 
                     {* Ausgaben anzeigen *}
-                    {if $smarty.session.user.settings.separate_sums}
-                    {include file='spendings-separate_sums.tpl'}
-                    {else}
-                    {include file='spendings-no_separate_sums.tpl'}
-                    {/if}
+                    {assign var=order_by_date value=$smarty.session.user.settings.order_by_date}
+					{foreach from=$spendings item=spending name=spendings}
+					    {if $smarty.foreach.spendings.first}
+					        <tr><td colspan="4">&nbsp;</td></tr>
+					        <tr><td colspan="4"><h3>Gebuchte Ausgaben</h3></td></tr>
+					        {assign var=lastgroup value=0}
+					    {/if}
+					    {if !$order_by_date}
+						    {if $lastgroup ne $spending.spendinggroup_id}
+						        <tr>
+						            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+						            <td class="subheader" align="right">{$sum_group[$spending.spendinggroup_id]|mf}</td>
+						        </tr>
+						        {assign var=lastgroup value=$spending.spendinggroup_id}
+						    {/if}
+					    {/if}
+					    {if $smarty.foreach.spendings.iteration is odd}
+					        <tr class="alt">
+					    {else}
+					        <tr>
+					    {/if}
+					        {if $summarize_months}
+					            <td>{$spending.date|date_format:'%d.'}</td>
+					        {else}
+					            <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
+					        {/if}
+					        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
+					        <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
+					        <td align="right" nowrap="true"><a name="{$spending.spending_id}"><span class="type-{$spending.type}">{$spending_config[$spending.type].sign}{$spending.value|mf}</span></a></td>
+					    </tr>
+					    {if $smarty.foreach.spendings.last}
+					        <tr class="sum">
+					        	<td class="sum" colspan="3"><strong>Summe</strong></td>
+					        	<td class="sum" align="right"><span class="type-{if $sum_type.0 < 0}1{else}2{/if}"><strong>{$sum_type.0|mf}</strong></span></td>
+					        </tr>
+					    {/if}
+					{/foreach}
+					<script type="text/javascript">
+					<!--
+					
+					    var Spendings = new Array();
+					    {foreach from=$spendings item=spending name=spendings }
+					        Spendings[{$spending.spending_id}] = new Array();
+					        {foreach from=$spending key=fieldname item=field_value}
+					            Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
+					        {/foreach}
+					    {/foreach}
+					
+					// -->
+					</script>
+                    
+                    {* Bar-Ausgaben anzeigen *}
+                    {math equation='x*-1' assign=sum_withdrawal x=$sum_type.4}
+                    {math equation='x+y' assign=sum_cash_all x=$sum_withdrawal y=$sum_type.3}
+                    {section loop=$spendings_cash name=cash}
+                        {if $smarty.section.cash.first}
+                        	<tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><h3>Bar-Ausgaben</h3></td>
+                            </tr>
+                            <tr class="alt">
+                            	<td>&nbsp;</td>
+                            	<td>Bar-Abhebungen</td>
+                            	<td><img src="lib/images/icons/spendingtype/4.gif" width="16" height="16" hspace="2" /></td>
+                            	<td align="right"><span class="type-{if $sum_withdrawal < 0}1{else}2{/if}">{$sum_withdrawal|mf}</span></td>
+                            </tr>
+                        {/if}
+                        {if $smarty.section.cash.iteration is odd}
+                            <tr>
+                        {else}
+                            <tr class="alt">
+                        {/if}
+                        	{if $summarize_months}
+					            <td>{$spendings_cash[cash].date|date_format:'%d.'}</td>
+					        {else}
+					            <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'}</td>
+					        {/if}
+                            <td><a href="javascript:javascript:showEditor({$spendings_cash[cash].spending_id});">{$spendings_cash[cash].description|so}</a></td>
+                            <td><img src="lib/images/icons/spendingtype/3.gif" width="16" height="16" hspace="2" /></td>
+                            <td align="right"><span class="type-{$spendings_cash[cash].type}">-{$spendings_cash[cash].value|mf}</span></td>
+                        </tr>
+                        {if $smarty.section.cash.last}
+                        	<tr class="sum">
+                                <td colspan="3" class="sum"><strong>Summe</strong></td>
+                                <td colspan="3" class="sum" align="right"><span class="type-{if $sum_cash_all < 0}1{else}2{/if}"><strong>{$sum_cash_all|mf}</strong></span></td>
+                            </tr>
+                            
+                            <!-- tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr -->
+                        {/if}
+                    {/section}
             
                 </tbody>
             </table>
@@ -172,13 +259,12 @@
                 </td>
             </tr>
             <tr>
-                <td align="right"><label for="type">Typ</label></td>
+                <td align="right">Typ</td>
                 <td>
-                    <select name="type" id="type">
-                        <option>( Typ wählen )</option>
-                        <option value="1" selected="true">Ausgabe</option>
-                        <option value="2">Einnahme</option>
-                    </select>
+                    <input type="radio" name="type" value="1" selected="true" id="type_1"> <label for="type_1"><img src="lib/images/icons/spendingtype/1.gif" width="32" height="32" alt="Ausgabe" title="Ausgabe" align="absmiddle" /> Ausgabe</label><br />
+                    <input type="radio" name="type" value="2" id="type_2"> <label for="type_2"><img src="lib/images/icons/spendingtype/2.gif" width="32" height="32" alt="Einnahme" title="Einnahme" align="absmiddle" /> Einnahme</label><br />
+                    <input type="radio" name="type" value="3" id="type_3"> <label for="type_3"><img src="lib/images/icons/spendingtype/3.gif" width="32" height="32" alt="Bar-Ausgabe" title="Bar-Ausgabe" align="absmiddle" /> Bar bezahlt</label><br />
+                    <input type="radio" name="type" value="4" id="type_4"> <label for="type_4"><img src="lib/images/icons/spendingtype/4.gif" width="32" height="32" alt="Bargeld abheben" title="Bargeld abheben" align="absmiddle" /> Bargeld abgehoben</label><br />
                 </td>
             </tr>
             <tr>
@@ -239,15 +325,6 @@
                 </td>
             </tr>
             <tr>
-                <td align="right">Zahlungsmittel</td>
-                <td>
-                    <input type="radio" name="spendingmethod_id" value="0" checked="true" id="spendingmethod_id_0" /> <label for="spendingmethod_id_0">Kein</label><br />
-                    {foreach from=$spendingmethods name=spendingmethods item=spendingmethod}
-                        <input type="radio" name="spendingmethod_id" value="{$spendingmethod.spendingmethod_id}" id="spendingmethod_id_{$spendingmethod.spendingmethod_id}" /> <label for="spendingmethod_id_{$spendingmethod.spendingmethod_id}"><img src="lib/images/icons/spendingmethod/{$spendingmethod.icon}" width="11" height="11" /> {$spendingmethod.name}</label><br />
-                    {/foreach}
-                </td>
-            </tr>
-            <tr>
                 <td align="right"><label for="ifduplicate"><u>N</u>euen Eintragen anlegen</label></td>
                 <td><input type="checkbox" name="ifduplicate" value="1" accesskey="n" id="ifduplicate" /></td>
             </tr>
@@ -269,6 +346,13 @@
         Spendings[{$spendings_notbooked[notbooked].spending_id}] = new Array();
         {foreach from=$spendings_notbooked[notbooked] key=fieldname item=field_value}
             Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
+        {/foreach}
+    {/section}
+    
+    {section loop=$spendings_cash name=cash}
+        Spendings[{$spendings_cash[cash].spending_id}] = new Array();
+        {foreach from=$spendings_cash[cash] key=fieldname item=field_value}
+            Spendings[{$spendings_cash[cash].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
         {/foreach}
     {/section}
     
@@ -297,17 +381,13 @@
                     {rdelim}
                     continue;
                 {rdelim}
+                if (fieldname == "type") {ldelim}
+                	document.addspending.type[(Spendings[spending_id][fieldname] - 1)].checked = true;
+                    continue;
+                {rdelim}
                 if (fieldname == "spendinggroup_id") {ldelim}
                     document.addspending.spendinggroup_name.value = spendinggroups[Spendings[spending_id][fieldname]];
                     updateDescriptionSelector(Spendings[spending_id][fieldname]);
-                {rdelim}
-                if (fieldname == "spendingmethod_id") {ldelim}
-                    for (var fieldId in document.addspending.spendingmethod_id) {ldelim}
-                        if (document.addspending.spendingmethod_id[fieldId].value == Spendings[spending_id][fieldname]) {ldelim}
-                            document.addspending.spendingmethod_id[fieldId].checked = true;
-                        {rdelim}
-                    {rdelim}
-                    continue;
                 {rdelim}
                 eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
             {rdelim}
@@ -340,7 +420,7 @@
             n++;
         {rdelim}
     {rdelim}
-
+    
 // -->
 </script>
 {include file='html_foot.tpl'}

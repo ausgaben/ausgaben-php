@@ -145,13 +145,8 @@ p.frametitle {
     font-weight: bold;
     color: #a00000;
 }
-td.sum-2 {
-    background-color: #cdffb4;
-    border-top: 2px solid #a0a0a0;
-}
-td.sum-1 {
-    background-color: #ffddd5;
-    border-top: 2px solid #a0a0a0;
+td.sum {
+    border-top: 1px solid #808080;
 }
 td.leftsum {
     border-top: 1px dashed #a0a0a0;
@@ -176,6 +171,9 @@ tbody {
 tr.alt {
     background-color: #f0f0f0;
 }
+tr.sum {
+    background-color: #ffffd7;
+}
 td.subheader {
     background-color: #e0e0e0;
     border-top: 1px solid #a0a0a0;
@@ -189,7 +187,7 @@ td.subheader {
     font-size: 10pt;
     visibility: hidden;
 }
-span.type-1 {
+span.type-1, span.type-3, span.type-4 {
     color: #e32200;
 }
 span.type-2 {

@@ -9,7 +9,6 @@
     * @subpackage Frontend
     */
 	
-	$separate_sums = $Settings->get('separate_sums');
 	$order_by_date = $Settings->get('order_by_date');
 
 	// Load abf (amount brought forward)
@@ -43,7 +42,7 @@
 			while ($SpendingValue->fetch()) {
 				if ($SpendingValue->type == SPENDING_TYPE_IN) {
 					$AccountData['sum_value'] += $SpendingValue->sum_value;
-				} else {
+				} else if ($SpendingValue->type == SPENDING_TYPE_OUT) {
 					$AccountData['sum_value'] -= $SpendingValue->sum_value;
 				}
 			}
@@ -126,13 +125,6 @@
 			$DISPLAYDATA['spendinggroups'][$Spendinggroup->spendinggroup_id] = $Spendinggroup->toArray();
 		}
 	}
-	// Load Spendingmethods
-	$Spendingmethod = DB_DataObject::factory('spendingmethod');
-	if ($Spendingmethod->find()) {
-		while($Spendingmethod->fetch()) {
-			$DISPLAYDATA['spendingmethods'][$Spendingmethod->spendingmethod_id] = $Spendingmethod->toArray();
-		}
-	}
 	if ($activeAccount['summarize_months']) {
 		// Load months
 		$Spending = DB_DataObject::factory('spending');
@@ -163,7 +155,7 @@
 			$DISPLAYDATA['spendings_notbooked'][] = $spendingData;
 			if ($Spending->type == SPENDING_TYPE_IN) {
 				$DISPLAYDATA['sum_notbooked'] += $Spending->value;
-			} else {
+			} else if ($Spending->type == SPENDING_TYPE_OUT) {
 				$DISPLAYDATA['sum_notbooked'] -= $Spending->value;
 			}
 		}
@@ -172,6 +164,7 @@
 	if ($activeAccount['summarize_months']) {
 		$DISPLAYDATA['month_sums'] = array();
 		$DISPLAYDATA['month_sums']['_all'] = 0;
+		if (!isset($DISPLAYDATA['months'])) return;
 		foreach ($DISPLAYDATA['months'] as $date) {
 			$DISPLAYDATA['month_sums'][$date] = 0;
 			$Spending = DB_DataObject::factory('spending');
@@ -186,7 +179,7 @@
 					if ($Spending->type == SPENDING_TYPE_IN) {
 						$DISPLAYDATA['month_sums'][$date] += $Spending->sum;
 						$DISPLAYDATA['month_sums']['_all'] += $Spending->sum;
-					} else {
+					} else if ($Spending->type == SPENDING_TYPE_OUT or $Spending->type == SPENDING_TYPE_WITHDRAWAL) {
 						$DISPLAYDATA['month_sums'][$date] -= $Spending->sum;
 						$DISPLAYDATA['month_sums']['_all'] -= $Spending->sum;
 					}
@@ -201,8 +194,15 @@
 			}
 		}
 	}
+	
 	// Load Spendings
-	$DISPLAYDATA['sum_type'] = array(SPENDING_TYPE_ALL => 0, SPENDING_TYPE_IN => 0, SPENDING_TYPE_OUT => 0);
+	$DISPLAYDATA['sum_type'] = array(
+		SPENDING_TYPE_ACCOUNT 		=> 0,
+		SPENDING_TYPE_OUT 			=> 0,
+		SPENDING_TYPE_IN 			=> 0,
+		SPENDING_TYPE_CASH 			=> 0,
+		SPENDING_TYPE_WITHDRAWAL 	=> 0,
+	);
 	$Spending = DB_DataObject::factory('spending');
 	if (!$order_by_date) $Spending->orderBy('spendinggroup_id');
 	$Spending->orderBy('day desc');
@@ -213,55 +213,39 @@
 	}
 	$Spending->whereAdd("account_id=$account_id");
 	if ($Spending->find()) {
-		if ($separate_sums) {
-			$DISPLAYDATA['sum_group'] = array();
-		} else {
-		}
 		while ($Spending->fetch()) {
 			$spendingData = $Spending->toArray();
 			$spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
-			if ($separate_sums) {
-				$DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
-			} else {
+			if ($spending_config[$Spending->type]['value'] > 0) {
+				$DISPLAYDATA['sum_type'][$Spending->type] += $Spending->value;
+			} else  {
+				$DISPLAYDATA['sum_type'][$Spending->type] -= $Spending->value;
+			}
+			switch ($Spending->type) {
+			case SPENDING_TYPE_OUT:
+			case SPENDING_TYPE_IN:
+			case SPENDING_TYPE_WITHDRAWAL:
 				$DISPLAYDATA['spendings'][] = $spendingData;
-			}
-			if ($separate_sums) {
-				if(!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
-					$DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
-				}
-			} else {
-				if(!isset($DISPLAYDATA['sum_group'][$Spending->spendinggroup_id])) {
-					$DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] = 0;
-				}
-			}
-			if ($Spending->type == SPENDING_TYPE_IN) {
-				$DISPLAYDATA['sum_type'][$Spending->type]                               += $Spending->value;
-				$DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL]                             += $Spending->value;
-				if ($separate_sums) {
-					$DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] += $Spending->value;
-				} else {
-					$DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] += $Spending->value;
-				}
-			} else {
-				$DISPLAYDATA['sum_type'][$Spending->type]                               -= $Spending->value;
-				$DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL]                             -= $Spending->value;
-				if ($separate_sums) {
-					$DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] -= $Spending->value;
-				} else {
-					$DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] -= $Spending->value;
-				}
+				break;
+			case SPENDING_TYPE_CASH:
+				$DISPLAYDATA['spendings_cash'][] = $spendingData;
+				break;
 			}
 		}
+		// Gesamtsummen
+		$DISPLAYDATA['sum_type'][SPENDING_TYPE_OUT] += $DISPLAYDATA['sum_type'][SPENDING_TYPE_WITHDRAWAL];
+		$DISPLAYDATA['sum_type'][SPENDING_TYPE_ACCOUNT] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_OUT] + $DISPLAYDATA['sum_type'][SPENDING_TYPE_IN];
 	}
+	
 	// Load abf from last month
 	if ($activeAccount['enable_abf'] and !empty($abf[$account_id])) {
 		$last_month = strftime('%Y%m', mktime(0, 0, 0, substr($display_month, 4, 2) - 1, 1, substr($display_month, 0, 4)));
 		if (isset($abf[$account_id][$last_month])) {
 			$DISPLAYDATA['abf'] = array(
-			'value' => $abf[$account_id][$last_month],
-			'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
+				'value' => $abf[$account_id][$last_month],
+				'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
 			);
-			$DISPLAYDATA['sum_abf'] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_ALL] + $abf[$account_id][$last_month];
+			$DISPLAYDATA['sum_abf'] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_ACCOUNT] + $abf[$account_id][$last_month];
 		}
 		// Set Date of the abf sum
 		$date_now     = new Date;
@@ -274,6 +258,7 @@
 	}
 	// Einstellungen
 	$DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
+	$DISPLAYDATA['spending_config'] = $spending_config;
 	// Beschreibungen laden
 	$date_1month = new Date;
 	$date_1month->subtractSeconds(4 * 31 * 24 * 60 * 60);

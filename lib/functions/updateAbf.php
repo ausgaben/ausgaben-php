@@ -23,7 +23,7 @@
 				if (!isset($abf[$yearmonth])) $abf[$yearmonth] = 0;
 				if ($Spending->type == SPENDING_TYPE_IN) {
 					$abf[$yearmonth] += $Spending->value;
-                } else {
+                } else if ($Spending->type == SPENDING_TYPE_OUT or $Spending->type == SPENDING_TYPE_WITHDRAWAL) {
                     $abf[$yearmonth] -= $Spending->value;
                 }
 			}
