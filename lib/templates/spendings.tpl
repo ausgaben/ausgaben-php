@@ -111,22 +111,15 @@
                     {/section}
 
                     {* Summen anzeigen *}
-                    {if $account.enable_abf and $abf}
-                        <tr>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">&raquo;</td>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" colspan="2">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
-                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">{$abf.value|mf}</td>
-                        </tr>
-                    {/if}
-                    <tr>
-                        <td class="sum-1" align="right">&raquo;</td>
-                        <td class="sum-1" colspan="2">Ausgaben</td>
-                        <td class="sum-1" align="right" nowrap="true">{$sum_type.1|mf}</td>
-                    </tr>
                     <tr>
                         <td class="sum-2" align="right">&raquo;</td>
                         <td class="sum-2" colspan="2">Einnahmen</td>
                         <td class="sum-2" align="right" nowrap="true">{$sum_type.2|mf}</td>
+                    </tr>
+                    <tr>
+                        <td class="sum-1" align="right">&raquo;</td>
+                        <td class="sum-1" colspan="2">Ausgaben</td>
+                        <td class="sum-1" align="right" nowrap="true">{$sum_type.1|mf}</td>
                     </tr>
                     <tr>
                         <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Summe der Einnahmen und Ausgaben</strong></td>
@@ -134,8 +127,13 @@
                     </tr>
                     {if $account.enable_abf and $abf}
                         <tr>
-                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
-                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_abf|mf}</strong></td>
+                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">&raquo;</td>
+                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" colspan="2">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
+                            <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">{$abf.value|mf}</td>
+                        </tr>
+                        <tr>
+                            <td class="{if $sum_abf >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
+                            <td class="{if $sum_abf >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_abf|mf}</strong></td>
                         </tr>
                     {/if}
 
