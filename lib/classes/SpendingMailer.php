@@ -159,7 +159,7 @@
                 $mime->addHTMLImage($image, $content_type);
             }
             $mime->setHTMLBody($body['html']);
-            $mime->setTextBody($body['text']);
+            $mime->setTxtBody($body['text']);
             $body = $mime->get();
             $hdrs = array_merge($hdrs, $mime->headers());
 
