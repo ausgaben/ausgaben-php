@@ -448,19 +448,19 @@
                     }
                     if ($ifignoredrawings and $fields[2] == 'GELDAUTOMAT') continue;
                     $Spending = DB_DataObject::factory('spending');
-                    $Spending->year  = 2000 + substr($fields[1], 6, 2);
-                    $Spending->month = substr($fields[1], 3, 2);
-                    $Spending->day   = substr($fields[1], 0, 2);
+                    $Spending->year  = 2000 + substr($fields[2], 6, 2);
+                    $Spending->month = substr($fields[2], 3, 2);
+                    $Spending->day   = substr($fields[2], 0, 2);
                     $Spending->spendinggroup_id = 15; // Importiert vom Kontoauszug
                     $Spending->spendingmethod_id = 3; // Überweisung
                     $fields[4] = str_replace(',', ', ', $fields[4]);
-                    $Spending->description = preg_replace('/[0-9]{5,}/', '[n]', ucwords(strtolower((empty($fields[4])) ? $fields[3] : $fields[4].' - '.$fields[3])));
+                    $Spending->description = preg_replace('/[0-9]{5,}/', '[n]', ucwords(strtolower((empty($fields[5])) ? $fields[4] : $fields[5].' - '.$fields[4])));
                     $Spending->description = str_replace("\n", ' ', $Spending->description);
                     $Spending->description = str_replace("\r", ' ', $Spending->description);
                     $Spending->description = str_replace("\r\n", ' ', $Spending->description);
                     $Spending->user_id = $_SESSION['user']['user_id'];
                     $Spending->account_id = $account_id;
-                    $value = explode(',', $fields[7]);
+                    $value = explode(',', $fields[8]);
                     $value[0]  = str_replace('.', '', $value[0]);
                     $value = join('.', $value);
                     if ($value > 0) {
