@@ -18,7 +18,7 @@
     require_once 'lib/classes/SpendingMailer.php';
     require_once 'Auth.php';
     require_once 'DB/DataObject.php';
-	require_once 'Net/UserAgent/Detect.php';
+    require_once 'Net/UserAgent/Detect.php';
 
     /**
     * Pull some vars from the request
@@ -33,7 +33,7 @@
     /**
     * Get Browser
     */
-	$Browser = new Net_Useragent_Detect;
+    $Browser = new Net_Useragent_Detect;
 
     /**
     * Auth
@@ -303,6 +303,21 @@
         }
         $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
         $DISPLAYDATA['display_month'] = $display_month;
+        // Beschreibungen laden
+        $Spending = DB_DataObject::factory('spending');
+        if ($Spending->find()) {
+            $DISPLAYDATA['descriptions'] = array();
+            while ($Spending->fetch()) {
+                $description = trim($Spending->description);
+                if (empty($description)) continue;
+                if (strlen($description) > 30) $description = substr($description, 0, 30).' ...';
+                $DISPLAYDATA['descriptions'][$Spending->spendinggroup_id][] = $description;
+            }
+        }
+        foreach ($DISPLAYDATA['descriptions'] as $spendinggroup_id => $descriptions) {
+            $DISPLAYDATA['descriptions'][$spendinggroup_id] = array_unique($DISPLAYDATA['descriptions'][$spendinggroup_id]);
+            sort($DISPLAYDATA['descriptions'][$spendinggroup_id]);
+        }
         break;
     case 'import':
         if (!$ifauthed) break;
@@ -437,7 +452,7 @@
     * Display
     */
     $DISPLAYDATA['locale_conv'] = localeconv();
-	$DISPLAYDATA['isIE'] = $Browser->isIE();
+    $DISPLAYDATA['isIE'] = $Browser->isIE();
     $DISPLAYDATA['do'] = $do;
     $DISPLAYDATA['action'] = $action;
     $DISPLAYDATA['version'] = $CONFIG['version'];

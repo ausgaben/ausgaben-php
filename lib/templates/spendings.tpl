@@ -39,7 +39,7 @@
                         <table cellpadding="0" cellspacing="0" width="100%">
                     {/if}
                     <tr>
-                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%B '%y"}{if $display_month eq $month}</strong>{/if}</td>
+                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%B '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
                         <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf:0}</span></td>
                     </tr>
                     {if $smarty.foreach.months.last}</table><p></p>{/if}
@@ -187,7 +187,7 @@
                             {/foreach}
                     // -->
                     </script>
-                    <select name="spendinggroup_id" onChange="document.addspending.spendinggroup_name.value=spendinggroups[this.value];">
+                    <select name="spendinggroup_id" onChange="document.addspending.spendinggroup_name.value=spendinggroups[this.value]; updateDescriptionSelector(this.value);">
                             <option value="">( Art )</option>
                             {foreach from=$spendinggroups item=spendinggroup}
                             <option value="{$spendinggroup.spendinggroup_id}">{$spendinggroup.name}</option>
@@ -199,7 +199,11 @@
                 </td>
             </tr>
             <tr>
-                <td align="right">Zweck</td>
+                <td align="right">
+                    <select name="descriptionSelector" disabled="true" onchange="document.addspending.description.value = this.value;">
+                        <option>( Beschreibung )</option>
+                    </select>
+                </td>
                 <td><input type="text" name="description" class="text" tabindex="5" /></td>
             </tr>
             <tr>
@@ -252,6 +256,14 @@
             Spendings[{$spendings_notbooked[notbooked].spending_id}]["{$fieldname}"] = "{$field_value|jso}";
         {/foreach}
     {/section}
+    
+    var Descriptions = new Array();
+    {foreach from=$descriptions name=descriptionpergroup key=spendinggroup_id item=descriptions}
+        Descriptions[{$spendinggroup_id}] = new Array();
+        {section loop=$descriptions name=descriptions}
+            Descriptions[{$spendinggroup_id}][{$smarty.section.descriptions.index}] = "{$descriptions[descriptions]|so}";
+        {/section}
+    {/foreach}
 
     var spendingform = xGetElementById('spendingform');
 
@@ -272,6 +284,7 @@
                 {rdelim}
                 if (fieldname == "spendinggroup_id") {ldelim}
                     document.addspending.spendinggroup_name.value = spendinggroups[Spendings[spending_id][fieldname]];
+                    updateDescriptionSelector(Spendings[spending_id][fieldname]);
                 {rdelim}
                 if (fieldname == "spendingmethod_id") {ldelim}
                     for (var fieldId in document.addspending.spendingmethod_id) {ldelim}
@@ -286,11 +299,29 @@
         {rdelim} else {ldelim}
             document.addspending.reset();
             document.addspending.spending_id.value = 0;
+            updateDescriptionSelector('');
         {rdelim}
         xTo = ((xClientWidth() - xWidth(spendingform)) / 2) + xScrollLeft();
         yTo = (((xClientHeight() / 7) * 3) - (xHeight(spendingform) / 2)) + xScrollTop();
         xMoveTo(spendingform, xTo, yTo);
         xShow(spendingform);
+    {rdelim}
+    
+    function updateDescriptionSelector (spendinggroup_id)
+    {ldelim}
+        document.addspending.descriptionSelector.length = 0;
+        document.addspending.descriptionSelector.options[0] = new Option('( Beschreibung )');
+        if (spendinggroup_id == '') {ldelim}
+            document.addspending.descriptionSelector.disabled = true;
+            return;
+        {rdelim}        
+        document.addspending.descriptionSelector.disabled = false;
+        var n = 1;
+        for (var description_id in Descriptions[spendinggroup_id]) {ldelim}
+            var description = Descriptions[spendinggroup_id][description_id];
+            document.addspending.descriptionSelector.options[n] = new Option(description, description);
+            n++;
+        {rdelim}
     {rdelim}
 
 // -->
