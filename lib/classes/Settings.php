@@ -6,6 +6,9 @@
     * @package Ausgaben
     * @subpackage Backend
     */
+    
+    define('SETTINGS_SCOPE_USER', 'user');
+    define('SETTINGS_SCOPE_SITE', 'site');
 
     /**
     * Manage Settings
@@ -17,9 +20,14 @@
     class Settings
     {
     	/**
+		* @var		string	Scope name
+		*/
+    	var $_scope = '_';
+    	
+    	/**
 		* @var		int		Scope ID
 		*/
-    	var $_scope = -1;
+    	var $_id = -1;
     	
     	/**
     	* @var 		string	Settings for the scope
@@ -46,18 +54,24 @@
     	/**
     	* Initially load the settings for the scope
     	*
-    	* @param 	int		Scope ID
+    	* @param 	string	Scope name
+    	* @param 	int		Scope id
     	*/
-        function init ($scope) 
+        function init ($scope, $id = 0) 
         {
-        	$this->_scope = intval($scope);
+        	$this->_scope = strtolower(trim($scope));
+        	$this->_id = intval($scope);
         	if (!isset($_SESSION[$this->_session_var][$this->_scope])) {
         		$_SESSION[$this->_session_var][$this->_scope] = array();
+        	}
+        	if (!isset($_SESSION[$this->_session_var][$this->_scope][$this->_id])) {
+        		$_SESSION[$this->_session_var][$this->_scope][$this->_id] = array();
 	        	$Settings = DB_DataObject::factory('settings');
 	            $Settings->scope = $this->_scope;
+	            $Settings->id = $this->_id;
 	            if ($Settings->find()) {
 	            	while ($Settings->fetch()) {
-	            		$_SESSION[$this->_session_var][$this->_scope][$Settings->name] = $Settings->value;
+	            		$_SESSION[$this->_session_var][$this->_scope][$this->_id][$Settings->name] = $Settings->value;
 	            	}
 	            }
         	}
@@ -73,10 +87,10 @@
         function get ($name = false)
         {
         	if (!$name) {
-        		if (isset($_SESSION[$this->_session_var][$this->_scope])) return $_SESSION[$this->_session_var][$this->_scope];
+        		if (isset($_SESSION[$this->_session_var][$this->_scope][$this->_id])) return $_SESSION[$this->_session_var][$this->_scope][$this->_id];
         		return array();
         	}
-        	if (isset($_SESSION[$this->_session_var][$this->_scope][$name])) return $_SESSION[$this->_session_var][$this->_scope][$name];
+        	if (isset($_SESSION[$this->_session_var][$this->_scope][$this->_id][$name])) return $_SESSION[$this->_session_var][$this->_scope][$this->_id][$name];
         	return false;
         }
         
@@ -89,10 +103,12 @@
         {
         	$Settings = DB_DataObject::factory('settings');
 	        $Settings->scope = $this->_scope;
+	        $Settings->id = $this->_id;
 	        $Settings->delete();
-	        foreach ($_SESSION[$this->_session_var][$this->_scope] as $name => $value) {
+	        foreach ($_SESSION[$this->_session_var][$this->_scope][$this->_id] as $name => $value) {
 	        	$Settings = DB_DataObject::factory('settings');
 	        	$Settings->scope = $this->_scope;
+	        	$Settings->id = $this->_id;
 	        	$Settings->name = $name;
         		$Settings->value = $value;
         		if (!$Settings->insert()) return false;
@@ -121,7 +137,7 @@
         */
         function set ($name, $value) 
         {
-        	$_SESSION[$this->_session_var][$this->_scope][$name] = $value;
+        	$_SESSION[$this->_session_var][$this->_scope][$this->_id][$name] = $value;
         	return true;
         }
     }

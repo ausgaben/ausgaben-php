@@ -64,7 +64,7 @@
     // Settings for the current User
     $Settings = new Settings();
     if ($ifauthed) {
-    	$Settings->init($_SESSION['user']['user_id']);
+    	$Settings->init(SETTINGS_SCOPE_USER, $_SESSION['user']['user_id']);
     	$_SESSION['user']['settings'] = $Settings->get();
     }
 
@@ -97,15 +97,10 @@
     $_SESSION['display_month'] = $display_month;
 
     // Load Settings for the app
-    $settings = array();
-    $AppSettings = DB_DataObject::factory('settings');
-    $AppSettings->scope = 0;
-    if ($AppSettings->find()) {
-        while ($AppSettings->fetch()) {
-            $settings[$AppSettings->name] = $AppSettings->value;
-        }
-    }
-    $DISPLAYDATA['settings'] = $settings;
+    $AppSettings = new Settings();
+    $AppSettings->init(SETTINGS_SCOPE_SITE);
+    $app_settings = $AppSettings->get();
+    $DISPLAYDATA['settings'] = $app_settings;
     
     /**
     * Action
@@ -160,7 +155,7 @@
     $DISPLAYDATA['action'] = $action;
     $DISPLAYDATA['version'] = $CONFIG['version'];
     $Smarty = new SmartyPage;
-    $Smarty->template_dir .= '/' . $settings['theme'];
+    $Smarty->template_dir .= '/' . $app_settings['theme'];
     $Smarty->display($do. '.tpl');
 
 ?>

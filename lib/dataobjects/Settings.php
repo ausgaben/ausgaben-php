@@ -10,7 +10,8 @@ class DataObject_Settings extends DB_DataObject
     /* the code below is auto generated do not remove the above tag */
 
     var $__table = 'settings';                        // table name
-    var $scope;                           // int(11)  not_null
+    var $scope;                           // blob(255)  not_null blob
+    var $id;                              // int(11)  not_null
     var $name;                            // blob(255)  not_null blob
     var $value;                           // blob(65535)  not_null blob
 
