@@ -188,6 +188,7 @@
                 // $spendingData['description'] = str_replace("\r\n", '-br-', $spendingData['description']);
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
                 $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
+                if (!$Spending->booked) continue;
                 if (!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
                     $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
                 }

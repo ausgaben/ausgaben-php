@@ -45,13 +45,12 @@
             {/if}
             {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
                 {if $smarty.foreach.spendings_by_type.first}
-                    <table cellspacing="0" cellpadding="2">
+                    <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                         <thead>
                             <tr>
                                 <td>Tag</td>
                                 <td>Zweck</td>
                                 <td align="right">Betrag</td>
-                                <td>&nbsp;</td>
                             </tr>
                         </thead>
                         <tbody>
@@ -63,7 +62,6 @@
                                 {/if}
                                 <td class="{$sumall_class}" colspan="2"><strong>Gesamt</strong></td>
                                 <td class="{$sumall_class}" align="right"><strong>{$sum_type.0|string_format:'%.2f'}</strong></td>
-                                <td class="{$sumall_class}">&nbsp;</td>
                             </tr>
                 {/if}
                 {foreach from=$spendings_by_type item=spending name=spending}
@@ -71,7 +69,6 @@
                         <tr>
                             <td class="sum-{$type}" colspan="2">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
                             <td class="sum-{$type}" align="right">{$sum_type[$type]|string_format:'%.2f'}</td>
-                            <td class="sum-{$type}">&nbsp;</td>
                         </tr>
                         {assign var=lastgroup value=0}
                     {/if}
@@ -79,7 +76,6 @@
                         <tr>
                             <td colspan="2" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
                             <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|string_format:'%.2f'}</td>
-                            <td class="subheader">&nbsp;</td>
                         </tr>
                         {assign var=lastgroup value=$spending.spendinggroup_id}
                     {/if}
@@ -93,9 +89,8 @@
                         {else}
                             <td>{$spending.date|date_format:'%d. %b. %y'}</td>
                         {/if}
-                        <td>{$spending.description}</td>
-                        <td align="right"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
-                        <td align="right"><a href="javascript:showEditor({$spending.spending_id});"><img src="lib/images/icons/small/riot_edit_page.png" width="21" height="18" align="absmiddle" /></a></td>
+                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{$spending.description}</a></td>
+                        <td align="right"><span class="type-{$type}" {if !$spending.booked}style="text-decoration: line-through;"{/if}>{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                     </tr>
                     {if $smarty.foreach.spendings_out.last}
 
@@ -135,7 +130,7 @@
                 <td>
                     <select name="type">
                         <option>( Typ wählen )</option>
-                        <option value="1">Ausgabe</option>
+                        <option value="1" selected="true">Ausgabe</option>
                         <option value="2">Einnahme</option>
                     </select>
                 </td>
@@ -184,7 +179,14 @@
             </tr>
             <tr>
                 <td align="right">Betrag</td>
-                <td><input type="text" name="value" class="small" tabindex="6" size="5" {if isset($edit_spending)}value="{$edit_spending.value}"{/if} /></td>
+                <td><input type="text" name="value" class="text" tabindex="6" size="5" {if isset($edit_spending)}value="{$edit_spending.value}"{/if} /></td>
+            </tr>
+            <tr>
+                <td align="right">Bereits gebucht?</td>
+                <td>
+                    <input type="radio" name="booked" value="1" checked="true" /> Ja
+                    <input type="radio" name="booked" value="0" /> Nein 
+                </td>
             </tr>
             <tr>
                 <td align="right">Eintrag <u>l</u>öschen</td>
@@ -218,6 +220,14 @@
             for (var fieldname in Spendings[spending_id]) {ldelim}
                 if (fieldname == "date") continue;
                 if (fieldname == "user_id") continue;
+                if (fieldname == "booked") {ldelim}
+                    if (Spendings[spending_id][fieldname] == "1") {ldelim}
+                        document.addspending.booked[0].checked = true;
+                    {rdelim} else {ldelim}
+                        document.addspending.booked[1].checked = true;
+                    {rdelim}
+                    continue;
+                {rdelim}
                 eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
             {rdelim}
         {rdelim} else {ldelim}
