@@ -25,7 +25,7 @@
         <div class="boxcontent">
             <p>
                 Name des Kontos<br />
-                <input type="text" name="name" value="{$account.name}" />
+                <input type="text" class="text" name="name" value="{$account.name}" />
             </p>
             <p>
                 Beschreibung<br />
@@ -42,7 +42,7 @@
                 </p>
             {/if}
             <p>
-                <input type="submit" value="Speichern" name="ifsubmit" />
+                <input type="submit" class="button" value="Speichern" name="ifsubmit" />
             </p>
         </div>
     </form>

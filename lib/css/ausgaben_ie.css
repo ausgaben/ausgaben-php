@@ -1,0 +1,15 @@
+body {
+	text-align: center;
+}
+div.masterbox {
+	text-align: left;
+}
+#loginpassword {
+	visibility: hidden;
+}
+div.loginform {
+    margin-left: 250px;
+}
+div.framecenter {
+    width: 630px;
+}

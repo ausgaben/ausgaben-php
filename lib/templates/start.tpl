@@ -20,7 +20,7 @@
                             </p>
                         {/if}
                     <div id="loginpassword">
-                        <input type="password" name="password" />
+                        <input type="password" name="password" class="text" />
                     </div>
                 </form>
                 <script type="text/javascript">

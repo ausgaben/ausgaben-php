@@ -17,7 +17,7 @@ img {
 p {
     margin: 0 0 10px 0;
 }
-select, input[type=text], input[type=password], textarea {
+select, textarea, input.text, input.tiny, input.small {
     border-top: 1px solid #565454;
     border-left: 1px solid #565454;
     border-bottom: 1px solid #e7e7e7;
@@ -27,7 +27,7 @@ select, input[type=text], input[type=password], textarea {
     width: 150px;
     padding: 0;
 }
-input[type=submit], input[type=button] {
+input.button {
     border: 1px solid #565454;
     background-color: #c0c0c0;
     font-size: 10pt;

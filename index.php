@@ -17,6 +17,7 @@
     require_once 'lib/classes/SmartyPage.php';
     require_once 'Auth.php';
     require_once 'DB/DataObject.php';
+	require_once 'Net/UserAgent/Detect.php';
 
     /**
     * Pull some vars from the request
@@ -331,6 +332,12 @@
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?do=$relocateDo&display_month=$display_month");
         return;
     }
+	
+	/**
+	* Get Browser
+	*/
+	$Browser = new Net_Useragent_Detect;
+	$DISPLAYDATA['isIE'] = $Browser->isIE();
 
     /**
     * Display

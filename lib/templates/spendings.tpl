@@ -45,7 +45,7 @@
             {/if}
             {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
                 {if $smarty.foreach.spendings_by_type.first}
-                    <table width="100%" cellspacing="0" cellpadding="2">
+                    <table cellspacing="0" cellpadding="2">
                         <thead>
                             <tr>
                                 <td>Tag</td>
@@ -175,12 +175,12 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="spendinggroup_name" class="medium" tabindex="4" {if isset($edit_spending)}value="{$spendinggroups[$edit_spending.spendinggroup_id].name}"{/if} />
+                    <input type="text" name="spendinggroup_name" class="text" tabindex="4" {if isset($edit_spending)}value="{$spendinggroups[$edit_spending.spendinggroup_id].name}"{/if} />
                 </td>
             </tr>
             <tr>
                 <td align="right">Zweck</td>
-                <td><input type="text" name="description" class="large" tabindex="5" {if isset($edit_spending)}value="{$edit_spending.description}"{/if} /></td>
+                <td><input type="text" name="description" class="text" tabindex="5" {if isset($edit_spending)}value="{$edit_spending.description}"{/if} /></td>
             </tr>
             <tr>
                 <td align="right">Betrag</td>
@@ -191,8 +191,8 @@
                 <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" /></td>
             </tr>
             <tr>
-                <td align="right"><input type="button" value="Abbrechen" onclick="xHide(spendingform);" /></td>
-                <td><input type="submit" name="ifsubmit" value="Speichern" /></td>
+                <td align="right"><input type="button" class="button" value="Abbrechen" onclick="xHide(spendingform);" /></td>
+                <td><input type="submit" class="button"  name="ifsubmit" value="Speichern" /></td>
             </tr>
         </table>
     </form>

@@ -27,7 +27,7 @@
                 <input type="file" name="file" />
             </p>
             <p>
-                <input type="submit" name="ifsubmit" value="Importieren" />
+                <input type="submit" class="button" name="ifsubmit" value="Importieren" />
             </p>
         </form>
     </div>
