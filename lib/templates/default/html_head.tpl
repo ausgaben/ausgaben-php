@@ -3,6 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Ausgaben {$version.major}.{$version.minor}</title>
+    <link rel="stylesheet" type="text/css" href="lib/css/{$settings.theme}.css" />
   	{if $isIE}<link rel="stylesheet" type="text/css" href="lib/css/{$settings.theme}-ie.css" />{/if}
   	<script type="text/javascript" src="lib/js/cross-browser.com/x/x_core.js"></script>
   	<script type="text/javascript" language="JavaScript" src="lib/js/overlib/overlib_config.js"></script>

@@ -10,6 +10,8 @@
     */
 
     $order_by_date = $Settings->get('order_by_date');
+    
+    $DateLastLogin = new Date($_SESSION['user']['last_login']);
 
     // Load abf (amount brought forward)
     $abf = array();
@@ -215,7 +217,13 @@
     if ($Spending->find()) {
         while ($Spending->fetch()) {
             $spendingData = $Spending->toArray();
-            $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
+            $SpendingDate = new Date(sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day));
+            if ($DateLastLogin->before($SpendingDate) and $Spending->user_id != $_SESSION['user']['user_id']) {
+            	$spendingData['is_new'] = true;
+            } else {
+            	$spendingData['is_new'] = false;
+            }
+            $spendingData['date'] = $SpendingDate->format('%Y%m%d000000');
             if ($spending_config[$Spending->type]['value'] > 0) {
                 $DISPLAYDATA['sum_type'][$Spending->type] += $Spending->value;
             } else  {

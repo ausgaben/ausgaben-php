@@ -53,10 +53,8 @@
             $_SESSION['user'] = $User->toArray();
         }
         // Update last_login
-        /*
         $User->last_login = strftime('%Y%m%d%H%M%S');
         $User->update();
-        */
     }
     if (isset($_SESSION['user']) and isset($_SESSION['user']['locale'])) {
         setlocale(LC_ALL, $_SESSION['user']['locale']);

@@ -123,7 +123,7 @@
                         {else}
                             <tr>
                         {/if}
-                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a></td>
+                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a> {if $spendings_notbooked[notbooked].is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/{$spendings_notbooked[notbooked].type}.gif" width="16" height="16" hspace="2" /></td>
                             <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|mf}</span></td>
                         </tr>
@@ -164,7 +164,7 @@
                             {else}
                                 <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
                             {/if}
-                            <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
+                            <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a> {if $spending.is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
                             <td align="right" nowrap="true"><a name="{$spending.spending_id}"><span class="type-{$spending.type}">{$spending_config[$spending.type].sign}{$spending.value|mf}</span></a></td>
                         </tr>
@@ -217,7 +217,7 @@
                             {else}
                                 <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'}</td>
                             {/if}
-                            <td><a href="javascript:javascript:showEditor({$spendings_cash[cash].spending_id});">{$spendings_cash[cash].description|so}</a></td>
+                            <td><a href="javascript:javascript:showEditor({$spendings_cash[cash].spending_id});">{$spendings_cash[cash].description|so}</a> {if $spendings_cash[cash].is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/3.gif" width="16" height="16" hspace="2" /></td>
                             <td align="right"><span class="type-{$spendings_cash[cash].type}">-{$spendings_cash[cash].value|mf}</span></td>
                         </tr>
@@ -372,6 +372,7 @@
                 if (fieldname == "date") continue;
                 if (fieldname == "user_id") continue;
                 if (fieldname == "timestamp") continue;
+                if (fieldname == "is_new") continue;
                 if (fieldname == "booked") {ldelim}
                     if (Spendings[spending_id][fieldname] == "1") {ldelim}
                         document.addspending.booked[0].checked = true;
