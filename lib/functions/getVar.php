@@ -18,8 +18,8 @@
     */
     function getVar($var, $default)
     {
-        if(!isset($var)) return $default;
-        if(empty($var)) return $default;
+        if (!isset($var)) return $default;
+        // if(empty($var)) return $default;
         switch(gettype($default)) {
         case 'integer':
             return intval($var);
@@ -32,6 +32,7 @@
             }
             break;
         case 'string':
+            if (empty($var)) return $default;
             return strval($var);
             break;
         case 'array':
