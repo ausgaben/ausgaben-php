@@ -8,7 +8,7 @@
     * @package Ausgaben
     * @subpackage Frontend
     */
-    
+
     /**
     * Include required files
     */
@@ -17,16 +17,17 @@
     require_once 'lib/classes/SmartyPage.php';
     require_once 'Auth.php';
     require_once 'DB/DataObject.php';
-    
+
     /**
     * Pull some vars from the request
     */
     $do       = getVar(&$_REQUEST['do'], 'start');
     $action   = getVar(&$_REQUEST['action'], '');
     $ifsubmit = getVar(&$_REQUEST['ifsubmit'], false);
+    $ifdelete = getVar(&$_REQUEST['ifdelete'], false);
     $logout   = getVar(&$_REQUEST['logout'], false);
     $display_month    = getVar(&$_REQUEST['display_month'], strftime('%Y%m01000000'));
-    
+
     /**
     * Auth
     */
@@ -44,7 +45,7 @@
         $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) $_SESSION['user'] = $User->toArray();
     }
-    
+
     /**
     * Action
     */
@@ -85,7 +86,7 @@
                 $Spendingtype->name = trim($spendingtype_name);
                 $result = $Spendingtype->find();
                 if ($result <= 0) {
-                    $result = $Spendingtype->insert(); 
+                    $result = $Spendingtype->insert();
                     if (!$result) {
                         echo "Failed to create new spendingtype";
                         die();
@@ -240,6 +241,33 @@
             }
         }
         break;
+    case 'accounts':
+        if(!$ifauthed) break;
+        if ($ifsubmit) {
+            $account_id = getVar(&$_REQUEST['account_id'], 0);
+            $Account = DB_DataObject::factory('account');
+            if ($account_id) {
+                $Account->get($account_id);
+            }
+            if ($ifdelete) {
+                $Account->delete();
+            } else {
+                $Account->setFrom($_REQUEST);
+                if (!$Account->account_id) {
+                    $Account->insert();
+                } else {
+                    $Account->update();
+                }
+            }
+        }
+        $Account = DB_DataObject::factory('account');
+        $Account->orderBy('name');
+        if ($Account->find()) {
+            while ($Account->fetch()) {
+                $DISPLAYDATA['accounts'][$Account->account_id] = $Account->toArray();
+            }
+        }
+        break;
     default:
         // Benutzer zum Login laden
         $User = DB_DataObject::factory('user');
@@ -249,7 +277,7 @@
         }
         $do = 'start';
     }
-    
+
     /**
     * Relocate if required
     */
@@ -257,7 +285,7 @@
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?do=$relocateDo&display_month=$display_month");
         return;
     }
-    
+
     /**
     * Display
     */

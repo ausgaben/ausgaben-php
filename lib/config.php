@@ -27,7 +27,7 @@
     );
     $CONFIG['version'] = array(
         'major'        => 0,
-        'minor'        => 1,
+        'minor'        => 2,
     );
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];

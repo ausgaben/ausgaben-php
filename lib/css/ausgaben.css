@@ -1,157 +1,63 @@
-/** SIZES **/
-body {
-    margin: 0px;
-}
-div.menu {
-    padding: 5px;
-    margin: 0 0 5px 0;
-}
-form {
-    padding: 0;
-    margin: 0;
-}
-input.tiny {
-width: 18px;
-}
-input.small{
-width: 36px;
-}
-input.medium, select {
-width: 100px;
-}
-input.large {
-width: 200px;
-}
-table.spendings {
-        margin: 10px auto 10px auto;;
-}
-div.box {
-    width: 600px;
-    margin: 10px auto 10px auto;;
-    padding: 10px;
-}
-p, h1 {
-    margin: 0 0 5px 0;
-    padding: 0;
-}
-img {
-    border: 0;
-}
-/** FONTS **/
-body {
-    font-family: Georgia, Times, serif;
-}
-div.menu {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-}
-/** FONT-SIZES **/
-div.menu, td.row, input, select {
-    font-size: 9pt;
-}
-td, p {
-    font-size: 10pt;
-}
-h1 {
-    font-size: 15pt;
-}
-p.large {
-    font-size: 13pt;
-}
-/** BOLD **/
-div.menu, tr.header-a, tr.header-b, thead, p.error {
-    font-weight: bold;
-}
-/** COLORS **/
 a {
     color: #FF6600;
-}
-a.login {
-    display: block;
-    width: auto;
     text-decoration: none;
-    padding: 5px;
 }
 body {
-    background-color: #ffffff;
-}
-div.menu, h1 {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-}
-div.menu {
-    background-color: #EEEEEE;
-    border-color: #000000;
-}
-tr.header-a {
-    background-color: #cccccc;
-}
-tr.header-b {
-    background-color: #ffffff;
-}
-tr.row-1 {
-    background-color: #ffffff;
-}
-tr.row-2 {
-    background-color: #eeeeee;
-}
-select, input {
-    border-color: #c1c1c1;
-    background-color: #F1EAEC;
-}
-h1 {
-    color: #808080;
-    border-color: #808080;
-}
-p.error {
-    color: #ff0000;
-}
-/** BORDERS **/
-.border, select, input, table.spendings, div.box {
-    border-width: 1px;
-    border-style: solid;
-}
-td.header-a {
-    border-top-style: solid;
-}
-div.menu, h1 {
-    border-bottom-width: 1px;
-    border-bottom-style: solid;
-}
-td.header-b {
-    border-top-width: 1px;
-    border-top-style: solid;
-}
-/** Layer **/
-#loginpassword {
-    position: absolute;
-}
-/** Images **/
-body {
+    margin: 0px;
+    font-family: sans-serif;
     background-image: url(../images/gfx/bg.gif);
+}
+form {
+    margin: 0;
+}
+select, input[type=text], input[type=password], textarea {
+    border-top: 1px solid #565454;
+    border-left: 1px solid #565454;
+    border-bottom: 1px solid #e7e7e7;
+    border-right: 1px solid #e7e7e7;
+    background-color: #F1EAEC;
+    font-size: 9pt;
+    width: 150px;
+    padding: 0;
+}
+div.masterbox {
+    width: 782px;
+    margin: 20px auto 20px auto;
+    border: 1px solid #A00000;
+    background-color: #ffffff;
 }
 div.boxtitle {
     background-color: #e1e1e1;
-    font-size: 7pt;
-    font-family: sans-serif;
+    font-size: 6pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;
     border-bottom: 1px dashed #a00000;
+    text-transform: uppercase;
+}
+div.boxsubtitle {
+    background-color: #f9f9f9;
+    font-size: 12pt;
+    font-weight: bold;
+    padding: 0 10px 0 10px;
+    border-bottom: 1px dashed #dcdcdc;
+    height: 29px;
+    line-height: 29px;
+    color: #a00000;
 }
 div.boxfooter {
     background-color: #e1e1e1;
-    font-size: 7pt;
-    font-family: sans-serif;
+    font-size: 6pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;
     border-top: 1px dashed #a00000;
     text-align: right;
+    text-transform: uppercase;
 }
 div.boxsubtitle {
     background-color: #f9f9f9;
     font-size: 12pt;
-    font-family: sans-serif;
     font-weight: bold;
     padding: 0 10px 0 10px;
     border-bottom: 1px dashed #dcdcdc;
@@ -160,12 +66,53 @@ div.boxsubtitle {
     color: #a00000;
 }
 div.boxcontent {
-    padding: 10px;
-    font-family: sans-serif;
+    padding: 0 10px 0 10px;
 }
-div.loginbox {
-    width: 250px;
-    margin: 20px auto 0 auto;
-    border: 1px solid #A00000;
-    background-color: #ffffff;
+/** start.tpl **/
+#loginpassword {
+    position: absolute;
+}
+div.loginform {
+    width: 300px;
+    margin: 0 auto 0 auto;
+}
+div.icons {
+    background-color: #c1c1c1;
+    height: 55px;
+    border-bottom: 1px dashed #a00000;
+    padding: 0 10px 0 0;
+}
+a.icon {
+    display: block;
+    float: left;
+    color: #000000;
+    text-align: center;
+    margin: 0 0 0 10px;
+    font-size: 6pt;
+}
+a.icon:hover {
+    color: #ffffff;
+}
+div.floatright {
+    float: right;
+}
+div.frameleft {
+    width: 135px;
+    float: left;
+    font-size: 6pt;
+}
+div.framecenter {
+    float: left;
+    border-left: 1px dashed #dcdcdc;
+    border-right: 1px dashed #dcdcdc;
+    width: 508px;
+}
+div.clearall {
+    clear: both;
+    height: 0px;
+    line-height: 0px;
+}
+p.frametitle {
+    color: #a00000;
+    font-weight: bold;
 }
