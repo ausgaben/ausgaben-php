@@ -149,7 +149,7 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="day" maxlength="2" class="tiny" tabindex="1" value="{if isset($edit_spending)}{$edit_spending.day}{else}{$smarty.now|date_format:'%d'}{/if}" />.<input type="text" name="month" maxlength="2" class="tiny" tabindex="2" value="{if isset($edit_spending)}{$edit_spending.month}{else}{$smarty.now|date_format:'%m'}{/if}" />.<input type="text" name="year" class="small" maxlength="4" tabindex="3" value="{if isset($edit_spending)}{$edit_spending.year}{else}{$smarty.now|date_format:'%Y'}{/if}" />
+                    <input type="text" name="day" maxlength="2" class="tiny" tabindex="1" value="{$smarty.now|date_format:'%d'}" />.<input type="text" name="month" maxlength="2" class="tiny" tabindex="2" value="{$smarty.now|date_format:'%m'}" />.<input type="text" name="year" class="small" maxlength="4" tabindex="3" value="{$smarty.now|date_format:'%Y'}" />
                 </td>
             </tr>
             <tr>
@@ -170,16 +170,16 @@
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="spendinggroup_name" class="text" tabindex="4" {if isset($edit_spending)}value="{$spendinggroups[$edit_spending.spendinggroup_id].name}"{/if} />
+                    <input type="text" name="spendinggroup_name" class="text" tabindex="4" />
                 </td>
             </tr>
             <tr>
                 <td align="right">Zweck</td>
-                <td><input type="text" name="description" class="text" tabindex="5" {if isset($edit_spending)}value="{$edit_spending.description}"{/if} /></td>
+                <td><input type="text" name="description" class="text" tabindex="5" /></td>
             </tr>
             <tr>
                 <td align="right">Betrag</td>
-                <td><input type="text" name="value" class="text" tabindex="6" size="5" {if isset($edit_spending)}value="{$edit_spending.value}"{/if} /></td>
+                <td><input type="text" name="value" class="text" tabindex="6" size="5" /></td>
             </tr>
             <tr>
                 <td align="right">Bereits gebucht?</td>
