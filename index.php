@@ -18,6 +18,7 @@
     require_once 'lib/classes/SmartyPage.php';
     require_once 'lib/classes/SpendingMailer.php';
     require_once 'Auth.php';
+    require_once 'Date.php';
     require_once 'DB/DataObject.php';
     require_once 'Net/UserAgent/Detect.php';
 
@@ -107,12 +108,12 @@
             }
         }
         // Load Accounts
-        // DB_DataObject::debugLevel(1);
         $User2Account = DB_DataObject::factory('user2account');
         $User2Account->user_id = $_SESSION['user']['user_id'];
         if (!$User2Account->find()) break;
         while ($User2Account->fetch()) {
             $Account = $User2Account->getLink('account_id');
+            if (!$Account) continue;
             $AccountData = $Account->toArray();
             $AccountData['sum_value'] = 0;
             // Load Values
@@ -133,10 +134,6 @@
                         $AccountData['sum_value'] -= $SpendingValue->sum_value;
                     }
                 }
-            }
-            $last_month = strftime('%Y%m', mktime(0, 0, 0, substr($display_month, 4, 2) - 1, 1, substr($display_month, 0, 4)));
-            if (isset($abf[$Account->account_id][$last_month])) {
-                $AccountData['sum_value'] += $abf[$Account->account_id][$last_month];
             }
             $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
         }
@@ -299,7 +296,7 @@
             if ($activeAccount['enable_abf'] and !empty($abf[$account_id])) {
                 foreach ($abf[$account_id] as $abf_yearmonth => $value) {
                     $abf_date = strftime('%Y%m01000000', mktime(0, 0, 0, substr($abf_yearmonth, 4, 2) + 1, 1, substr($abf_yearmonth, 0, 4)));
-                    if (isset($DISPLAYDATA['month_sums'][$abf_date])) $DISPLAYDATA['month_sums'][$abf_date] += $value;
+                    if (isset($DISPLAYDATA['month_sums'][$abf_date])) $DISPLAYDATA['month_sums_abf'][$abf_date] = $DISPLAYDATA['month_sums'][$abf_date] + $value;
                 }
             }
         }
@@ -343,7 +340,15 @@
                     'value' => $abf[$account_id][$last_month],
                     'date' => mktime(0, 0, 0, substr($last_month, 4, 2), 1, substr($last_month, 0, 4)),
                 );
-                if (isset($DISPLAYDATA['sum_type'][0])) $DISPLAYDATA['sum_type'][0] += $abf[$account_id][$last_month];
+                $DISPLAYDATA['sum_abf'] = $DISPLAYDATA['sum_type'][0] + $abf[$account_id][$last_month];
+            }
+            // Set Date of the abf sum
+            $date_now     = new Date;
+            $date_display = new Date(mktime(0, 0, 0, substr($display_month, 4, 2), 1, substr($display_month, 0, 4)));
+            if ($date_now->format('%Y%m') == $date_display->format('%Y%m')) {
+                $DISPLAYDATA['sum_abf_date'] = $date_now->getDate(DATE_FORMAT_UNIXTIME);
+            } else {
+                $DISPLAYDATA['sum_abf_date'] = mktime(23, 59, 59, $date_display->getMonth() + 1, 0, $date_display->getYear());
             }
         }
         // Einstellungen
@@ -464,6 +469,7 @@
                 $Account->setFrom($_REQUEST);
                 if (!$Account->account_id) {
                     $result = $Account->insert();
+                    $account_id = $result;
                 } else {
                     $result = $Account->update();
                 }
