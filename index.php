@@ -42,12 +42,11 @@
     * Auth
     */
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
-    $last_auth_status = $Auth->getAuth();
     $Auth->start();
     $ifauthed = $Auth->getAuth();
     $DISPLAYDATA['AUTH'] = $ifauthed;
     $DISPLAYDATA['AUTH_STATUS'] = $Auth->getStatus();
-    if ($ifauthed and !$last_auth_status) {
+    if ($ifauthed and isset($_REQUEST['password'])) {
         $User = DB_DataObject::factory('user');
         $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) {
