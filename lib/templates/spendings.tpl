@@ -29,18 +29,20 @@
     <div class="framecenter">
         <div class="boxsubtitle">{$account.name}</div>
         <div class="boxcontent">
-            <h3>
-                {section loop=$months name=months}
-                    {if $smarty.section.months.first}
-                        <select onChange="document.location.href='{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month=' + this.value;" class="floatright">
-                    {/if}
-                    <option value="{$months[months]}" {if $display_month eq $months[months]}selected="true"{/if}>{$months[months]|date_format:'%B %Y'}</option>
-                    {if $smarty.section.months.last}
-                        </select>
-                    {/if}
-                {/section}
-                {$display_month|date_format:'%B %Y'}
-            </h3>
+            {if $summarize_months}
+                <h3>
+                    {section loop=$months name=months}
+                        {if $smarty.section.months.first}
+                            <select onChange="document.location.href='{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month=' + this.value;" class="floatright">
+                        {/if}
+                        <option value="{$months[months]}" {if $display_month eq $months[months]}selected="true"{/if}>{$months[months]|date_format:'%B %Y'}</option>
+                        {if $smarty.section.months.last}
+                            </select>
+                        {/if}
+                    {/section}
+                    {$display_month|date_format:'%B %Y'}
+                </h3>
+            {/if}
             {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
                 {if $smarty.foreach.spendings_by_type.first}
                     <table width="100%" cellspacing="0" cellpadding="2">
@@ -86,7 +88,11 @@
                     {else}
                         <tr class="alt">
                     {/if}
-                        <td>{$spending.date|date_format:'%d.'}</td>
+                        {if $summarize_months}
+                            <td>{$spending.date|date_format:'%d.'}</td>
+                        {else}
+                            <td>{$spending.date|date_format:'%d. %b. %y'}</td>
+                        {/if}
                         <td>{$spending.description}</td>
                         <td align="right"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                         <td align="right"><a href="javascript:showEditor({$spending.spending_id});"><img src="lib/images/icons/small/riot_edit_page.png" width="21" height="18" align="absmiddle" /></a></td>
@@ -110,6 +116,7 @@
 <div id="spendingform">
     <form name="addspending" method="post" action="{$SCRIPT_NAME}">
         <input type="hidden" name="spending_id" value="0" />
+        <input type="hidden" name="display_month" value="{$display_month}" />
         <input type="hidden" name="do" value="{$do}" />
         <table cellspacing="0" cellpadding="2">
             <tr>

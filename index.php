@@ -66,6 +66,7 @@
             $DISPLAYDATA['accounts'][$Account->account_id] = $Account->toArray();
         }
         if(!$account_id) break;
+        $activeAccount = $DISPLAYDATA['accounts'][$account_id];
         // Insert new spending
         if ($ifsubmit) {
             $spending_id        = getVar(&$_REQUEST['spending_id'], 0);
@@ -111,8 +112,10 @@
                 $result = $Spending->insert();
             }
             if (!$result) {
-                echo "Failed to insert spending.";
-                die();
+                if (PEAR::isError($result)) {
+                    echo "Failed to insert spending.";
+                    die();
+                }
             }
             $relocateDo = 'spendings';
         }
@@ -137,15 +140,17 @@
                 $DISPLAYDATA['spendinggroups'][$Spendinggroup->spendinggroup_id] = $Spendinggroup->toArray();
             }
         }
-        // Load years
-        $Spending = DB_DataObject::factory('spending');
-        $Spending->orderBy('year desc');
-        $Spending->orderBy('month desc');
-        $Spending->groupBy('year, month');
-        $Spending->whereAdd("account_id=$account_id");
-        if ($Spending->find()) {
-            while ($Spending->fetch()) {
-                $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
+        if ($activeAccount['summarize_months']) {
+            // Load years
+            $Spending = DB_DataObject::factory('spending');
+            $Spending->orderBy('year desc');
+            $Spending->orderBy('month desc');
+            $Spending->groupBy('year, month');
+            $Spending->whereAdd("account_id=$account_id");
+            if ($Spending->find()) {
+                while ($Spending->fetch()) {
+                    $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
+                }
             }
         }
         // Load Spendings
@@ -153,8 +158,10 @@
         $Spending->orderBy('type');
         $Spending->orderBy('spendinggroup_id');
         $Spending->orderBy('day desc');
-        $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
-        $Spending->whereAdd('year='.substr($display_month, 0, 4));
+        if ($activeAccount['summarize_months']) {
+            $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
+            $Spending->whereAdd('year='.substr($display_month, 0, 4));
+        }
         $Spending->whereAdd("account_id=$account_id");
         if ($Spending->find()) {
             $DISPLAYDATA['sum_type'] = array(0 => 0, 1 => 0, 2 => 0);
@@ -174,6 +181,7 @@
                 }
             }
         }
+        $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
         $DISPLAYDATA['display_month'] = $display_month;
         break;
     case 'import':
@@ -232,6 +240,7 @@
                     $Spending->description = preg_replace('/[0-9]{5,}/', '[n]', ucwords(strtolower((empty($fields[4])) ? $fields[3] : $fields[4].' - '.$fields[3])));
                     $Spending->description = str_replace("\n", ' ', $Spending->description);
                     $Spending->description = str_replace("\r", ' ', $Spending->description);
+                    $Spending->description = str_replace("\r\n", ' ', $Spending->description);
                     $Spending->user_id = $_SESSION['user']['user_id'];
                     $Spending->account_id = $account_id;
                     $value = explode(',', $fields[7]);

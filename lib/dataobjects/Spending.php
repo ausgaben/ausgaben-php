@@ -7,7 +7,7 @@ require_once 'DB/DataObject.php';
 define('SPENDING_TYPE_OUT',    1);
 define('SPENDING_TYPE_IN',     2);
 
-class DataObject_Spending extends DB_DataObject
+class DataObject_Spending extends DB_DataObject 
 {
     ###START_AUTOCODE
     /* the code below is auto generated do not remove the above tag */

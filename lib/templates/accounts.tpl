@@ -31,6 +31,11 @@
                 Beschreibung<br />
                 <textarea name="description">{$account.description}</textarea>
             </p>
+            <p>
+                Konto-Bewegungen monatlich zusammenfassen?<br />
+                <input type="radio" name="summarize_months" value="1" {if $account.summarize_months eq 1 or !$account}checked="true"{/if} /> Ja
+                <input type="radio" name="summarize_months" value="0" {if $account.summarize_months eq 0 and $account}checked="true"{/if} /> Nein
+            </p>
             {if $smarty.request.account_id}
                 <p>
                     <input type="checkbox" name="ifdelete" value="1" /> Konto löschen

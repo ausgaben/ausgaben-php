@@ -13,6 +13,7 @@ class DataObject_Account extends DB_DataObject
     var $account_id;                      // int(11)  not_null primary_key auto_increment
     var $name;                            // blob(255)  not_null blob
     var $description;                     // blob(65535)  not_null blob
+    var $summarize_months;                // int(1)  not_null
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}
