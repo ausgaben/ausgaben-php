@@ -17,6 +17,7 @@
     require_once 'lib/functions/updateAbf.php';
     require_once 'lib/classes/SmartyPage.php';
     require_once 'lib/classes/SpendingMailer.php';
+    require_once 'lib/classes/SpendingFilter.php';
     require_once 'Auth.php';
     require_once 'Date.php';
     require_once 'DB/DataObject.php';
@@ -354,20 +355,22 @@
         // Einstellungen
         $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
         // Beschreibungen laden
+        $date_1month = new Date;
+        $date_1month->subtractSeconds(4 * 31 * 24 * 60 * 60);
         $Spending = DB_DataObject::factory('spending');
+        $Spending->whereAdd('timestamp > ' . $date_1month->getDate(DATE_FORMAT_TIMESTAMP));
+        $Spending->orderBy('spendinggroup_id');
+        $Spending->orderBy('description');
         if ($Spending->find()) {
             $DISPLAYDATA['descriptions'] = array();
             while ($Spending->fetch()) {
                 $description = trim($Spending->description);
                 if (empty($description)) continue;
-                if (strlen($description) > 30) $description = substr($description, 0, 30).' ...';
                 $DISPLAYDATA['descriptions'][$Spending->spendinggroup_id][] = $description;
             }
         }
-        foreach ($DISPLAYDATA['descriptions'] as $spendinggroup_id => $descriptions) {
-            $DISPLAYDATA['descriptions'][$spendinggroup_id] = array_unique($DISPLAYDATA['descriptions'][$spendinggroup_id]);
-            sort($DISPLAYDATA['descriptions'][$spendinggroup_id]);
-        }
+        $SpendingFilter = SpendingFilter::factory($CONFIG['spending_filter']);
+        $SpendingFilter->filterDescriptions(&$DISPLAYDATA['descriptions']);
         break;
     case 'import':
         if (!$ifauthed) break;

@@ -17,6 +17,7 @@
         'database' => array(
             'dsn' => 'mysql://ausgaben:HBkYXw_F@localhost/ausgaben',
         ),
+        'spending_filter' => 'm',
     );
 
 ?>
