@@ -12,12 +12,9 @@
         <form method="post" enctype="multipart/form-data">
             <p>
                 Bitte das Konto wählen, in das Importiert werden soll:<br />
-                <select name="account_id">
-                    <option value="">( Konto wählen )</option>
-                    {section loop=$accounts name=accounts}
-                        <option value="{$accounts[accounts].account_id}" {if $smarty.session.account_id eq $accounts[accounts].account_id}selected="true"{/if}>{$accounts[accounts].name}</option>
-                    {/section}
-                </select>
+                {section loop=$accounts name=accounts}
+                    <input type="radio" name="account_id" value="{$accounts[accounts].account_id}" {if $smarty.session.account_id eq $accounts[accounts].account_id}checked="true"{/if} id="account_id_{$accounts[accounts].account_id}" /><label for="account_id_{$accounts[accounts].account_id}">{$accounts[accounts].name}{if $accounts[accounts].last_import > 0} (Letzter Import: {$accounts[accounts].last_import|date_format:'%x'}){/if}</label><br />
+                {/section}
             </p>
             <p>
                 <input type="checkbox" name="ifignoredrawings" value="1" checked="true" /> Sollen Abhebungen per Geldautomaten ignoriert werden?

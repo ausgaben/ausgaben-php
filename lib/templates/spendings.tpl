@@ -68,8 +68,8 @@
                 <input type="hidden" name="ifviewsettings" value="1" />
                 <p>
                     <strong>Einnahmen und Ausgaben</strong><br />
-                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" /> getrennt<br />
-                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" /> zusammen<br />
+                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1">getrennt</label><br />
+                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2">zusammen</label><br />
                 </p>
             </form>
         {/if}
@@ -87,29 +87,6 @@
             {/if}
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
-                    {section loop=$spendings_notbooked name=notbooked}
-                        {if $smarty.section.notbooked.first}
-                            <tr>
-                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}"><strong>Noch nicht gebucht</strong></td>
-                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_notbooked|mf}</strong></td>
-                            </tr>
-                        {/if}
-                        {if $smarty.section.notbooked.iteration is odd}
-                            <tr class="alt">
-                        {else}
-                            <tr>
-                        {/if}
-                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a></td>
-                            <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
-                            <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|mf}</span></td>
-                        </tr>
-                        {if $smarty.section.notbooked.last}
-                            <tr>
-                                <td colspan="4">&nbsp;</td>
-                            </tr>
-                        {/if}
-                    {/section}
-
                     {* Summen anzeigen *}
                     <tr>
                         <td class="sum-2" align="right">&raquo;</td>
@@ -137,6 +114,34 @@
                         </tr>
                     {/if}
 
+                    {* Nicht gebuchte Ausgaben anzeigen *}
+                    {section loop=$spendings_notbooked name=notbooked}
+                        {if $smarty.section.notbooked.first}
+                            <tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}"><strong>Noch nicht gebucht</strong></td>
+                                <td colspan="3" class="{if $sum_notbooked >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_notbooked|mf}</strong></td>
+                            </tr>
+                        {/if}
+                        {if $smarty.section.notbooked.iteration is odd}
+                            <tr class="alt">
+                        {else}
+                            <tr>
+                        {/if}
+                            <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description|so}</a></td>
+                            <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
+                            <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|mf}</span></td>
+                        </tr>
+                        {if $smarty.section.notbooked.last}
+                            <!-- tr>
+                                <td colspan="4">&nbsp;</td>
+                            </tr -->
+                        {/if}
+                    {/section}
+
+                    {* Ausgaben anzeigen *}
                     {if $smarty.session.user.settings.separate_sums}
                     {include file='spendings-separate_sums.tpl'}
                     {else}
@@ -157,9 +162,9 @@
         <input type="hidden" name="spending_id" value="0" />
         <table cellspacing="0" cellpadding="2">
             <tr>
-                <td align="right">Konto</td>
+                <td align="right"><label for="account_id">Konto</label></td>
                 <td>
-                    <select name="account_id">
+                    <select name="account_id" id="account_id">
                         <option value="">( Konto wählen )</option>
                         {foreach from=$accounts name=list_account item=list_account}
                             <option value="{$list_account.account_id}" {if $smarty.session.account_id eq $list_account.account_id}selected="true"{/if}>{$list_account.name}</option>
@@ -168,9 +173,9 @@
                 </td>
             </tr>
             <tr>
-                <td align="right">Typ</td>
+                <td align="right"><label for="type">Typ</label></td>
                 <td>
-                    <select name="type">
+                    <select name="type" id="type">
                         <option>( Typ wählen )</option>
                         <option value="1" selected="true">Ausgabe</option>
                         <option value="2">Einnahme</option>
@@ -224,28 +229,32 @@
                 <td><input type="text" name="description" class="text" tabindex="5" /></td>
             </tr>
             <tr>
-                <td align="right">Betrag</td>
-                <td><input type="text" name="value" class="text" tabindex="6" size="5" /></td>
+                <td align="right"><label for="value">Betrag</label></td>
+                <td><input type="text" name="value" class="text" tabindex="6" size="5" id="value" /></td>
             </tr>
             <tr>
                 <td align="right">Bereits gebucht?</td>
                 <td>
-                    <input type="radio" name="booked" value="1" checked="true" /> Ja
-                    <input type="radio" name="booked" value="0" /> Nein 
+                    <input type="radio" name="booked" value="1" checked="true" id="booked_1" /> <label for="booked_1">Ja</label>
+                    <input type="radio" name="booked" value="0" id="booked_0" /> <label for="booked_0">Nein</label>
                 </td>
             </tr>
             <tr>
                 <td align="right">Zahlungsmittel</td>
                 <td>
-                    <input type="radio" name="spendingmethod_id" value="0" checked="true" /> Kein<br />
+                    <input type="radio" name="spendingmethod_id" value="0" checked="true" id="spendingmethod_id_0" /> <label for="spendingmethod_id_0">Kein</label><br />
                     {foreach from=$spendingmethods name=spendingmethods item=spendingmethod}
-                        <input type="radio" name="spendingmethod_id" value="{$spendingmethod.spendingmethod_id}" /> <img src="lib/images/icons/spendingmethod/{$spendingmethod.icon}" width="11" height="11" /> {$spendingmethod.name}<br />
+                        <input type="radio" name="spendingmethod_id" value="{$spendingmethod.spendingmethod_id}" id="spendingmethod_id_{$spendingmethod.spendingmethod_id}" /> <label for="spendingmethod_id_{$spendingmethod.spendingmethod_id}"><img src="lib/images/icons/spendingmethod/{$spendingmethod.icon}" width="11" height="11" /> {$spendingmethod.name}</label><br />
                     {/foreach}
                 </td>
             </tr>
             <tr>
-                <td align="right">Eintrag <u>l</u>öschen</td>
-                <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" /></td>
+                <td align="right"><label for="ifduplicate"><u>N</u>euen Eintragen anlegen</label></td>
+                <td><input type="checkbox" name="ifduplicate" value="1" accesskey="n" id="ifduplicate" /></td>
+            </tr>
+            <tr>
+                <td align="right"><label for="ifdelete">Eintrag <u>l</u>öschen</label></td>
+                <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" id="ifdelete" /></td>
             </tr>
             <tr>
                 <td align="right"><input type="button" class="button" value="Abbrechen" onclick="xHide(spendingform);" /></td>
@@ -303,9 +312,11 @@
                 {rdelim}
                 eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
             {rdelim}
+            document.addspending.ifduplicate.disabled = false;
         {rdelim} else {ldelim}
             document.addspending.reset();
             document.addspending.spending_id.value = 0;
+            document.addspending.ifduplicate.disabled = true;
             updateDescriptionSelector('');
         {rdelim}
         xTo = ((xClientWidth() - xWidth(spendingform)) / 2) + xScrollLeft();

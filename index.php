@@ -30,6 +30,7 @@
     $action           = getVar(&$_REQUEST['action'], '');
     $ifsubmit         = getVar(&$_REQUEST['ifsubmit'], false);
     $ifdelete         = getVar(&$_REQUEST['ifdelete'], false);
+    $ifduplicate      = getVar(&$_REQUEST['ifduplicate'], false);
     $logout           = getVar(&$_REQUEST['logout'], false);
     session_start();
     $display_month    = getVar(&$_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
@@ -160,7 +161,7 @@
             $spendinggroup_id   = getVar(&$_REQUEST['spendinggroup_id'], 0);
             $spendinggroup_name = getVar(&$_REQUEST['spendinggroup_name'], '');
             $Spending = DB_DataObject::factory('spending');
-            if ($spending_id) {
+            if ($spending_id and !$ifduplicate) {
                 if (!$Spending->get($spending_id)) {
                     break;
                 }
@@ -200,7 +201,7 @@
                 }
                 $Spending->spendinggroup_id = $spendinggroup_id;
             }
-            if ($spending_id) {
+            if ($spending_id and !$ifduplicate) {
                 $result = $Spending->update();
             } else {
                 $result = $Spending->insert();
@@ -467,6 +468,12 @@
                     }
                     $DISPLAYDATA['n_imported'] = $n_imported;
                     $DISPLAYDATA['n_failed'] = $n_failed;
+                    // Set Date of last import
+                    $date = new Date;
+                    $Account = DB_DataObject::factory('account');
+                    $Account->get($account_id);
+                    $Account->last_import = $date->getDate(DATE_FORMAT_TIMESTAMP);
+                    $Account->update();
                 }
                 unlink($cvs);
             } elseif ($file->isError()) {
@@ -485,7 +492,21 @@
                 $Account->get($account_id);
             }
             if ($ifdelete) {
-                $Account->delete();
+                $result = $Account->delete();
+                if ($result) {
+                    // Spendings löschen
+                    $Spending =  DB_DataObject::factory('spending');
+                    $Spending->account_id = $account_id;
+                    $Spending->delete();
+                    // User zuordnung löschen
+                    $User2Account  = DB_DataObject::factory('user2account');
+                    $User2Account->account_id = $account_id;
+                    $User2Account->delete();
+                    // ABF löschen
+                    $Account_Abf = DB_DataObject::factory('account_abf');
+                    $Account_Abf->account_id = $account_id;
+                    $Account_Abf->delete();
+                }
             } else {
                 $Account->setFrom($_REQUEST);
                 if (!$Account->account_id) {
