@@ -187,8 +187,8 @@
                 <td><input type="text" name="value" class="small" tabindex="6" size="5" {if isset($edit_spending)}value="{$edit_spending.value}"{/if} /></td>
             </tr>
             <tr>
-                <td align="right">Eintrag löschen</td>
-                <td><input type="checkbox" name="ifdelete" value="1" /></td>
+                <td align="right">Eintrag <u>l</u>öschen</td>
+                <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" /></td>
             </tr>
             <tr>
                 <td align="right"><input type="button" value="Abbrechen" onclick="xHide(spendingform);" /></td>

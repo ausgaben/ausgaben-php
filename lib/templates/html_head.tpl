@@ -2,13 +2,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Ausgaben</title>
+  <title>Ausgaben {$version.major}.{$version.minor}</title>
   <link rel="stylesheet" type="text/css" href="lib/css/ausgaben.css" />
   <script type="text/javascript" src="lib/js/cross-browser.com/x/x_core.js"></script>
 </head>
 <body>
     <div class="masterbox">
-        <div class="boxtitle">AUSGABEN {$version.major}.{$version.minor}</div>
+        <div class="boxtitle"><div class="floatright">{$smarty.now|date_format:'%A, %d. %B %Y, %H:%M Uhr'}</div>AUSGABEN {$version.major}.{$version.minor}</div>
     {if $AUTH}
         <div class="icons">
             <a href="?do=spendings" class="icon">

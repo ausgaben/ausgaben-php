@@ -8,9 +8,11 @@
     * @package Ausgaben
     * @subpackage Configuration
     */
-    
+
+    error_reporting(E_ALL);
+
     require_once 'PEAR.php';
-    
+
     $CONFIG = parse_ini_file('lib/config.ini', true);
     $CONFIG['DataObject'] = array(
         'database'        => $CONFIG['database']['dsn'],
@@ -31,7 +33,7 @@
     );
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
-    
+
     setlocale(LC_ALL, $CONFIG['misc']['locale']);
-    
+
 ?>

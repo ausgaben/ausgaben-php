@@ -50,7 +50,7 @@ div.masterbox {
 }
 div.boxtitle {
     background-color: #e1e1e1;
-    font-size: 8pt;
+    font-size: 6pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;
@@ -69,7 +69,7 @@ div.boxsubtitle {
 }
 div.boxfooter {
     background-color: #e1e1e1;
-    font-size: 8pt;
+    font-size: 6pt;
     padding: 0 10px 0 10px;
     height: 22px;
     line-height: 22px;

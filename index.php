@@ -33,10 +33,6 @@
     */
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
     $Auth->start();
-    if ($logout) {
-        session_destroy();
-        header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
-    }
     $ifauthed = $Auth->getAuth();
     $DISPLAYDATA['AUTH'] = $ifauthed;
     $DISPLAYDATA['AUTH_STATUS'] = $Auth->getStatus();
@@ -45,6 +41,19 @@
         $User->whereAdd("email='".$Auth->getUsername()."'");
         if ($User->find(true)) $_SESSION['user'] = $User->toArray();
     }
+    if ($logout) {
+        if (isset($_SESSION['account_id']) and $_SESSION['account_id'] != $_SESSION['user']['last_account_id']) {
+            $User = DB_DataObject::factory('user');
+            $User->get($_SESSION['user']['user_id']);
+            $User->last_account_id = $_SESSION['account_id'];
+            $User->update();
+        }
+        session_destroy();
+        header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
+        return;
+    }
+
+    if ($ifauthed and $do == 'start') $do = 'spendings';
 
     /**
     * Action
@@ -56,7 +65,14 @@
         if ($account_id) {
             $_SESSION['account_id'] = $account_id;
         } else {
-            $account_id = $_SESSION['account_id'];
+            if (isset($_SESSION['account_id'])) {
+                $account_id = $_SESSION['account_id'];
+            } else {
+                if ($_SESSION['user']['last_account_id']) {
+                    $account_id = $_SESSION['user']['last_account_id'];
+                    $_SESSION['account_id'] = $account_id;
+                }
+            }
         }
         // Load Accounts
         $Account = DB_DataObject::factory('account');
@@ -86,7 +102,7 @@
             }
             $Spending->setFrom($_REQUEST);
             $Spending->value = str_replace(',', '.', $Spending->value);
-            $Spending->date = sprintf('%04d%02d%02d', $_REQUEST['date_y'], $_REQUEST['date_m'], $_REQUEST['date_d']);
+            $Spending->date = sprintf('%04d%02d%02d', $_REQUEST['year'], $_REQUEST['month'], $_REQUEST['day']);
             // If no spendinggroup_id isset maybe we should create a new one?
             // -> spendinggroup_name must be set
             if (empty($spendinggroup_id) and !empty($spendinggroup_name)) {
@@ -165,11 +181,15 @@
         $Spending->whereAdd("account_id=$account_id");
         if ($Spending->find()) {
             $DISPLAYDATA['sum_type'] = array(0 => 0, 1 => 0, 2 => 0);
+            $DISPLAYDATA['sum_group'] = array(SPENDING_TYPE_IN => array(), SPENDING_TYPE_OUT => array());
             while ($Spending->fetch()) {
                 $spendingData = $Spending->toArray();
                 // $spendingData['description'] = str_replace("\r\n", '-br-', $spendingData['description']);
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
                 $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
+                if (!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
+                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
+                }
                 if ($Spending->type == SPENDING_TYPE_IN) {
                     $DISPLAYDATA['sum_type'][$Spending->type]                               += $Spending->value;
                     $DISPLAYDATA['sum_type'][0]                                             += $Spending->value;
