@@ -13,8 +13,8 @@
     
     $CONFIG['DSN'] = 'mysql://ausgaben:HBkYXw_F@localhost/ausgaben';
     $CONFIG['path'] = array(
-        'home' => '/www/tacker.org/www/ausgaben',
-        'smarty' => '/opt/smarty/latest/',
+        'home' => '/var/www/tacker.org/www/htdoc/ausgaben',
+        'smarty' => '/usr/lib/php/Smarty/',
     );
     $CONFIG['DataObject'] = array(
         'database'        => $CONFIG['DSN'],
