@@ -263,6 +263,7 @@
     */
     $DISPLAYDATA['do'] = $do;
     $DISPLAYDATA['action'] = $action;
+    $DISPLAYDATA['version'] = $CONFIG['version'];
     $Smarty = new SmartyPage;
     $Smarty->display("$do.tpl");
 

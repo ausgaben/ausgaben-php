@@ -25,6 +25,10 @@
         'usernamecol' => 'email',
         'passwordcol' => 'password',
     );
+    $CONFIG['version'] = array(
+        'major'        => 0,
+        'minor'        => 1,
+    );
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
     

@@ -6,7 +6,7 @@
                 <form method="post" name="loginform" action="{$SCRIPT_NAME}">
                     <input type="hidden" name="username" />
                     <div class="loginbox">
-                        <div class="boxtitle">AUSGABEN</div>
+                        <div class="boxtitle">AUSGABEN {$version.major}.{$version.minor}</div>
                         <div class="boxsubtitle">Login</div>
                         <div class="boxcontent">
                             <p>
