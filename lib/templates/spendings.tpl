@@ -54,9 +54,14 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="sum-all" colspan="2">Gesamt</td>
-                                <td class="sum-all" align="right">{$sum_type.0|string_format:'%.2f'}</td>
-                                <td class="sum-all">&nbsp;</td>
+                                {if $sum_type.0 > 0}
+                                    {assign var=sumall_class value=sum-2}
+                                {else}
+                                    {assign var=sumall_class value=sum-1}
+                                {/if}
+                                <td class="{$sumall_class}" colspan="2"><strong>Gesamt</strong></td>
+                                <td class="{$sumall_class}" align="right"><strong>{$sum_type.0|string_format:'%.2f'}</strong></td>
+                                <td class="{$sumall_class}">&nbsp;</td>
                             </tr>
                 {/if}
                 {foreach from=$spendings_by_type item=spending name=spending}
@@ -66,11 +71,12 @@
                             <td class="sum-{$type}" align="right">{$sum_type[$type]|string_format:'%.2f'}</td>
                             <td class="sum-{$type}">&nbsp;</td>
                         </tr>
+                        {assign var=lastgroup value=0}
                     {/if}
                     {if $lastgroup ne $spending.spendinggroup_id}
                         <tr>
                             <td colspan="2" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
-                            <td class="subheader" align="right">{$sum_group[$spending.spendinggroup_id]|string_format:'%.2f'}</td>
+                            <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|string_format:'%.2f'}</td>
                             <td class="subheader">&nbsp;</td>
                         </tr>
                         {assign var=lastgroup value=$spending.spendinggroup_id}
@@ -82,7 +88,7 @@
                     {/if}
                         <td>{$spending.date|date_format:'%d.'}</td>
                         <td>{$spending.description}</td>
-                        <td align="right">{$spending.value|string_format:'%.2f'}</td>
+                        <td align="right"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                         <td align="right"><a href="javascript:showEditor({$spending.spending_id});"><img src="lib/images/icons/small/riot_edit_page.png" width="21" height="18" align="absmiddle" /></a></td>
                     </tr>
                     {if $smarty.foreach.spendings_out.last}

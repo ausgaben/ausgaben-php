@@ -120,15 +120,14 @@ a.icon:hover {
     float: right;
 }
 div.frameleft {
-    width: 135px;
+    width: 150px;
     float: left;
-    font-size: 10pt;
+    font-size: 9pt;
 }
 div.framecenter {
     float: left;
     border-left: 1px dashed #dcdcdc;
-    border-right: 1px dashed #dcdcdc;
-    width: 508px;
+    width: 631px;
 }
 div.clearall {
     clear: both;
@@ -141,12 +140,11 @@ p.frametitle {
 }
 td.sum-2 {
     background-color: #cdffb4;
+    border-top: 2px solid #a0a0a0;
 }
 td.sum-1 {
     background-color: #ffddd5;
-}
-td.sum-all {
-    background-color: #ffffb6;
+    border-top: 2px solid #a0a0a0;
 }
 div.spendings-out {
     border-top: 1px solid #ffddd5;
@@ -180,4 +178,10 @@ td.subheader {
     padding: 10px;
     font-size: 10pt;
     visibility: hidden;
+}
+span.type-1 {
+    color: #e32200;
+}
+span.type-2 {
+    color: #309c1d;
 }

@@ -142,6 +142,7 @@
         $Spending->orderBy('year desc');
         $Spending->orderBy('month desc');
         $Spending->groupBy('year, month');
+        $Spending->whereAdd("account_id=$account_id");
         if ($Spending->find()) {
             while ($Spending->fetch()) {
                 $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
@@ -163,13 +164,13 @@
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
                 $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
                 if ($Spending->type == SPENDING_TYPE_IN) {
-                    $DISPLAYDATA['sum_type'][$Spending->type]              += $Spending->value;
-                    $DISPLAYDATA['sum_type'][0]                            += $Spending->value;
-                    $DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] += $Spending->value;
+                    $DISPLAYDATA['sum_type'][$Spending->type]                               += $Spending->value;
+                    $DISPLAYDATA['sum_type'][0]                                             += $Spending->value;
+                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] += $Spending->value;
                 } else {
-                    $DISPLAYDATA['sum_type'][$Spending->type]              -= $Spending->value;
-                    $DISPLAYDATA['sum_type'][0]                            -= $Spending->value;
-                    $DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] -= $Spending->value;
+                    $DISPLAYDATA['sum_type'][$Spending->type]                               -= $Spending->value;
+                    $DISPLAYDATA['sum_type'][0]                                             -= $Spending->value;
+                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] -= $Spending->value;
                 }
             }
         }
@@ -177,7 +178,17 @@
         break;
     case 'import':
         if (!$ifauthed) break;
+        $Account = DB_DataObject::factory('account');
+        $Account->orderBy('name');
+        if ($Account->find()) {
+            while ($Account->fetch()) {
+                $DISPLAYDATA['accounts'][] = $Account->toArray();
+            }
+        }
+        $account_id = getVar(&$_REQUEST['account_id'], 0);
+        if (!$account_id) break;
         if ($ifsubmit) {
+            $ifignoredrawings = getVar(&$_REQUEST['ifignoredrawings'], 0);
             require_once 'HTTP/Upload.php';
             $upload = new HTTP_Upload('de');
             $file = $upload->getFiles('file');
@@ -211,17 +222,27 @@
                         $line_append = $line;
                         continue;
                     }
+                    if ($ifignoredrawings and $fields[2] == 'GELDAUTOMAT') continue;
                     $Spending = DB_DataObject::factory('spending');
                     $Spending->year  = 2000 + substr($fields[1], 6, 2);
                     $Spending->month = substr($fields[1], 3, 2);
                     $Spending->day   = substr($fields[1], 0, 2);
                     $Spending->spendinggroup_id = 15; // Importiert vom Kontoauszug
+                    $fields[4] = str_replace(',', ', ', $fields[4]);
                     $Spending->description = preg_replace('/[0-9]{5,}/', '[n]', ucwords(strtolower((empty($fields[4])) ? $fields[3] : $fields[4].' - '.$fields[3])));
+                    $Spending->description = str_replace("\n", ' ', $Spending->description);
+                    $Spending->description = str_replace("\r", ' ', $Spending->description);
                     $Spending->user_id = $_SESSION['user']['user_id'];
-                    $Spending->account_id = 1;
-                    $value_pre  = str_replace('.', '', substr($fields[7], 1, -3));
-                    $value_past = substr($fields[7], -2, 2);
-                    $value = $value_pre.'.'.$value_past;
+                    $Spending->account_id = $account_id;
+                    $value = explode(',', $fields[7]);
+                    $value[0]  = str_replace('.', '', $value[0]);
+                    $value = join('.', $value);
+                    if ($value > 0) {
+                        $Spending->type = SPENDING_TYPE_IN;
+                    } else {
+                        $value = str_replace('-', '', $value);
+                        $Spending->type = SPENDING_TYPE_OUT;
+                    }
                     $Spending->value = $value;
                     if ($Spending->insert()) {
                         $n_imported++;
@@ -231,6 +252,7 @@
                     $DISPLAYDATA['n_imported'] = $n_imported;
                     $DISPLAYDATA['n_failed'] = $n_failed;
                 }
+                unlink($cvs);
             } elseif ($file->isError()) {
                 echo $file->errorMsg() . "\n";
             }
