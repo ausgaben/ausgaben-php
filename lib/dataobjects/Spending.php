@@ -24,6 +24,7 @@ class DataObject_Spending extends DB_DataObject
     var $account_id;                      // int(11)  not_null
     var $value;                           // real(12)  not_null
     var $booked;                          // int(1)  not_null
+    var $spendingmethod_id;               // int(4)  not_null
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}

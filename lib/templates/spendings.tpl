@@ -51,7 +51,7 @@
                     {section loop=$spendings_notbooked name=notbooked}
                         {if $smarty.section.notbooked.first}
                             <tr>
-                                <td colspan="3" class="subheader">Noch nicht gebucht</td>
+                                <td colspan="4" class="subheader">Noch nicht gebucht</td>
                             </tr>
                         {/if}
                         {if $smarty.section.notbooked.iteration is odd}
@@ -60,11 +60,12 @@
                             <tr class="alt">
                         {/if}
                             <td colspan="2"><a href="javascript:javascript:showEditor({$spendings_notbooked[notbooked].spending_id});">{$spendings_notbooked[notbooked].description}</a></td>
+                            <td>{if $spendings_notbooked[notbooked].spendingmethod_id > 0}{assign var=spendingmethod_id value=$spendings_notbooked[notbooked].spendingmethod_id}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
                             <td align="right"><span class="type-{$spendings_notbooked[notbooked].type}">{if $spendings_notbooked[notbooked].type eq 1}-{/if}{$spendings_notbooked[notbooked].value|string_format:'%.2f'}</span></td>
                         </tr>
                         {if $smarty.section.notbooked.last}
                             <tr>
-                                <td colspan="3">&nbsp;</td>
+                                <td colspan="4">&nbsp;</td>
                             </tr>
                         {/if}
                     {/section}
@@ -76,21 +77,21 @@
                                 {else}
                                     {assign var=sumall_class value=sum-1}
                                 {/if}
-                                <td class="{$sumall_class}" colspan="2"><strong>Gesamt</strong></td>
+                                <td class="{$sumall_class}" colspan="3"><strong>Gesamt</strong></td>
                                 <td class="{$sumall_class}" align="right"><strong>{$sum_type.0|string_format:'%.2f'}</strong></td>
                             </tr>
                 {/if}
                 {foreach from=$spendings_by_type item=spending name=spending}
                     {if $smarty.foreach.spending.first}
                         <tr>
-                            <td class="sum-{$type}" colspan="2">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
+                            <td class="sum-{$type}" colspan="3">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
                             <td class="sum-{$type}" align="right">{$sum_type[$type]|string_format:'%.2f'}</td>
                         </tr>
                         {assign var=lastgroup value=0}
                     {/if}
                     {if $lastgroup ne $spending.spendinggroup_id}
                         <tr>
-                            <td colspan="2" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
                             <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|string_format:'%.2f'}</td>
                         </tr>
                         {assign var=lastgroup value=$spending.spendinggroup_id}
@@ -106,7 +107,8 @@
                             <td>{$spending.date|date_format:'%d. %b. %y'}</td>
                         {/if}
                         <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{$spending.description}</a></td>
-                        <td align="right"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
+                        <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
+                        <td align="right" nowrap="true"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|string_format:'%.2f'}</span></td>
                     </tr>
                     {if $smarty.foreach.spendings_out.last}
 
@@ -203,6 +205,15 @@
                 </td>
             </tr>
             <tr>
+                <td align="right">Zahlungsmittel</td>
+                <td>
+                    <input type="radio" name="spendingmethod_id" value="0" checked="true" /> Kein<br />
+                    {foreach from=$spendingmethods name=spendingmethods item=spendingmethod}
+                        <input type="radio" name="spendingmethod_id" value="{$spendingmethod.spendingmethod_id}" /> <img src="lib/images/icons/spendingmethod/{$spendingmethod.icon}" width="11" height="11" /> {$spendingmethod.name}<br />
+                    {/foreach}
+                </td>
+            </tr>
+            <tr>
                 <td align="right">Eintrag <u>l</u>öschen</td>
                 <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" /></td>
             </tr>
@@ -251,6 +262,14 @@
                 {rdelim}
                 if (fieldname == "spendinggroup_id") {ldelim}
                     document.addspending.spendinggroup_name.value = spendinggroups[Spendings[spending_id][fieldname]];
+                {rdelim}
+                if (fieldname == "spendingmethod_id") {ldelim}
+                    for (var fieldId in document.addspending.spendingmethod_id) {ldelim}
+                        if (document.addspending.spendingmethod_id[fieldId].value == Spendings[spending_id][fieldname]) {ldelim}
+                            document.addspending.spendingmethod_id[fieldId].checked = true;
+                        {rdelim}
+                    {rdelim}
+                    continue;
                 {rdelim}
                 eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
             {rdelim}

@@ -104,11 +104,6 @@
             $AccountData['sum_value'] = round($AccountData['sum_value']);
             $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
         }
-        /*
-        echo '<pre>';
-        print_r($DISPLAYDATA['accounts']);
-        echo '</pre>';
-        */
         if(!$account_id) break;
         $activeAccount = $DISPLAYDATA['accounts'][$account_id];
         // Insert new spending
@@ -184,6 +179,13 @@
                 $DISPLAYDATA['spendinggroups'][$Spendinggroup->spendinggroup_id] = $Spendinggroup->toArray();
             }
         }
+        // Load Spendingmethods
+        $Spendingmethod = DB_DataObject::factory('spendingmethod');
+        if ($Spendingmethod->find()) {
+            while($Spendingmethod->fetch()) {
+                $DISPLAYDATA['spendingmethods'][$Spendingmethod->spendingmethod_id] = $Spendingmethod->toArray();
+            }
+        } 
         if ($activeAccount['summarize_months']) {
             // Load years
             $Spending = DB_DataObject::factory('spending');
