@@ -73,6 +73,7 @@
     }
 
     if ($ifauthed and $do == 'start') $do = 'spendings';
+    if (!$ifauthed) $do = 'start';
 
     /**
     * Action
