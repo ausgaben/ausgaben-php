@@ -1,3 +1,4 @@
+{assign var=order_by_date value=$smarty.session.user.settings.order_by_date}
 {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
     <tr><td colspan="4">&nbsp;</td></tr>
     <tr>
@@ -6,17 +7,19 @@
         <td class="sum-{$type}" align="right" nowrap="true">{$sum_type[$type]|mf}</td>
     </tr>
     {foreach from=$spendings_by_type item=spending name=spending}
-        {if $smarty.foreach.spending.first}
-            {assign var=lastgroup value=0}
+	    {if !$order_by_date}
+	        {if $smarty.foreach.spending.first}
+	            {assign var=lastgroup value=0}
+	        {/if}
+	        {if $lastgroup ne $spending.spendinggroup_id}
+	            <tr>
+	                <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+	                <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|mf}</td>
+	            </tr>
+	            {assign var=lastgroup value=$spending.spendinggroup_id}
+	        {/if}
         {/if}
-        {if $lastgroup ne $spending.spendinggroup_id}
-            <tr>
-                <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
-                <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|mf}</td>
-            </tr>
-            {assign var=lastgroup value=$spending.spendinggroup_id}
-        {/if}
-        {if $smarty.foreach.spending.iteration is odd}
+	    {if $smarty.foreach.spending.iteration is odd}
             <tr>
         {else}
             <tr class="alt">

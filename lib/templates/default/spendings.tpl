@@ -67,8 +67,8 @@
                 <p>
                     <input type="radio" name="_set_separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_1" /> <label for="separate_sums_1" {popup text="Die Ausgaben über den Einnahmen anzeigen"}>Getrennt</label><br />
                     <input type="radio" name="_set_separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" id="separate_sums_2" /> <label for="separate_sums_2" {popup text="Die Ausgaben und die Einnahmen zusammen anzeigen"}>Zusammen</label><br />
-                    <input type="radio" name="_set_order_by_date" value="1" {if $smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_1" /> <label for="order_by_date_1" {popup text="Gruppiert die Einnahmen und Ausgaben nach ihrer Art"}>Nach Art gruppieren</label><br />
-                    <input type="radio" name="_set_order_by_date" value="0" {if !$smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_2" /> <label for="order_by_date_2" {popup text="Ordnet die Einnahmen und Ausgaben nach dem Datum"}>Nach Datum sortieren</label><br />
+                    <input type="radio" name="_set_order_by_date" value="0" {if !$smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_1" /> <label for="order_by_date_1" {popup text="Gruppiert die Einnahmen und Ausgaben nach ihrer Art"}>Nach Art gruppieren</label><br />
+                    <input type="radio" name="_set_order_by_date" value="1" {if $smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_2" /> <label for="order_by_date_2" {popup text="Ordnet die Einnahmen und Ausgaben nach dem Datum"}>Nach Datum sortieren</label><br />
                 </p>
             </form>
         {/if}

@@ -10,6 +10,7 @@
     */
 	
 	$separate_sums = $Settings->get('separate_sums');
+	$order_by_date = $Settings->get('order_by_date');
 
 	// Load abf (amount brought forward)
 	$abf = array();
@@ -148,7 +149,7 @@
 	}
 	// Load not booked spendings
 	$Spending = DB_DataObject::factory('spending');
-	$Spending->orderBy('spendinggroup_id');
+	if (!$order_by_date) $Spending->orderBy('spendinggroup_id');
 	$Spending->orderBy('year desc');
 	$Spending->orderBy('month desc');
 	$Spending->orderBy('day desc');
@@ -203,7 +204,7 @@
 	// Load Spendings
 	$DISPLAYDATA['sum_type'] = array(SPENDING_TYPE_ALL => 0, SPENDING_TYPE_IN => 0, SPENDING_TYPE_OUT => 0);
 	$Spending = DB_DataObject::factory('spending');
-	$Spending->orderBy('spendinggroup_id');
+	if (!$order_by_date) $Spending->orderBy('spendinggroup_id');
 	$Spending->orderBy('day desc');
 	$Spending->booked = 1;
 	if ($activeAccount['summarize_months']) {

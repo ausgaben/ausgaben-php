@@ -1,14 +1,17 @@
+{assign var=order_by_date value=$smarty.session.user.settings.order_by_date}
 {foreach from=$spendings item=spending name=spendings}
     {if $smarty.foreach.spendings.first}
         <tr><td colspan="4">&nbsp;</td></tr>
         {assign var=lastgroup value=0}
     {/if}
-    {if $lastgroup ne $spending.spendinggroup_id}
-        <tr>
-            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
-            <td class="subheader" align="right">{$sum_group[$spending.spendinggroup_id]|mf}</td>
-        </tr>
-        {assign var=lastgroup value=$spending.spendinggroup_id}
+    {if !$order_by_date}
+	    {if $lastgroup ne $spending.spendinggroup_id}
+	        <tr>
+	            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+	            <td class="subheader" align="right">{$sum_group[$spending.spendinggroup_id]|mf}</td>
+	        </tr>
+	        {assign var=lastgroup value=$spending.spendinggroup_id}
+	    {/if}
     {/if}
     {if $smarty.foreach.spendings.iteration is odd}
         <tr>
