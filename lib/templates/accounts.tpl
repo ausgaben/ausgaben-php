@@ -41,6 +41,16 @@
                 <input type="radio" name="enable_abf" value="1" {if $account.enable_abf eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
                 <input type="radio" name="enable_abf" value="0" {if $account.enable_abf eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
+            <p>
+                Einnahmen und Ausgaben separat?<br />
+                <input type="radio" name="separate_spendings" value="1" {if $account.separate_spendings eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
+                <input type="radio" name="separate_spendings" value="0" {if $account.separate_spendings eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
+            </p>
+            <p>
+                Bar-Bewegungen zusammenfassen?<br />
+                <input type="radio" name="cash_pool" value="1" {if $account.cash_pool eq 1 and $account}checked="true"{/if} onChange="updateForm()" /> Ja
+                <input type="radio" name="cash_pool" value="0" {if $account.cash_pool eq 0 or !$account}checked="true"{/if} onChange="updateForm()" /> Nein
+            </p>
             {section loop=$users name=users}
                 {if $smarty.section.users.first}<p>Benutzer dieses Kontos<br />{/if}
                 {assign var=user_id value=$users[users].user_id}

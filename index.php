@@ -31,8 +31,7 @@
     $ifsubmit         = getVar(&$_REQUEST['ifsubmit'], false);
     $ifdelete         = getVar(&$_REQUEST['ifdelete'], false);
     $logout           = getVar(&$_REQUEST['logout'], false);
-    $display_month    = getVar(&$_REQUEST['display_month'], strftime('%Y%m01000000'));
-    $DISPLAYDATA['display_month'] = $display_month;
+    $display_month    = getVar(&$_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
 
     /**
     * Get Browser
@@ -43,34 +42,40 @@
     * Auth
     */
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
+    $last_auth_status = $Auth->getAuth();
     $Auth->start();
     $ifauthed = $Auth->getAuth();
     $DISPLAYDATA['AUTH'] = $ifauthed;
     $DISPLAYDATA['AUTH_STATUS'] = $Auth->getStatus();
-    if ($ifauthed and !isset($_SESSION['user'])) {
+    if ($ifauthed and !$last_auth_status) {
         $User = DB_DataObject::factory('user');
         $User->whereAdd("email='".$Auth->getUsername()."'");
-        if ($User->find(true)) $_SESSION['user'] = $User->toArray();
+        if ($User->find(true)) {
+            $_SESSION['user'] = $User->toArray();
+            $_SESSION['user']['settings'] = unserialize($_SESSION['user']['settings']);
+            if (!is_array($_SESSION['user']['settings'])) $_SESSION['user']['settings'] = array();
+        }
         // Update last_login
         $User->last_login = strftime('%Y%m%d%H%M%S');
         $User->update();
     }
-    if (isset($_SESSION['user'])) {
+    if (isset($_SESSION['user']) and isset($_SESSION['user']['locale'])) {
         setlocale(LC_ALL, $_SESSION['user']['locale']);
     }
 
     if ($logout) {
-        if (isset($_SESSION['account_id']) and $_SESSION['account_id'] != $_SESSION['user']['last_account_id']) {
-            $User = DB_DataObject::factory('user');
-            $User->get($_SESSION['user']['user_id']);
-            $User->last_account_id = $_SESSION['account_id'];
-            $User->update();
-        }
+        // Einstellungen speichern
+        $User = DB_DataObject::factory('user');
+        $User->get($_SESSION['user']['user_id']);
+        $User->settings = serialize($_SESSION['user']['settings']);
+        $User->update();
+        // Neue Ausgaben senden
         if (isset($_SESSION['user'])) {
             $SpendingMailer = new SpendingMailer;
             $SpendingMailer->setUser($_SESSION['user']['user_id']);
             $SpendingMailer->send();
         }
+        // Ausloggen
         session_destroy();
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
         return;
@@ -78,21 +83,26 @@
 
     if ($ifauthed and $do == 'start') $do = 'spendings';
     if (!$ifauthed) $do = 'start';
-    
+
     // Selected Account
     $account_id = getVar(&$_REQUEST['account_id'], 0);
     if ($account_id) {
-        $_SESSION['account_id'] = $account_id;
+        $_SESSION['user']['settings']['last_account_id'] = $account_id;
     } else {
-        if (isset($_SESSION['account_id'])) {
-            $account_id = $_SESSION['account_id'];
-        } else {
-            if (isset($_SESSION['user']) and $_SESSION['user']['last_account_id']) {
-                $account_id = $_SESSION['user']['last_account_id'];
-                $_SESSION['account_id'] = $account_id;
-            }
+        if (isset($_SESSION['user']['settings']['last_account_id'])) {
+            $account_id = $_SESSION['user']['settings']['last_account_id'];
         }
     }
+    $_SESSION['account_id'] = $account_id;
+    $_SESSION['display_month'] = $display_month;
+
+    // Display settings
+    $ifviewsettings = getVar(&$_REQUEST['ifviewsettings'], false);
+    if ($ifauthed and $ifviewsettings) {
+        $_SESSION['user']['settings']['separate_sums'] = getVar(&$_REQUEST['separate_sums'], true);
+    }
+    $_SESSION['user']['settings']['separate_sums'] = getVar(&$_SESSION['user']['settings']['separate_sums'], true);
+    $separate_sums = $_SESSION['user']['settings']['separate_sums'];
 
     /**
     * Action
@@ -248,7 +258,6 @@
         }
         // Load not booked spendings
         $Spending = DB_DataObject::factory('spending');
-        $Spending->orderBy('type');
         $Spending->orderBy('spendinggroup_id');
         $Spending->orderBy('year desc');
         $Spending->orderBy('month desc');
@@ -303,7 +312,6 @@
         }
         // Load Spendings
         $Spending = DB_DataObject::factory('spending');
-        $Spending->orderBy('type');
         $Spending->orderBy('spendinggroup_id');
         $Spending->orderBy('day desc');
         $Spending->booked = 1;
@@ -314,22 +322,43 @@
         $Spending->whereAdd("account_id=$account_id");
         if ($Spending->find()) {
             $DISPLAYDATA['sum_type'] = array(0 => 0, 1 => 0, 2 => 0);
-            $DISPLAYDATA['sum_group'] = array(SPENDING_TYPE_IN => array(), SPENDING_TYPE_OUT => array());
+            if ($separate_sums) {
+                $DISPLAYDATA['sum_group'] = array();
+            } else {
+            }
             while ($Spending->fetch()) {
                 $spendingData = $Spending->toArray();
                 $spendingData['date'] = sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day);
-                $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
-                if (!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
-                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
+                if ($separate_sums) {
+                    $DISPLAYDATA['spendings'][$Spending->type][] = $spendingData;
+                } else {
+                    $DISPLAYDATA['spendings'][] = $spendingData;
+                }
+                if ($separate_sums) {
+                    if(!isset($DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id])) {
+                        $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] = 0;
+                    }
+                } else {
+                    if(!isset($DISPLAYDATA['sum_group'][$Spending->spendinggroup_id])) {
+                        $DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] = 0;
+                    }
                 }
                 if ($Spending->type == SPENDING_TYPE_IN) {
                     $DISPLAYDATA['sum_type'][$Spending->type]                               += $Spending->value;
                     $DISPLAYDATA['sum_type'][0]                                             += $Spending->value;
-                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] += $Spending->value;
+                    if ($separate_sums) {
+                        $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] += $Spending->value;
+                    } else {
+                        $DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] += $Spending->value;
+                    }
                 } else {
                     $DISPLAYDATA['sum_type'][$Spending->type]                               -= $Spending->value;
                     $DISPLAYDATA['sum_type'][0]                                             -= $Spending->value;
-                    $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] -= $Spending->value;
+                    if ($separate_sums) {
+                        $DISPLAYDATA['sum_group'][$Spending->type][$Spending->spendinggroup_id] -= $Spending->value;
+                    } else {
+                        $DISPLAYDATA['sum_group'][$Spending->spendinggroup_id] -= $Spending->value;
+                    }
                 }
             }
         }
@@ -533,11 +562,14 @@
         }
         $do = 'start';
     }
+
+    $_SESSION['do'] = $do;
     
     /**
     * Relocate if required
     */
     if (isset($relocateDo)) {
+        $_SESSION['do'] = $relocateDo;
         header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}?do=$relocateDo&display_month=$display_month");
         return;
     }

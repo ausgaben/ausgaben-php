@@ -2,7 +2,7 @@
 --
 -- Host: localhost    Database: ausgaben
 -- ------------------------------------------------------
--- Server version	4.0.20
+-- Server version	4.0.22
 
 --
 -- Table structure for table `account`
@@ -89,7 +89,7 @@ CREATE TABLE user (
   prename tinytext NOT NULL,
   name tinytext NOT NULL,
   admin tinyint(4) unsigned NOT NULL default '0',
-  last_account_id int(11) unsigned NOT NULL default '0',
+  settings text NOT NULL,
   last_login varchar(14) default NULL,
   avatar tinytext NOT NULL,
   locale varchar(16) NOT NULL default '',

@@ -1,4 +1,5 @@
 {include file='html_head.tpl'}
+{assign var=display_month value=$smarty.session.display_month}
 <div id="loading"><img src="lib/images/icons/large/riot_time.png" alt="" align="left" width="40" height="40" />&nbsp;Bitte warten. Seite wird geladen.&nbsp;</div>
 <script type="text/javascript">
 <!--
@@ -23,7 +24,7 @@
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
             <tr>
-                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?do={$do}&amp;account_id={$list_account.account_id}&amp;display_month={$display_month}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}</td>
+                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}">{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}{if $list_account.summarize_months}&sup1;{/if}</td>
                 <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf:0}</span></span></td>
             </tr>
             {if $smarty.foreach.list_account.last}
@@ -62,6 +63,15 @@
             {if $accounts}<p class="tiny">&sup1; im {$display_month|date_format:'%b. %Y'}</p>{/if}
             <p class="frametitle">Ausgaben</p>
             <p><a href="javascript:showEditor();"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a></p>
+            <p class="frametitle">Ansicht</p>
+            <form name="viewsettings" method="post" action="{$SCRIPT_NAME}">
+                <input type="hidden" name="ifviewsettings" value="1" />
+                <p>
+                    <strong>Einnahmen und Ausgaben</strong><br />
+                    <input type="radio" name="separate_sums" value="1" {if $smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" /> getrennt<br />
+                    <input type="radio" name="separate_sums" value="0" {if !$smarty.session.user.settings.separate_sums}checked="true"{/if} onchange="document.viewsettings.submit();" /> zusammen<br />
+                </p>
+            </form>
         {/if}
     </div>
 </div>
@@ -100,14 +110,8 @@
                         {/if}
                     {/section}
 
-            {foreach from=$spendings item=spendings_by_type key=type name=spendings_by_type}
-                {if $smarty.foreach.spendings_by_type.first}
-                    {* Übertrag anzeigen *}
+                    {* Summen anzeigen *}
                     {if $account.enable_abf and $abf}
-                        <tr>
-                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
-                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_abf|mf}</strong></td>
-                        </tr>
                         <tr>
                             <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" align="right">&raquo;</td>
                             <td class="{if $abf.value >= 0}sum-2{else}sum-1{/if}" colspan="2">Übertrag aus {$abf.date|date_format:'%B %Y'}</td>
@@ -115,43 +119,32 @@
                         </tr>
                     {/if}
                     <tr>
+                        <td class="sum-1" align="right">&raquo;</td>
+                        <td class="sum-1" colspan="2">Ausgaben</td>
+                        <td class="sum-1" align="right" nowrap="true">{$sum_type.1|mf}</td>
+                    </tr>
+                    <tr>
+                        <td class="sum-2" align="right">&raquo;</td>
+                        <td class="sum-2" colspan="2">Einnahmen</td>
+                        <td class="sum-2" align="right" nowrap="true">{$sum_type.2|mf}</td>
+                    </tr>
+                    <tr>
                         <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Summe der Einnahmen und Ausgaben</strong></td>
                         <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_type.0|mf}</strong></td>
                     </tr>
-                {/if}
-                {foreach from=$spendings_by_type item=spending name=spending}
-                    {if $smarty.foreach.spending.first}
+                    {if $account.enable_abf and $abf}
                         <tr>
-                            <td class="sum-{$type}" align="right">&raquo;</td>
-                            <td class="sum-{$type}" colspan="2">{if $type eq 1}Ausgaben{else}Einnahmen{/if}</td>
-                            <td class="sum-{$type}" align="right" nowrap="true">{$sum_type[$type]|mf}</td>
+                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
+                            <td class="{if $sum_type.0 >= 0}sum-2{else}sum-1{/if}" align="right"><strong>{$sum_abf|mf}</strong></td>
                         </tr>
-                        {assign var=lastgroup value=0}
                     {/if}
-                    {if $lastgroup ne $spending.spendinggroup_id}
-                        <tr>
-                            <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
-                            <td class="subheader" align="right">{$sum_group[$type][$spending.spendinggroup_id]|mf}</td>
-                        </tr>
-                        {assign var=lastgroup value=$spending.spendinggroup_id}
-                    {/if}
-                    {if $smarty.foreach.spending.iteration is odd}
-                        <tr>
+
+                    {if $smarty.session.user.settings.separate_sums}
+                    {include file='spendings-separate_sums.tpl'}
                     {else}
-                        <tr class="alt">
+                    {include file='spendings-no_separate_sums.tpl'}
                     {/if}
-                        {if $summarize_months}
-                            <td>{$spending.date|date_format:'%d.'}</td>
-                        {else}
-                            <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
-                        {/if}
-                        <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a></td>
-                        <td>{if $spending.spendingmethod_id > 0}<img src="lib/images/icons/spendingmethod/{$spendingmethods[$spending.spendingmethod_id].icon}" width="11" height="11" hspace="2" />{/if}</td>
-                        <td align="right" nowrap="true"><span class="type-{$type}">{if $type eq 1}-{/if}{$spending.value|mf}</span></td>
-                    </tr>
-                    {if $smarty.foreach.spendings_out.last}{/if}
-                {/foreach}
-            {/foreach}
+            
                 </tbody>
             </table>
         </div>
@@ -164,8 +157,6 @@
 <div id="spendingform">
     <form name="addspending" method="post" action="{$SCRIPT_NAME}">
         <input type="hidden" name="spending_id" value="0" />
-        <input type="hidden" name="display_month" value="{$display_month}" />
-        <input type="hidden" name="do" value="{$do}" />
         <table cellspacing="0" cellpadding="2">
             <tr>
                 <td align="right">Konto</td>
