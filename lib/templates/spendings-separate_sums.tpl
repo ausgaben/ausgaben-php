@@ -33,5 +33,20 @@
         {if $smarty.foreach.spendings_out.last}{/if}
     {/foreach}
 {/foreach}
+<script type="text/javascript">
+<!--
+
+    var Spendings = new Array();
+    {foreach from=$spendings key=spending_type name=spendings item=spendings_by_type}
+        {foreach from=$spendings[$spending_type] item=spending}
+            Spendings[{$spending.spending_id}] = new Array();
+            {foreach from=$spending key=fieldname item=field_value}
+                Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
+            {/foreach}
+        {/foreach}
+    {/foreach}
+
+// -->
+</script>
 <!-- $Id$ -->
 <!-- separat -->

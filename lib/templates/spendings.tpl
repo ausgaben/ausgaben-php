@@ -258,17 +258,7 @@
 </div>
 <script type="text/javascript">
 <!--
-
-    var Spendings = new Array();
-    {foreach from=$spendings key=spending_type name=spendings item=spendings_by_type}
-        {foreach from=$spendings[$spending_type] item=spending}
-            Spendings[{$spending.spending_id}] = new Array();
-            {foreach from=$spending key=fieldname item=field_value}
-                Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
-            {/foreach}
-        {/foreach}
-    {/foreach}
-    
+   
     {section loop=$spendings_notbooked name=notbooked}
         Spendings[{$spendings_notbooked[notbooked].spending_id}] = new Array();
         {foreach from=$spendings_notbooked[notbooked] key=fieldname item=field_value}

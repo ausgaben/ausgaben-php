@@ -25,5 +25,18 @@
         <td align="right" nowrap="true"><span class="type-{$spending.type}">{if $spending.type eq 1}-{/if}{$spending.value|mf}</span></td>
     </tr>
 {/foreach}
+<script type="text/javascript">
+<!--
+
+    var Spendings = new Array();
+    {foreach from=$spendings item=spending name=spendings }
+        Spendings[{$spending.spending_id}] = new Array();
+        {foreach from=$spending key=fieldname item=field_value}
+            Spendings[{$spending.spending_id}]["{$fieldname}"] = "{$field_value|jso}";
+        {/foreach}
+    {/foreach}
+
+// -->
+</script>
 <!-- $Id$ -->
 <!-- no-separat -->
