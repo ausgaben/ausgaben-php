@@ -60,7 +60,7 @@
         function init ($scope, $id = 0) 
         {
         	$this->_scope = strtolower(trim($scope));
-        	$this->_id = intval($scope);
+        	$this->_id = intval($id);
         	if (!isset($_SESSION[$this->_session_var][$this->_scope])) {
         		$_SESSION[$this->_session_var][$this->_scope] = array();
         	}
