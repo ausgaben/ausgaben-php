@@ -44,7 +44,7 @@
                         </tr>
                     {/if}
                     <tr>
-                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$SCRIPT_NAME}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
+                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$smarty.server.PHP_SELF}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
                         <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf:0}</span></span></td>
                         {if $account.enable_abf eq 1}
                             <td align="right">{if $month_sums_abf[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums_abf[$month]|mf:0}</span></span></td>
@@ -63,7 +63,7 @@
             <p class="frametitle">Ausgaben</p>
             <p><a href="javascript:showEditor();"><img src="lib/images/icons/small/riot_page.png" width="21" height="18" align="absmiddle" />Neu ...</a></p>
             <p class="frametitle">Ansicht</p>
-            <form name="viewsettings" method="post" action="{$SCRIPT_NAME}">
+            <form name="viewsettings" method="post" action="{$smarty.server.PHP_SELF}">
                 <p>
                     <input type="radio" name="_set_order_by_date" value="0" {if !$smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_1" /> <label for="order_by_date_1" {popup text="Gruppiert die Einnahmen und Ausgaben nach ihrer Art"}>Nach Art gruppieren</label><br />
                     <input type="radio" name="_set_order_by_date" value="1" {if $smarty.session.user.settings.order_by_date}checked="true"{/if} onchange="document.viewsettings.submit();" id="order_by_date_2" /> <label for="order_by_date_2" {popup text="Ordnet die Einnahmen und Ausgaben nach dem Datum"}>Nach Datum sortieren</label><br />
@@ -243,7 +243,7 @@
     Ausgaben editieren
 *}
 <div id="spendingform">
-    <form name="addspending" method="post" action="{$SCRIPT_NAME}">
+    <form name="addspending" method="post" action="{$smarty.server.PHP_SELF}">
         <input type="hidden" name="spending_id" value="0" />
         <table cellspacing="0" cellpadding="2">
             <tr>

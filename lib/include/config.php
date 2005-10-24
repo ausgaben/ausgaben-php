@@ -34,7 +34,7 @@
     $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
 
-    ini_set('session.cookie_path', dirname($_SERVER['SCRIPT_NAME']));
+    ini_set('session.cookie_path', dirname($_SERVER['PHP_SELF']));
 
     $proto = (isset($_SERVER['HTTPS']) and strtolower($_SERVER['HTTPS']) == 'on') ? 'https://' : 'http://';
 

@@ -39,7 +39,7 @@
     * Get Browser
     */
     $Browser = new Net_Useragent_Detect;
-    
+
     // Login User
     $Auth = new Auth('DB', $CONFIG['auth'], '', false);
     $Auth->start();
@@ -59,12 +59,12 @@
     if (isset($_SESSION['user']) and isset($_SESSION['user']['locale'])) {
         setlocale(LC_ALL, $_SESSION['user']['locale']);
     }
-    
+
     // Settings for the current User
     $Settings = new Settings();
     if ($ifauthed) {
-    	$Settings->init(SETTINGS_SCOPE_USER, $_SESSION['user']['user_id']);
-    	$_SESSION['user']['settings'] = $Settings->get();
+        $Settings->init(SETTINGS_SCOPE_USER, $_SESSION['user']['user_id']);
+        $_SESSION['user']['settings'] = $Settings->get();
     }
 
     if ($logout) {
@@ -72,7 +72,7 @@
         $Settings->save();
         // Ausloggen
         session_destroy();
-        header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['SCRIPT_NAME']}");
+        header("Location: http://{$_SERVER['HTTP_HOST']}{$_SERVER['PHP_SELF']}");
         return;
     }
 
@@ -84,7 +84,7 @@
     if ($account_id) {
         $Settings->set('last_account_id', $account_id);
     } else {
-    	$account_id = intval($Settings->get('last_account_id'));
+        $account_id = intval($Settings->get('last_account_id'));
     }
     $_SESSION['account_id'] = $account_id;
     $_SESSION['display_month'] = $display_month;
@@ -94,7 +94,7 @@
     $AppSettings->init(SETTINGS_SCOPE_SITE);
     $app_settings = $AppSettings->get();
     $DISPLAYDATA['settings'] = $app_settings;
-    
+
     /**
     * Action
     */
@@ -127,13 +127,13 @@
     }
 
     $_SESSION['do'] = $do;
-    
+
     /**
     * Relocate if required
     */
     if (isset($relocateDo)) {
         $_SESSION['do'] = $relocateDo;
-        $target = $proto . $_SERVER['HTTP_HOST'] . $_SERVER['SCRIPT_NAME'] . '?do=' . $relocateDo;
+        $target = $proto . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?do=' . $relocateDo;
         if (isset($relocateId)) $target .= '#' . $relocateId;
         header('Location: ' . $target);
         return;

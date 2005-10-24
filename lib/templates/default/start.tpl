@@ -4,7 +4,7 @@
         <div class="loginform">
         {section loop=$users name=users}
             {if $smarty.section.users.first}
-                <form method="post" name="loginform" action="{$SCRIPT_NAME}">
+                <form method="post" name="loginform" action="{$smarty.server.PHP_SELF}">
                     <input type="hidden" name="username" />
                     <p>
                         Bitte einen Benutzer auswählen und dann das Passwort eingeben.

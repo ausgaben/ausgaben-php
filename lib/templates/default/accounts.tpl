@@ -14,7 +14,7 @@
 </div>
 <div class="framecenter">
     <div class="boxsubtitle">Konten</div>
-    <form method="post" action="{$SCRIPT_NAME}" name="account_form">
+    <form method="post" action="{$smarty.server.PHP_SELF}" name="account_form">
         {if $smarty.request.account_id}
             {assign var=account value=$accounts[$smarty.request.account_id]}
             <input type="hidden" name="account_id" value="{$account.account_id}" />
@@ -45,7 +45,7 @@
                 {if $smarty.section.users.first}<p>Benutzer dieses Kontos<br />{/if}
                 {assign var=user_id value=$users[users].user_id}
                 <input type="checkbox" name="user2account[]" value="{$users[users].user_id}" {if $user2account.$user_id}checked="true"{/if} />
-                {$users[users].prename} {$users[users].name}<br /> 
+                {$users[users].prename} {$users[users].name}<br />
                 {if $smarty.section.users.last}</p>{/if}
             {/section}
             {if $smarty.request.account_id}
