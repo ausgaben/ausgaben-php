@@ -174,10 +174,13 @@ tr.alt {
 tr.sum {
     background-color: #ffffd7;
 }
-td.subheader {
+td.subheader, td.subheader-right {
     background-color: #e0e0e0;
     border-top: 1px solid #a0a0a0;
     font-weight: bold;
+}
+td.subheader-right {
+    text-align: right;
 }
 #spendingform {
     position: absolute;
@@ -204,11 +207,11 @@ span.type-2 {
 }
 // Overlib classes
 .ol_font {
-	font-size: 12px;
+        font-size: 12px;
 }
 .ol_fg {
-	background-color: #ffffff;
+        background-color: #ffffff;
 }
 .ol_bg {
-	background-color: #a00000;
+        background-color: #a00000;
 }

@@ -149,7 +149,12 @@
                         {if !$order_by_date}
                             {if $lastgroup ne $spending.spendinggroup_id}
                                 <tr>
-                                    <td colspan="4" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                    {if $summarize_months}
+                                        <td colspan="4" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                    {else}
+                                        <td colspan="3" class="subheader">{$spendinggroups_sums[$spending.spendinggroup_id].name}</td>
+                                        <td class="subheader-right"><span class="type-{if $spendinggroups_sums[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups_sums[$spending.spendinggroup_id].sum|mf}</strong></span></td>
+                                    {/if}
                                 </tr>
                                 {assign var=lastgroup value=$spending.spendinggroup_id}
                             {/if}

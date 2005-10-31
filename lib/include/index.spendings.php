@@ -10,7 +10,7 @@
     */
 
     $order_by_date = $Settings->get('order_by_date');
-    
+
     $DateLastLogin = new Date($_SESSION['user']['last_login']);
 
     // Load abf (amount brought forward)
@@ -219,9 +219,9 @@
             $spendingData = $Spending->toArray();
             $SpendingDate = new Date(sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day));
             if ($DateLastLogin->before($SpendingDate) and $Spending->user_id != $_SESSION['user']['user_id']) {
-            	$spendingData['is_new'] = true;
+                $spendingData['is_new'] = true;
             } else {
-            	$spendingData['is_new'] = false;
+                $spendingData['is_new'] = false;
             }
             $spendingData['date'] = $SpendingDate->format('%Y%m%d000000');
             if ($spending_config[$Spending->type]['value'] > 0) {
@@ -243,6 +243,18 @@
         // Gesamtsummen
         $DISPLAYDATA['sum_type'][SPENDING_TYPE_OUT] += $DISPLAYDATA['sum_type'][SPENDING_TYPE_WITHDRAWAL];
         $DISPLAYDATA['sum_type'][SPENDING_TYPE_ACCOUNT] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_OUT] + $DISPLAYDATA['sum_type'][SPENDING_TYPE_IN];
+        // Gruppensummen
+        $DBC = $Spending->getDataBaseConnection();
+        $result = $DBC->getAll('SELECT b.spendinggroup_id, b.name , SUM((CASE WHEN a.type=2 THEN a.value ELSE - a.value END)) AS sum FROM spending a LEFT JOIN spendinggroup b ON b.spendinggroup_id=a.spendinggroup_id WHERE a.account_id=' . $account_id . ' GROUP BY spendinggroup_id');
+        $DISPLAYDATA['spendinggroups_sums'] = array();
+        foreach ($result as $row) {
+            $DISPLAYDATA['spendinggroups_sums'][$row[0]] = array(
+                'name' => $row[1],
+                'sum' => $row[2],
+            );
+        }
+
+
     }
 
     // Load abf from last month
