@@ -11,5 +11,5 @@
 </head>
 <body>
     <div class="masterbox">
-        <div class="boxtitle"><div class="floatright">{$smarty.now|date_format:'%A, %d. %B %Y, %H:%M Uhr'}</div>AUSGABEN {$version.major}.{$version.minor}</div>
+        <div class="boxtitle"><div class="floatright">{$smarty.now|date_format:'%A, %d. %B %Y, %H:%M Uhr'|utf8_encode}</div>AUSGABEN {$version.major}.{$version.minor}</div>
         {if $AUTH}{include file='menu.tpl'}{/if}

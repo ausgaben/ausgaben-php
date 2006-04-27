@@ -13,18 +13,18 @@
     {assign var=account value=$accounts[$smarty.session.account_id]}
 {/if}
 {*
-    Kontos ausw‰hlen
+    Kontos ausw√§hlen
 *}
 <div class="frameleft">
     <div class="boxcontent">
         <p class="frametitle">Konten</p>
         {if $smarty.session.account_id <= 0}
-            <p>Ein Konto ausw‰hlen:</p>
+            <p>Ein Konto ausw√§hlen:</p>
         {/if}
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
             <tr>
-                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}" {if $list_account.summarize_months}{popup text=$display_month|date_format:'im %B %Y'}{/if}>{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}</td>
+                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}" {if $list_account.summarize_months}{popup text=$display_month|date_format:'im %B %Y'|utf8_encode}{/if}>{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}</td>
                 <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf:0}</span></span></td>
             </tr>
             {if $smarty.foreach.list_account.last}
@@ -44,7 +44,7 @@
                         </tr>
                     {/if}
                     <tr>
-                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$smarty.server.PHP_SELF}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"}</a>{if $display_month eq $month}</strong>{/if}</td>
+                        <td>{if $display_month eq $month}<strong>{/if}<a href="{$smarty.server.PHP_SELF}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"|utf8_encode}</a>{if $display_month eq $month}</strong>{/if}</td>
                         <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf:0}</span></span></td>
                         {if $account.enable_abf eq 1}
                             <td align="right">{if $month_sums_abf[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums_abf[$month]|mf:0}</span></span></td>
@@ -77,7 +77,7 @@
 *}
 {if $smarty.session.account_id > 0}
     <div class="framecenter">
-        <div class="boxsubtitle">{$account.name}{if $summarize_months} - {$display_month|date_format:'%B %Y'}{/if}</div>
+        <div class="boxsubtitle">{$account.name}{if $summarize_months} - {$display_month|date_format:'%B %Y'|utf8_encode}{/if}</div>
         <div class="boxcontent">
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
@@ -99,11 +99,11 @@
                     </tr>
                     {if $account.enable_abf and $abf}
                         <tr class="alt">
-                            <td colspan="3">‹bertrag aus {$abf.date|date_format:'%B %Y'}</td>
+                            <td colspan="3">√úbertrag aus {$abf.date|date_format:'%B %Y'|utf8_encode}</td>
                             <td align="right">{$abf.value|mf}</td>
                         </tr>
                         <tr class="sum">
-                            <td class="sum" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'})</strong></td>
+                            <td class="sum" colspan="3"><strong>Kontostand (am {$sum_abf_date|date_format:'%d.%m.%Y'|utf8_encode})</strong></td>
                             <td class="sum" align="right"><span class="type-{if $sum_abf < 0}1{else}2{/if}"><strong>{$sum_abf|mf}</strong></span></td>
                         </tr>
                     {/if}
@@ -165,9 +165,9 @@
                             <tr>
                         {/if}
                             {if $summarize_months}
-                                <td>{$spending.date|date_format:'%d.'}</td>
+                                <td>{$spending.date|date_format:'%d.'|utf8_encode}</td>
                             {else}
-                                <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'}</td>
+                                <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'|utf8_encode}</td>
                             {/if}
                             <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a> {if $spending.is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
@@ -218,9 +218,9 @@
                             <tr class="alt">
                         {/if}
                             {if $summarize_months}
-                                <td>{$spendings_cash[cash].date|date_format:'%d.'}</td>
+                                <td>{$spendings_cash[cash].date|date_format:'%d.'|utf8_encode}</td>
                             {else}
-                                <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'}</td>
+                                <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'|utf8_encode}</td>
                             {/if}
                             <td><a href="javascript:javascript:showEditor({$spendings_cash[cash].spending_id});">{$spendings_cash[cash].description|so}</a> {if $spendings_cash[cash].is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/3.gif" width="16" height="16" hspace="2" /></td>
@@ -255,7 +255,7 @@
                 <td align="right"><label for="account_id">Konto</label></td>
                 <td>
                     <select name="account_id" id="account_id">
-                        <option value="">( Konto w‰hlen )</option>
+                        <option value="">( Konto w√§hlen )</option>
                         {foreach from=$accounts name=list_account item=list_account}
                             <option value="{$list_account.account_id}" {if $smarty.session.account_id eq $list_account.account_id}selected="true"{/if}>{$list_account.name}</option>
                         {/foreach}
@@ -275,17 +275,17 @@
                 <td>
                     <select onChange="document.addspending.day.value=this.value.substr(6,2);document.addspending.month.value=this.value.substr(4,2);document.addspending.year.value=this.value.substr(0,4);">
                             <option value="">( Datum )</option>
-                            <option value="{$smarty.now|date_format:'%Y%m%d'}">{$smarty.now|date_format:'%d. Heute'}</option>
-                            <option value="{$smarty.now-86400|date_format:'%Y%m%d'}">{$smarty.now-86400|date_format:'%d. %A'}</option>
-                            <option value="{$smarty.now-86400*2|date_format:'%Y%m%d'}">{$smarty.now-86400*2|date_format:'%d. %A'}</option>
-                            <option value="{$smarty.now-86400*3|date_format:'%Y%m%d'}">{$smarty.now-86400*3|date_format:'%d. %A'}</option>
-                            <option value="{$smarty.now-86400*4|date_format:'%Y%m%d'}">{$smarty.now-86400*4|date_format:'%d. %A'}</option>
-                            <option value="{$smarty.now-86400*5|date_format:'%Y%m%d'}">{$smarty.now-86400*5|date_format:'%d. %A'}</option>
-                            <option value="{$smarty.now-86400*6|date_format:'%Y%m%d'}">{$smarty.now-86400*6|date_format:'%d. %A'}</option>
+                            <option value="{$smarty.now|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now|date_format:'%d. Heute'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400|date_format:'%d. %A'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400*2|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400*2|date_format:'%d. %A'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400*3|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400*3|date_format:'%d. %A'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400*4|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400*4|date_format:'%d. %A'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400*5|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400*5|date_format:'%d. %A'|utf8_encode}</option>
+                            <option value="{$smarty.now-86400*6|date_format:'%Y%m%d'|utf8_encode}">{$smarty.now-86400*6|date_format:'%d. %A'|utf8_encode}</option>
                     </select>
                 </td>
                 <td>
-                    <input type="text" name="day" maxlength="2" class="tiny" tabindex="1" value="{$smarty.now|date_format:'%d'}" />.<input type="text" name="month" maxlength="2" class="tiny" tabindex="2" value="{$smarty.now|date_format:'%m'}" />.<input type="text" name="year" class="small" maxlength="4" tabindex="3" value="{$smarty.now|date_format:'%Y'}" />
+                    <input type="text" name="day" maxlength="2" class="tiny" tabindex="1" value="{$smarty.now|date_format:'%d'|utf8_encode}" />.<input type="text" name="month" maxlength="2" class="tiny" tabindex="2" value="{$smarty.now|date_format:'%m'|utf8_encode}" />.<input type="text" name="year" class="small" maxlength="4" tabindex="3" value="{$smarty.now|date_format:'%Y'|utf8_encode}" />
                 </td>
             </tr>
             <tr>
@@ -333,7 +333,7 @@
                 <td><input type="checkbox" name="ifduplicate" value="1" accesskey="n" id="ifduplicate" /></td>
             </tr>
             <tr>
-                <td align="right"><label for="ifdelete">Eintrag <u>l</u>ˆschen</label></td>
+                <td align="right"><label for="ifdelete">Eintrag <u>l</u>√∂schen</label></td>
                 <td><input type="checkbox" name="ifdelete" value="1" accesskey="l" id="ifdelete" /></td>
             </tr>
             <tr>
@@ -428,4 +428,7 @@
 
 // -->
 </script>
+
 {include file='html_foot.tpl'}
+
+

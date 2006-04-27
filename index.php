@@ -23,6 +23,8 @@
     require_once 'DB/DataObject.php';
     require_once 'Net/UserAgent/Detect.php';
 
+    ini_set('default_charset', 'utf-8');
+
     /**
     * Pull some vars from the request
     */
