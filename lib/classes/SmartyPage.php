@@ -10,10 +10,10 @@
     /**
     * Include smarty
     */
-    require_once "{$CONFIG['path']['smarty']}/Smarty.class.php";
     require_once "{$CONFIG['path']['home']}/lib/functions/javaScriptOut.php";
     require_once "{$CONFIG['path']['home']}/lib/functions/screenOut.php";
     require_once "{$CONFIG['path']['home']}/lib/functions/moneyFormat.php";
+	require_once 'Smarty.class.php';
 
     /**
     * Class which handles general smarty configuration
