@@ -141,7 +141,7 @@
         $Spending->account_id = $account_id;
         if ($Spending->find()) {
             while ($Spending->fetch()) {
-                $DISPLAYDATA['months'][] = sprintf('%d%02d01000000', $Spending->year, $Spending->month);
+                $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
             }
         }
     }
@@ -179,6 +179,11 @@
         if (!isset($DISPLAYDATA['months'])) return;
         foreach ($DISPLAYDATA['months'] as $date) {
             $DISPLAYDATA['month_sums'][$date] = 0;
+		// Display only current years month sums
+		if ((int)substr($date, 0, 4) < (int)strftime('%Y')) {
+                        $DISPLAYDATA['month_sums'][$date] = false;
+			continue;
+		}
             $Spending = DB_DataObject::factory('spending');
             $Spending->year = substr($date, 0, 4);
             $Spending->month = substr($date, 4, 2);

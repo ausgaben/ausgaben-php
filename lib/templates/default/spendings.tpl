@@ -43,6 +43,7 @@
                             {if $account.enable_abf eq 1}<td class="tiny">Kontostand</td>{/if}
                         </tr>
                     {/if}
+			{if $month_sums[$month] !== false}
                     <tr>
                         <td>{if $display_month eq $month}<strong>{/if}<a href="{$smarty.server.PHP_SELF}?do={$smarty.request.do}&amp;display_month={$month}">{$month|date_format:"%b '%y"|utf8_encode}</a>{if $display_month eq $month}</strong>{/if}</td>
                         <td align="right">{if $month_sums[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums[$month]|mf:0}</span></span></td>
@@ -50,6 +51,7 @@
                             <td align="right">{if $month_sums_abf[$month] >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$month_sums_abf[$month]|mf:0}</span></span></td>
                         {/if}
                     </tr>
+			{/if}
                     {if $smarty.foreach.months.last}
                         {if $account.enable_abf eq 0}
                             <tr>
