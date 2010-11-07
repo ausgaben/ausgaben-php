@@ -95,6 +95,7 @@
     $AppSettings = new Settings();
     $AppSettings->init(SETTINGS_SCOPE_SITE);
     $app_settings = $AppSettings->get();
+	if (!isset($app_settings['theme'])) $app_settings['theme'] = 'default';
     $DISPLAYDATA['settings'] = $app_settings;
 
     /**

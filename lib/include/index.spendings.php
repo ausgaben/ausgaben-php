@@ -25,8 +25,9 @@
     $User2Account = DB_DataObject::factory('user2account');
     $User2Account->user_id = $_SESSION['user']['user_id'];
     if (!$User2Account->find()) return;
-    while ($User2Account->fetch()) {
+   	while ($User2Account->fetch()) {
         $Account = $User2Account->getLink('account_id');
+
         if (!$Account) continue;
         $AccountData = $Account->toArray();
         $AccountData['sum_value'] = 0;
@@ -50,7 +51,9 @@
             }
         }
         $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
-    }
+	}
+
+
     if(!$account_id) return;
     if (isset($DISPLAYDATA['accounts'][$account_id])) {
         $activeAccount = $DISPLAYDATA['accounts'][$account_id];
@@ -125,6 +128,7 @@
     if ($Spendinggroup->find()) {
         while($Spendinggroup->fetch()) {
             $DISPLAYDATA['spendinggroups'][$Spendinggroup->spendinggroup_id] = $Spendinggroup->toArray();
+            $DISPLAYDATA['spendinggroups'][$Spendinggroup->spendinggroup_id]['sum'] = 0;
         }
     }
     if ($activeAccount['summarize_months']) {
@@ -149,6 +153,10 @@
     $Spending->orderBy('day desc');
     $Spending->booked = 0;
     $Spending->account_id = $account_id;
+    if ($activeAccount['summarize_months']) {
+    	$Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
+    	$Spending->whereAdd('year='.substr($display_month, 0, 4));
+   	}
     if ($Spending->find()) {
         $DISPLAYDATA['sum_notbooked'] = 0;
         while ($Spending->fetch()) {
@@ -157,8 +165,10 @@
             $DISPLAYDATA['spendings_notbooked'][] = $spendingData;
             if ($Spending->type == SPENDING_TYPE_IN) {
                 $DISPLAYDATA['sum_notbooked'] += $Spending->value;
+                $DISPLAYDATA['spendinggroups'][$Spending->spendinggroup_id]['sum_notbooked'] += $Spending->value;
             } else if ($Spending->type == SPENDING_TYPE_OUT) {
                 $DISPLAYDATA['sum_notbooked'] -= $Spending->value;
+                $DISPLAYDATA['spendinggroups'][$Spending->spendinggroup_id]['sum_notbooked'] -= $Spending->value;
             }
         }
     }
@@ -207,27 +217,34 @@
     );
     $Spending = DB_DataObject::factory('spending');
     if (!$order_by_date) $Spending->orderBy('spendinggroup_id');
-    $Spending->orderBy('day desc');
     $Spending->booked = 1;
     if ($activeAccount['summarize_months']) {
+        $Spending->orderBy('day desc');
         $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
         $Spending->whereAdd('year='.substr($display_month, 0, 4));
+    } else {
+        $Spending->orderBy('year asc');
+        $Spending->orderBy('month asc');
+        $Spending->orderBy('day asc');
     }
     $Spending->whereAdd("account_id=$account_id");
+
     if ($Spending->find()) {
         while ($Spending->fetch()) {
             $spendingData = $Spending->toArray();
-            $SpendingDate = new Date(sprintf('%04d%02d%02d000000', $Spending->year, $Spending->month, $Spending->day));
+            $SpendingDate = new Date(sprintf('%04d-%02d-%02d', $Spending->year, $Spending->month, $Spending->day));
+            $spendingData['date'] = $SpendingDate->format('%Y%m%d000000');
             if ($DateLastLogin->before($SpendingDate) and $Spending->user_id != $_SESSION['user']['user_id']) {
                 $spendingData['is_new'] = true;
             } else {
                 $spendingData['is_new'] = false;
             }
-            $spendingData['date'] = $SpendingDate->format('%Y%m%d000000');
             if ($spending_config[$Spending->type]['value'] > 0) {
                 $DISPLAYDATA['sum_type'][$Spending->type] += $Spending->value;
+                $DISPLAYDATA['spendinggroups'][$Spending->spendinggroup_id]['sum'] += $Spending->value;
             } else  {
                 $DISPLAYDATA['sum_type'][$Spending->type] -= $Spending->value;
+                $DISPLAYDATA['spendinggroups'][$Spending->spendinggroup_id]['sum'] -= $Spending->value;
             }
             switch ($Spending->type) {
             case SPENDING_TYPE_OUT:
@@ -245,7 +262,7 @@
         $DISPLAYDATA['sum_type'][SPENDING_TYPE_ACCOUNT] = $DISPLAYDATA['sum_type'][SPENDING_TYPE_OUT] + $DISPLAYDATA['sum_type'][SPENDING_TYPE_IN];
         // Gruppensummen
         $DBC = $Spending->getDataBaseConnection();
-        $result = $DBC->getAll('SELECT b.spendinggroup_id, b.name , SUM((CASE WHEN a.type=2 THEN a.value ELSE - a.value END)) AS sum FROM spending a LEFT JOIN spendinggroup b ON b.spendinggroup_id=a.spendinggroup_id WHERE a.account_id=' . $account_id . ' GROUP BY spendinggroup_id');
+        $result = $DBC->getAll('SELECT b.spendinggroup_id, b.name , SUM((CASE WHEN a.type=2 THEN a.value ELSE - a.value END)) AS sum FROM spending a LEFT JOIN spendinggroup b ON b.spendinggroup_id=a.spendinggroup_id WHERE a.account_id=' . $account_id . ' AND a.booked = 1 GROUP BY spendinggroup_id');
         $DISPLAYDATA['spendinggroups_sums'] = array();
         foreach ($result as $row) {
             $DISPLAYDATA['spendinggroups_sums'][$row[0]] = array(
@@ -253,8 +270,6 @@
                 'sum' => $row[2],
             );
         }
-
-
     }
 
     // Load abf from last month
@@ -296,5 +311,3 @@
     }
     $SpendingFilter = SpendingFilter::factory($CONFIG['spending_filter']);
     $SpendingFilter->filterDescriptions(&$DISPLAYDATA['descriptions']);
-
-?>

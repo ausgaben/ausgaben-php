@@ -110,6 +110,7 @@
 
                     {* Nicht gebuchte Ausgaben anzeigen *}
                     {section loop=$spendings_notbooked name=notbooked}
+                    	{assign var="spending" value=$spendings_notbooked[notbooked]}
                         {if $smarty.section.notbooked.first}
                             <tr>
                                 <td colspan="4">&nbsp;</td>
@@ -117,6 +118,14 @@
                             <tr>
                                 <td colspan="4"><h3>Noch nicht gebuchte Ausgaben</h3></td>
                             </tr>
+                            {assign var=lastgroup value=0}
+                        {/if}
+                        {if $lastgroup ne $spending.spendinggroup_id}
+                            <tr>
+                                <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                <td class="subheader-right"><span class="type-{if $spendinggroups[$spending.spendinggroup_id].sum_notbooked < 0}1{else}2{/if}"><strong>{$spendinggroups[$spending.spendinggroup_id].sum_notbooked|mf}</strong></span></td>
+                            </tr>
+                            {assign var=lastgroup value=$spending.spendinggroup_id}
                         {/if}
                         {if $smarty.section.notbooked.iteration is odd}
                             <tr class="alt">
@@ -136,6 +145,7 @@
                                 <td colspan="4">&nbsp;</td>
                             </tr -->
                         {/if}
+                        {assign var=lastgroup value=$spending.spendinggroup_id}
                     {/section}
 
                     {* Ausgaben anzeigen *}
@@ -150,7 +160,8 @@
                             {if $lastgroup ne $spending.spendinggroup_id}
                                 <tr>
                                     {if $summarize_months}
-                                        <td colspan="4" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                        <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                        <td class="subheader-right"><span class="type-{if $spendinggroups[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups[$spending.spendinggroup_id].sum|mf}</strong></span></td>
                                     {else}
                                         <td colspan="3" class="subheader">{$spendinggroups_sums[$spending.spendinggroup_id].name}</td>
                                         <td class="subheader-right"><span class="type-{if $spendinggroups_sums[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups_sums[$spending.spendinggroup_id].sum|mf}</strong></span></td>
@@ -167,7 +178,7 @@
                             {if $summarize_months}
                                 <td>{$spending.date|date_format:'%d.'|utf8_encode}</td>
                             {else}
-                                <td nowrap="true">{$spending.date|date_format:'%d.%b.%y'|utf8_encode}</td>
+                                <td nowrap="true">{$spending.date|date_format:'%d.%m.%Y'|utf8_encode}</td>
                             {/if}
                             <td><a href="javascript:javascript:showEditor({$spending.spending_id});">{if $spending.description}{$spending.description|so}{else}&mdash;{/if}</a> {if $spending.is_new}<sup>NEU</sup>{/if}</td>
                             <td><img src="lib/images/icons/spendingtype/{$spending.type}.gif" width="16" height="16" hspace="2" /></td>
