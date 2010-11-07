@@ -7,7 +7,7 @@
                 <form method="post" name="loginform" action="{$smarty.server.PHP_SELF}">
                     <input type="hidden" name="username" />
                     <p>
-                        Bitte einen Benutzer auswählen und dann das Passwort eingeben.
+                        Bitte einen Benutzer auswÃ¤hlen und dann das Passwort eingeben.
                     </p>
                 {/if}
                 <p class="large" onclick="doLogin('{$users[users].email}', this);">

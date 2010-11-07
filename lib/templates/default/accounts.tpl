@@ -37,7 +37,7 @@
                 <input type="radio" name="summarize_months" value="0" {if $account.summarize_months eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
             <p>
-                Monatlichen Übertrag erzeugen?<br />
+                Monatlichen Ãœbertrag erzeugen?<br />
                 <input type="radio" name="enable_abf" value="1" {if $account.enable_abf eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
                 <input type="radio" name="enable_abf" value="0" {if $account.enable_abf eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
@@ -50,7 +50,7 @@
             {/section}
             {if $smarty.request.account_id}
                 <p>
-                    <input type="checkbox" name="ifdelete" value="1" /> Konto löschen
+                    <input type="checkbox" name="ifdelete" value="1" /> Konto lÃ¶schen
                 </p>
             {/if}
             <p>

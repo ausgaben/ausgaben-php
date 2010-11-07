@@ -4,14 +4,14 @@
     <div class="boxsubtitle">Import</div>
     <div class="boxcontent">
         {if $n_imported > 0}
-            <p>{$n_imported} Eintr‰ge importiert.</p>
+            <p>{$n_imported} Eintr√§ge importiert.</p>
         {/if}
         {if $n_failed > 0}
-            <p>{$n_failed} Eintr‰ge nicht importiert.</p>
+            <p>{$n_failed} Eintr√§ge nicht importiert.</p>
         {/if}
         <form method="post" enctype="multipart/form-data">
             <p>
-                Bitte das Konto w‰hlen, in das Importiert werden soll:<br />
+                Bitte das Konto w√§hlen, in das Importiert werden soll:<br />
                 {section loop=$accounts name=accounts}
                     <input type="radio" name="account_id" value="{$accounts[accounts].account_id}" {if $smarty.session.account_id eq $accounts[accounts].account_id}checked="true"{/if} id="account_id_{$accounts[accounts].account_id}" /><label for="account_id_{$accounts[accounts].account_id}">{$accounts[accounts].name}{if $accounts[accounts].last_import > 0} (Letzter Import: {$accounts[accounts].last_import|date_format:'%x'}){/if}</label><br />
                 {/section}
@@ -20,7 +20,7 @@
                 <input type="checkbox" name="ifignoredrawings" value="1" checked="true" /> Sollen Abhebungen per Geldautomaten ignoriert werden?
             </p>
             <p>
-                Eine CSV-Datei mit den Daten ausw‰hlen:<br />
+                Eine CSV-Datei mit den Daten ausw√§hlen:<br />
                 <input type="file" name="file" />
             </p>
             <p>
