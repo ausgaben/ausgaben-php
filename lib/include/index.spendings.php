@@ -342,8 +342,8 @@
         }
     }
     // Einstellungen
-    $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
-    $DISPLAYDATA['summarize_years'] = $activeAccount['summarize_years'];
+    $DISPLAYDATA['summarize_months'] = (bool)$activeAccount['summarize_months'];
+    $DISPLAYDATA['summarize_years'] = (bool)$activeAccount['summarize_years'];
     $DISPLAYDATA['spending_config'] = $spending_config;
     // Beschreibungen laden
     $date_1month = new Date;

@@ -1,5 +1,6 @@
 {include file='html_head.tpl'}
 {assign var=display_month value=$smarty.session.display_month}
+{assign var=display_year value=$smarty.session.display_year}
 <div id="loading"><img src="lib/images/icons/large/riot_time.png" alt="" align="left" width="40" height="40" />&nbsp;Bitte warten. Seite wird geladen.&nbsp;</div>
 <script type="text/javascript">
 <!--
@@ -24,7 +25,16 @@
         {foreach from=$accounts name=list_account item=list_account}
             {if $smarty.foreach.list_account.first}<table cellpadding="0" cellspacing="0" width="100%">{/if}
             <tr>
-                <td>{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}<a href="?account_id={$list_account.account_id}" {if $list_account.summarize_months}{popup text=$display_month|date_format:'im %B %Y'|utf8_encode}{/if}>{$list_account.name}</a>{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}</td>
+                <td>
+                	{if $smarty.session.account_id eq $list_account.account_id}<strong>{/if}
+                	<a href="?account_id={$list_account.account_id}" 
+                		{if $list_account.summarize_months}{popup text=$display_month|date_format:'im %B %Y'|utf8_encode}{/if}
+                		{if $list_account.summarize_years}{popup text=$display_year|date_format:'in %Y'|utf8_encode}{/if}
+                	>
+                		{$list_account.name}
+                	</a>
+                	{if $smarty.session.account_id eq $list_account.account_id}</strong>{/if}
+                </td>
                 <td align="right">{if $list_account.sum_value >= 0}<span class="type-2">{else}<span class="type-1">{/if}{$list_account.sum_value|mf:0}</span></span></td>
             </tr>
             {if $smarty.foreach.list_account.last}
@@ -99,7 +109,11 @@
 *}
 {if $smarty.session.account_id > 0}
     <div class="framecenter">
-        <div class="boxsubtitle">{$account.name}{if $summarize_months} - {$display_month|date_format:'%B %Y'|utf8_encode}{/if}</div>
+        <div class="boxsubtitle">
+        	{$account.name}
+        	{if $summarize_months} - {$display_month|date_format:'%B %Y'|utf8_encode}{/if}
+        	{if $summarize_years} - {$display_year|date_format:'%Y'|utf8_encode}{/if}
+        </div>
         <div class="boxcontent">
             <table {if $isIE}width="609"{else}width="100%"{/if} cellspacing="0" cellpadding="2">
                 <tbody>
@@ -184,6 +198,9 @@
                                     {if $summarize_months}
                                         <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
                                         <td class="subheader-right"><span class="type-{if $spendinggroups[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups[$spending.spendinggroup_id].sum|mf}</strong></span></td>
+                                    {elseif $summarize_years}
+                                        <td colspan="3" class="subheader">{$spendinggroups[$spending.spendinggroup_id].name}</td>
+                                        <td class="subheader-right"><span class="type-{if $spendinggroups[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups[$spending.spendinggroup_id].sum|mf}</strong></span></td>
                                     {else}
                                         <td colspan="3" class="subheader">{$spendinggroups_sums[$spending.spendinggroup_id].name}</td>
                                         <td class="subheader-right"><span class="type-{if $spendinggroups_sums[$spending.spendinggroup_id].sum < 0}1{else}2{/if}"><strong>{$spendinggroups_sums[$spending.spendinggroup_id].sum|mf}</strong></span></td>
@@ -199,6 +216,8 @@
                         {/if}
                             {if $summarize_months}
                                 <td>{$spending.date|date_format:'%d.'|utf8_encode}</td>
+                            {elseif $summarize_years}
+                                <td>{$spending.date|date_format:'%d. %B'|utf8_encode}</td>
                             {else}
                                 <td nowrap="true">{$spending.date|date_format:'%d.%m.%Y'|utf8_encode}</td>
                             {/if}
@@ -252,6 +271,8 @@
                         {/if}
                             {if $summarize_months}
                                 <td>{$spendings_cash[cash].date|date_format:'%d.'|utf8_encode}</td>
+                            {elseif $summarize_years}
+                                <td>{$spendings_cash[cash].date|date_format:'%d. %B'|utf8_encode}</td>
                             {else}
                                 <td nowrap="true">{$spendings_cash[cash].date|date_format:'%d.%b.%y'|utf8_encode}</td>
                             {/if}

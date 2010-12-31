@@ -91,6 +91,7 @@
     }
     $_SESSION['account_id'] = $account_id;
     $_SESSION['display_month'] = $display_month;
+    $_SESSION['display_year'] = $display_year;
 
     // Load Settings for the app
     $AppSettings = new Settings();
