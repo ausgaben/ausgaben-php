@@ -40,6 +40,8 @@
         if ($Account->summarize_months) {
             $SpendingValue->whereAdd('month='.intval(substr($display_month, 4, 2)));
             $SpendingValue->whereAdd('year='.substr($display_month, 0, 4));
+        } else if ($Account->summarize_years) {
+        	$SpendingValue->whereAdd('year=' . substr($display_year, 0 , 4));
         }
         if ($SpendingValue->find()) {
             while ($SpendingValue->fetch()) {
@@ -144,6 +146,18 @@
                 $DISPLAYDATA['months'][] = sprintf('%04d%02d01000000', $Spending->year, $Spending->month);
             }
         }
+    } else if ($activeAccount['summarize_years']) {
+        // Load Years
+        $Spending = DB_DataObject::factory('spending');
+        $Spending->orderBy('year desc');
+        $Spending->groupBy('year');
+        $Spending->booked = 1;
+        $Spending->account_id = $account_id;
+        if ($Spending->find()) {
+            while ($Spending->fetch()) {
+                $DISPLAYDATA['years'][] = sprintf('%04d0101000000', $Spending->year);
+            }
+        }
     }
     // Load not booked spendings
     $Spending = DB_DataObject::factory('spending');
@@ -156,6 +170,8 @@
     if ($activeAccount['summarize_months']) {
     	$Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
     	$Spending->whereAdd('year='.substr($display_month, 0, 4));
+   	} else if ($activeAccount['summarize_years']) {
+    	$Spending->whereAdd('year=' . substr($display_year, 0 , 4));
    	}
     if ($Spending->find()) {
         $DISPLAYDATA['sum_notbooked'] = 0;
@@ -211,6 +227,32 @@
             }
         }
     }
+    // Load sums per Year
+    else if ($activeAccount['summarize_years']) {
+        $DISPLAYDATA['year_sums'] = array();
+        $DISPLAYDATA['year_sums']['_all'] = 0;
+        if (!isset($DISPLAYDATA['years'])) return;
+        foreach ($DISPLAYDATA['years'] as $date) {
+            $DISPLAYDATA['year_sums'][$date] = 0;
+            $Spending = DB_DataObject::factory('spending');
+            $Spending->year = substr($date, 0, 4);
+            $Spending->groupBy('type');
+            $Spending->selectAdd('SUM(value) as sum');
+            $Spending->booked = 1;
+            $Spending->account_id = $account_id;
+            if ($Spending->find()) {
+                while ($Spending->fetch()) {
+                    if ($Spending->type == SPENDING_TYPE_IN) {
+                        $DISPLAYDATA['year_sums'][$date] += $Spending->sum;
+                        $DISPLAYDATA['year_sums']['_all'] += $Spending->sum;
+                    } else if ($Spending->type == SPENDING_TYPE_OUT or $Spending->type == SPENDING_TYPE_WITHDRAWAL) {
+                        $DISPLAYDATA['year_sums'][$date] -= $Spending->sum;
+                        $DISPLAYDATA['year_sums']['_all'] -= $Spending->sum;
+                    }
+                }
+            }
+        }
+    }
 
     // Load Spendings
     $DISPLAYDATA['sum_type'] = array(
@@ -227,6 +269,9 @@
         $Spending->orderBy('day desc');
         $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
         $Spending->whereAdd('year='.substr($display_month, 0, 4));
+    } else if ($activeAccount['summarize_years']) {
+        $Spending->orderBy('day desc');
+        $Spending->whereAdd('year=' . substr($display_year, 0 , 4));
     } else {
         $Spending->orderBy('year asc');
         $Spending->orderBy('month asc');
@@ -298,6 +343,7 @@
     }
     // Einstellungen
     $DISPLAYDATA['summarize_months'] = $activeAccount['summarize_months'];
+    $DISPLAYDATA['summarize_years'] = $activeAccount['summarize_years'];
     $DISPLAYDATA['spending_config'] = $spending_config;
     // Beschreibungen laden
     $date_1month = new Date;

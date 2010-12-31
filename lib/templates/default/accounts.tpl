@@ -37,6 +37,11 @@
                 <input type="radio" name="summarize_months" value="0" {if $account.summarize_months eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
             </p>
             <p>
+                Konto-Bewegungen jährlich zusammenfassen?<br />
+                <input type="radio" name="summarize_years" value="1" {if $account.summarize_years eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
+                <input type="radio" name="summarize_years" value="0" {if $account.summarize_years eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein
+            </p>
+            <p>
                 Monatlichen Übertrag erzeugen?<br />
                 <input type="radio" name="enable_abf" value="1" {if $account.enable_abf eq 1 or !$account}checked="true"{/if} onChange="updateForm()" /> Ja
                 <input type="radio" name="enable_abf" value="0" {if $account.enable_abf eq 0 and $account}checked="true"{/if} onChange="updateForm()" /> Nein

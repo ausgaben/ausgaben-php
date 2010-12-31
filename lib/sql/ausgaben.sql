@@ -13,7 +13,8 @@ CREATE TABLE account (
   account_id int(11) unsigned NOT NULL auto_increment,
   name tinytext NOT NULL,
   description text NOT NULL,
-  summarize_months tinyint(1) unsigned NOT NULL default '1',
+  summarize_months tinyint(1) unsigned NOT NULL default '0',
+  summarize_years tinyint(1) unsigned NOT NULL default '0',
   enable_abf tinyint(1) unsigned NOT NULL default '0',
   PRIMARY KEY  (account_id)
 ) TYPE=MyISAM;

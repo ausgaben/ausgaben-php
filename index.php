@@ -36,6 +36,7 @@
     $logout           = getVar(&$_REQUEST['logout'], false);
     session_start();
     $display_month    = getVar(&$_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
+    $display_year     = getVar(&$_REQUEST['display_year'], (isset($_SESSION['display_year'])) ? $_SESSION['display_year'] : strftime('%Y0101000000'));
 
     /**
     * Get Browser
