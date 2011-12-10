@@ -12,6 +12,7 @@
     /**
     * Include required files
     */
+    ini_set('include_path', ini_get('include_path') . ':' . '/usr/share/php/smarty');
     require_once 'lib/include/config.php';
     require_once 'lib/functions/getVar.php';
     require_once 'lib/functions/updateAbf.php';
