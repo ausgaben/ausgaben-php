@@ -270,7 +270,8 @@
         $Spending->whereAdd('month='.intval(substr($display_month, 4, 2)));
         $Spending->whereAdd('year='.substr($display_month, 0, 4));
     } else if ($activeAccount['summarize_years']) {
-        $Spending->orderBy('day desc');
+        $Spending->orderBy('month asc');
+        $Spending->orderBy('day asc');
         $Spending->whereAdd('year=' . substr($display_year, 0 , 4));
     } else {
         $Spending->orderBy('year asc');
