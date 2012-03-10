@@ -448,7 +448,7 @@
                     document.addspending.spendinggroup_name.value = spendinggroups[Spendings[spending_id][fieldname]];
                     updateDescriptionSelector(Spendings[spending_id][fieldname]);
                 {rdelim}
-                eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname] + "';");
+                eval("document.addspending." + fieldname + ".value = '" + Spendings[spending_id][fieldname].replace("'", "\\'") + "';");
             {rdelim}
             document.addspending.ifduplicate.disabled = false;
         {rdelim} else {ldelim}
