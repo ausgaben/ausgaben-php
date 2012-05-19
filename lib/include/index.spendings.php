@@ -64,9 +64,9 @@
     }
     // Insert new spending
     if ($ifsubmit) {
-        $spending_id        = getVar(&$_REQUEST['spending_id'], 0);
-        $spendinggroup_id   = getVar(&$_REQUEST['spendinggroup_id'], 0);
-        $spendinggroup_name = getVar(&$_REQUEST['spendinggroup_name'], '');
+        $spending_id        = getVar($_REQUEST['spending_id'], 0);
+        $spendinggroup_id   = getVar($_REQUEST['spendinggroup_id'], 0);
+        $spendinggroup_name = getVar($_REQUEST['spendinggroup_name'], '');
         $Spending = DB_DataObject::factory('spending');
         if ($spending_id and !$ifduplicate) {
             if (!$Spending->get($spending_id)) {
@@ -362,4 +362,4 @@
         }
     }
     $SpendingFilter = SpendingFilter::factory($CONFIG['spending_filter']);
-    $SpendingFilter->filterDescriptions(&$DISPLAYDATA['descriptions']);
+    $SpendingFilter->filterDescriptions($DISPLAYDATA['descriptions']);

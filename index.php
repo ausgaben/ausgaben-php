@@ -29,15 +29,15 @@
     /**
     * Pull some vars from the request
     */
-    $do               = getVar(&$_REQUEST['do'], 'start');
-    $action           = getVar(&$_REQUEST['action'], '');
-    $ifsubmit         = getVar(&$_REQUEST['ifsubmit'], false);
-    $ifdelete         = getVar(&$_REQUEST['ifdelete'], false);
-    $ifduplicate      = getVar(&$_REQUEST['ifduplicate'], false);
-    $logout           = getVar(&$_REQUEST['logout'], false);
+    $do               = getVar($_REQUEST['do'], 'start');
+    $action           = getVar($_REQUEST['action'], '');
+    $ifsubmit         = getVar($_REQUEST['ifsubmit'], false);
+    $ifdelete         = getVar($_REQUEST['ifdelete'], false);
+    $ifduplicate      = getVar($_REQUEST['ifduplicate'], false);
+    $logout           = getVar($_REQUEST['logout'], false);
     session_start();
-    $display_month    = getVar(&$_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
-    $display_year     = getVar(&$_REQUEST['display_year'], (isset($_SESSION['display_year'])) ? $_SESSION['display_year'] : strftime('%Y0101000000'));
+    $display_month    = getVar($_REQUEST['display_month'], (isset($_SESSION['display_month'])) ? $_SESSION['display_month'] : strftime('%Y%m01000000'));
+    $display_year     = getVar($_REQUEST['display_year'], (isset($_SESSION['display_year'])) ? $_SESSION['display_year'] : strftime('%Y0101000000'));
 
     /**
     * Get Browser
@@ -84,7 +84,7 @@
     if (!$ifauthed) $do = 'start';
 
     // Selected Account
-    $account_id = getVar(&$_REQUEST['account_id'], 0);
+    $account_id = getVar($_REQUEST['account_id'], 0);
     if ($account_id) {
         $Settings->set('last_account_id', $account_id);
     } else {

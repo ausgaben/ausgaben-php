@@ -25,10 +25,10 @@
             $DISPLAYDATA['accounts'][] = $Account->toArray();
         }
     }
-    $account_id = getVar(&$_REQUEST['account_id'], 0);
+    $account_id = getVar($_REQUEST['account_id'], 0);
     if (!$account_id) return;
     if ($ifsubmit) {
-        $ifignoredrawings = getVar(&$_REQUEST['ifignoredrawings'], 0);
+        $ifignoredrawings = getVar($_REQUEST['ifignoredrawings'], 0);
         require_once 'HTTP/Upload.php';
         $upload = new HTTP_Upload('de');
         $file = $upload->getFiles('file');

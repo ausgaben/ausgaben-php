@@ -9,9 +9,9 @@
     * @subpackage Frontend
     */
 
-	$account_id = getVar(&$_REQUEST['account_id'], 0);
+	$account_id = getVar($_REQUEST['account_id'], 0);
     if ($ifsubmit) {
-        $user2account = getVar(&$_REQUEST['user2account'], array());
+        $user2account = getVar($_REQUEST['user2account'], array());
         $Account = DB_DataObject::factory('account');
         if ($account_id) {
             $Account->get($account_id);
