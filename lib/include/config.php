@@ -31,7 +31,7 @@
         'major'        => 'BETA',
         'minor'        => 4,
     );
-    $DOOptions = PEAR::getStaticProperty('DB_DataObject', 'options');
+    $DOOptions = &PEAR::getStaticProperty('DB_DataObject', 'options');
     $DOOptions = $CONFIG['DataObject'];
 
     ini_set('session.cookie_path', dirname($_SERVER['PHP_SELF']));
