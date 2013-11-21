@@ -24,6 +24,7 @@
     // Load Accounts
     $User2Account = DB_DataObject::factory('user2account');
     $User2Account->user_id = $_SESSION['user']['user_id'];
+    $accounts = array();
     if (!$User2Account->find()) return;
    	while ($User2Account->fetch()) {
         $Account = $User2Account->getLink('account_id');
@@ -52,13 +53,15 @@
                 }
             }
         }
-        $DISPLAYDATA['accounts'][$Account->account_id] = $AccountData;
+	$accounts[] = $AccountData;
 	}
-
+	usort($accounts, function($a, $b) { return $a['order'] > $b['order'] ? 1 : -1; });
+        $DISPLAYDATA['accounts'] = $accounts;
 
     if(!$account_id) return;
-    if (isset($DISPLAYDATA['accounts'][$account_id])) {
-        $activeAccount = $DISPLAYDATA['accounts'][$account_id];
+    if (in_array($account_id, array_map(function($account) { return $account['account_id']; }, $accounts))) {
+        $activeAccount = array_filter($accounts, function($account) use($account_id) { return $account['account_id'] == $account_id; });
+	$activeAccount = array_pop($activeAccount);
     } else {
         return;
     }

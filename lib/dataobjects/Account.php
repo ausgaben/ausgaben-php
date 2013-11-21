@@ -17,6 +17,7 @@ class DataObject_Account extends DB_DataObject
     var $summarize_years;                // int(1)  not_null unsigned
     var $enable_abf;                      // int(1)  not_null unsigned
     var $last_import;                     // string(14)  
+    var $order;                     	  // int(11) unsigned
 
     /* ZE2 compatibility trick*/
     function __clone() { return $this;}
